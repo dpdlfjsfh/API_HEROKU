@@ -146,16 +146,11 @@ menu_items = [
 
 # 가상의 옷 상품 데이터
 products = [
-    {"product_name": "T-Shirt", "price": 19.99, "category": "Shirts", "sale_colors": ["Red", "Blue", "White"], "sales": 1000, "keywords": ["casual", "cotton"]},
-    {"product_name": "Jeans", "price": 49.99, "category": "Pants", "sale_colors": ["Black", "Blue"], "sales": 500, "keywords": ["denim", "slim fit"]},
-    {"product_name": "Dress", "price": 39.99, "category": "Dresses", "sale_colors": ["Pink", "Black"], "sales": 800, "keywords": ["formal", "evening"]},
-    {"product_name": "Sweater", "price": 29.99, "category": "Sweaters", "sale_colors": ["Gray", "Navy"], "sales": 300, "keywords": ["wool", "warm"]},
-    {"product_name": "Shorts", "price": 24.99, "category": "Shorts", "sale_colors": ["Beige", "Khaki"], "sales": 600, "keywords": ["summer", "casual"]},
-    {"product_name": "Blouse", "price": 34.99, "category": "Shirts", "sale_colors": ["White", "Yellow"], "sales": 400, "keywords": ["feminine", "chiffon"]},
-    {"product_name": "Jacket", "price": 59.99, "category": "Jackets", "sale_colors": ["Black", "Brown"], "sales": 200, "keywords": ["leather", "outerwear"]},
-    {"product_name": "Skirt", "price": 29.99, "category": "Skirts", "sale_colors": ["Navy", "Green"], "sales": 700, "keywords": ["floral", "midi"]},
-    {"product_name": "Sweatshirt", "price": 39.99, "category": "Sweaters", "sale_colors": ["Gray", "Black"], "sales": 400, "keywords": ["hoodie", "sporty"]},
-    {"product_name": "Coat", "price": 79.99, "category": "Coats", "sale_colors": ["Gray", "Camel"], "sales": 100, "keywords": ["winter", "warm"]}
+    {"product_name": "T-Shirt", "price": 15.99, "category": "Clothing", "sale_colors": "blue", "sales": 100, "keywords": "casual"},
+    {"product_name": "Jeans", "price": 49.99, "category": "Clothing", "sale_colors": "blue", "sales": 50, "keywords": "denim"},
+    {"product_name": "Sneakers", "price": 79.99, "category": "Shoes", "sale_colors": "black", "sales": 80, "keywords": "athletic"},
+    {"product_name": "Dress", "price": 39.99, "category": "Clothing", "sale_colors": "red", "sales": 30, "keywords": "formal"},
+    {"product_name": "Jacket", "price": 89.99, "category": "Clothing", "sale_colors": "black", "sales": 20, "keywords": "outerwear"}
 ]
 
 travel_packages = [
@@ -439,9 +434,9 @@ async def get_products(
     product_name: str = Query(default=None),
     max_price: float = Query(default=None, ge=0),
     category: str = Query(default=None),
-    sale_colors: List[str] = Query(default=None),
+    sale_colors: str = Query(default=None),
     min_sales: int = Query(default=None, ge=0),
-    keywords: List[str] = Query(default=None),
+    keywords: str = Query(default=None),
 ):
     filtered_products = products
 
@@ -459,7 +454,7 @@ async def get_products(
 
     if sale_colors is not None:
         # 판매 색상 필터링
-        filtered_products = [product for product in filtered_products if set(sale_colors).intersection(set(product['sale_colors']))]
+        filtered_products = [product for product in filtered_products if sale_colors.lower() in product['sale_colors'].lower()]
 
     if min_sales is not None:
         # 최소 판매량 필터링
@@ -467,7 +462,7 @@ async def get_products(
 
     if keywords is not None:
         # 키워드 필터링
-        filtered_products = [product for product in filtered_products if set(keywords).intersection(set(product['keywords']))]
+        filtered_products = [product for product in filtered_products if keywords.lower() in product['keywords'].lower()]
 
     return filtered_products
 
