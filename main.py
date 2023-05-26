@@ -101,6 +101,89 @@ movies = [
     {"title": "Interstellar", "director": "Christopher Nolan", "year": 2014, "genre": "Sci-Fi", "rating": 8.6}
 ]
 
+#가상의 음악 데이터
+songs = [
+    {"title": "Shape of You", "artist": "Ed Sheeran", "rating": 4.8, "release_date": "2017-01-06", "genre": "Pop"},
+    {"title": "Bohemian Rhapsody", "artist": "Queen", "rating": 4.9, "release_date": "1975-10-31", "genre": "Rock"},
+    {"title": "Rolling in the Deep", "artist": "Adele", "rating": 4.7, "release_date": "2010-11-29", "genre": "Pop"},
+    {"title": "Hotel California", "artist": "Eagles", "rating": 4.9, "release_date": "1977-02-22", "genre": "Rock"},
+    {"title": "Imagine", "artist": "John Lennon", "rating": 4.8, "release_date": "1971-10-11", "genre": "Pop"},
+    {"title": "Smells Like Teen Spirit", "artist": "Nirvana", "rating": 4.7, "release_date": "1991-09-10", "genre": "Rock"},
+    {"title": "Viva la Vida", "artist": "Coldplay", "rating": 4.6, "release_date": "2008-05-25", "genre": "Pop"},
+    {"title": "Stairway to Heaven", "artist": "Led Zeppelin", "rating": 4.9, "release_date": "1971-11-08", "genre": "Rock"},
+    {"title": "Someone Like You", "artist": "Adele", "rating": 4.7, "release_date": "2011-01-24", "genre": "Pop"},
+    {"title": "November Rain", "artist": "Guns N' Roses", "rating": 4.8, "release_date": "1992-02-18", "genre": "Rock"}
+]
+
+# 가상의 커피 원두 데이터
+coffees = [
+    {"name": "Colombian Supremo", "origin": "Colombia", "acidity": 4, "sweetness": 3, "bitterness": 2, "price": 15.99},
+    {"name": "Ethiopian Yirgacheffe", "origin": "Ethiopia", "acidity": 5, "sweetness": 4, "bitterness": 1, "price": 17.99},
+    {"name": "Costa Rican Tarrazu", "origin": "Costa Rica", "acidity": 3, "sweetness": 3, "bitterness": 3, "price": 14.99},
+    {"name": "Guatemalan Antigua", "origin": "Guatemala", "acidity": 4, "sweetness": 2, "bitterness": 4, "price": 16.99},
+    {"name": "Kenyan AA", "origin": "Kenya", "acidity": 5, "sweetness": 3, "bitterness": 2, "price": 18.99},
+    {"name": "Brazilian Santos", "origin": "Brazil", "acidity": 2, "sweetness": 4, "bitterness": 3, "price": 12.99},
+    {"name": "Sumatra Mandheling", "origin": "Indonesia", "acidity": 3, "sweetness": 2, "bitterness": 5, "price": 15.99},
+    {"name": "Hawaiian Kona", "origin": "Hawaii", "acidity": 4, "sweetness": 4, "bitterness": 2, "price": 19.99},
+    {"name": "Mexican Altura", "origin": "Mexico", "acidity": 3, "sweetness": 3, "bitterness": 3, "price": 13.99},
+    {"name": "Tanzanian Peaberry", "origin": "Tanzania", "acidity": 4, "sweetness": 3, "bitterness": 2, "price": 17.99}
+]
+
+# 가상의 파스타 가게 메뉴 데이터
+menu_items = [
+    {"menu_name": "Spaghetti Bolognese", "price": 12.99, "spicy_level": 1, "calories": 800},
+    {"menu_name": "Carbonara", "price": 11.99, "spicy_level": 2, "calories": 900},
+    {"menu_name": "Arrabbiata", "price": 10.99, "spicy_level": 3, "calories": 750},
+    {"menu_name": "Pesto Pasta", "price": 13.99, "spicy_level": 1, "calories": 850},
+    {"menu_name": "Alfredo", "price": 12.99, "spicy_level": 1, "calories": 950},
+    {"menu_name": "Aglio e Olio", "price": 10.99, "spicy_level": 2, "calories": 700},
+    {"menu_name": "Vongole", "price": 14.99, "spicy_level": 1, "calories": 900},
+    {"menu_name": "Puttanesca", "price": 11.99, "spicy_level": 3, "calories": 800},
+    {"menu_name": "Seafood Linguine", "price": 15.99, "spicy_level": 2, "calories": 1000},
+    {"menu_name": "Mushroom Risotto", "price": 12.99, "spicy_level": 1, "calories": 850}
+]
+
+# 가상의 옷 상품 데이터
+products = [
+    {"product_name": "T-Shirt", "price": 19.99, "category": "Shirts", "sale_colors": ["Red", "Blue", "White"], "sales": 1000, "keywords": ["casual", "cotton"]},
+    {"product_name": "Jeans", "price": 49.99, "category": "Pants", "sale_colors": ["Black", "Blue"], "sales": 500, "keywords": ["denim", "slim fit"]},
+    {"product_name": "Dress", "price": 39.99, "category": "Dresses", "sale_colors": ["Pink", "Black"], "sales": 800, "keywords": ["formal", "evening"]},
+    {"product_name": "Sweater", "price": 29.99, "category": "Sweaters", "sale_colors": ["Gray", "Navy"], "sales": 300, "keywords": ["wool", "warm"]},
+    {"product_name": "Shorts", "price": 24.99, "category": "Shorts", "sale_colors": ["Beige", "Khaki"], "sales": 600, "keywords": ["summer", "casual"]},
+    {"product_name": "Blouse", "price": 34.99, "category": "Shirts", "sale_colors": ["White", "Yellow"], "sales": 400, "keywords": ["feminine", "chiffon"]},
+    {"product_name": "Jacket", "price": 59.99, "category": "Jackets", "sale_colors": ["Black", "Brown"], "sales": 200, "keywords": ["leather", "outerwear"]},
+    {"product_name": "Skirt", "price": 29.99, "category": "Skirts", "sale_colors": ["Navy", "Green"], "sales": 700, "keywords": ["floral", "midi"]},
+    {"product_name": "Sweatshirt", "price": 39.99, "category": "Sweaters", "sale_colors": ["Gray", "Black"], "sales": 400, "keywords": ["hoodie", "sporty"]},
+    {"product_name": "Coat", "price": 79.99, "category": "Coats", "sale_colors": ["Gray", "Camel"], "sales": 100, "keywords": ["winter", "warm"]}
+]
+
+travel_packages = [
+    {"destination": "Paris", "duration": "5 days", "price": 1500},
+    {"destination": "Tokyo", "duration": "7 days", "price": 2500},
+    {"destination": "New York", "duration": "4 days", "price": 1800},
+    {"destination": "Rome", "duration": "6 days", "price": 2000},
+    {"destination": "Bali", "duration": "10 days", "price": 3000},
+    {"destination": "Cairo", "duration": "8 days", "price": 2200},
+    {"destination": "Sydney", "duration": "7 days", "price": 2800},
+    {"destination": "Cancun", "duration": "5 days", "price": 1700},
+    {"destination": "Barcelona", "duration": "6 days", "price": 1900},
+    {"destination": "Hawaii", "duration": "9 days", "price": 3200}
+]
+
+# 가상의 구직정보 데이터
+job_listings = [
+    {"company_name": "ABC Company", "salary": 50000, "position": "Software Engineer", "application_deadline": "2023-06-30", "employee_count": 100},
+    {"company_name": "XYZ Corporation", "salary": 60000, "position": "Data Analyst", "application_deadline": "2023-07-15", "employee_count": 200},
+    {"company_name": "DEF Enterprises", "salary": 55000, "position": "Marketing Specialist", "application_deadline": "2023-06-25", "employee_count": 150},
+    {"company_name": "GHI Inc.", "salary": 70000, "position": "Product Manager", "application_deadline": "2023-07-10", "employee_count": 120},
+    {"company_name": "JKL Solutions", "salary": 65000, "position": "Sales Representative", "application_deadline": "2023-07-05", "employee_count": 180},
+    {"company_name": "MNO Corporation", "salary": 55000, "position": "HR Coordinator", "application_deadline": "2023-07-20", "employee_count": 100},
+    {"company_name": "PQR Industries", "salary": 60000, "position": "Operations Manager", "application_deadline": "2023-07-08", "employee_count": 250},
+    {"company_name": "STU Technologies", "salary": 70000, "position": "UX/UI Designer", "application_deadline": "2023-06-28", "employee_count": 80},
+    {"company_name": "VWX Group", "salary": 55000, "position": "Accountant", "application_deadline": "2023-07-12", "employee_count": 130},
+    {"company_name": "YZA Corporation", "salary": 60000, "position": "Customer Service Representative", "application_deadline": "2023-07-18", "employee_count": 150}
+]
+
 @app.get("/courses")
 async def get_courses(
     id: int = Query(default=None),
@@ -238,3 +321,205 @@ async def get_novels(
         filtered_novels = [novel for novel in filtered_novels if novel['downloads'] >= min_downloads]
 
     return filtered_novels
+
+@app.get("/songs")
+async def get_songs(
+    min_rating: float = Query(default=None, ge=0.0, le=5.0),
+    genre: str = Query(default=None),
+    title: str = Query(default=None),
+    artist: str = Query(default=None),
+    release_date: str = Query(default=None),
+):
+    filtered_songs = songs
+
+    if min_rating is not None:
+        # 최소 평점 필터링
+        filtered_songs = [song for song in filtered_songs if song['rating'] >= min_rating]
+
+    if genre is not None:
+        # 장르 필터링
+        filtered_songs = [song for song in filtered_songs if genre.lower() == song['genre'].lower()]
+
+    if title is not None:
+        # 제목 필터링
+        filtered_songs = [song for song in filtered_songs if title.lower() in song['title'].lower()]
+
+    if artist is not None:
+        # 가수 필터링
+        filtered_songs = [song for song in filtered_songs if artist.lower() in song['artist'].lower()]
+
+    if release_date is not None:
+        # 출시일 필터링
+        filtered_songs = [song for song in filtered_songs if release_date == song['release_date']]
+
+    return filtered_s
+
+@app.get("/coffees")
+async def get_coffees(
+    origin: str = Query(default=None),
+    min_acidity: int = Query(default=None, ge=1, le=5),
+    max_acidity: int = Query(default=None, ge=1, le=5),
+    min_sweetness: int = Query(default=None, ge=1, le=5),
+    max_sweetness: int = Query(default=None, ge=1, le=5),
+    min_bitterness: int = Query(default=None, ge=1, le=5),
+    max_bitterness: int = Query(default=None, ge=1, le=5),
+    max_price: float = Query(default=None, ge=0),
+):
+    filtered_coffees = coffees
+
+    if origin is not None:
+        # 생산지 필터링
+        filtered_coffees = [coffee for coffee in filtered_coffees if origin.lower() == coffee['origin'].lower()]
+
+    if min_acidity is not None:
+        # 최소 산미 필터링
+        filtered_coffees = [coffee for coffee in filtered_coffees if coffee['acidity'] >= min_acidity]
+
+    if max_acidity is not None:
+        # 최대 산미 필터링
+        filtered_coffees = [coffee for coffee in filtered_coffees if coffee['acidity'] <= max_acidity]
+
+    if min_sweetness is not None:
+        # 최소 당도 필터링
+        filtered_coffees = [coffee for coffee in filtered_coffees if coffee['sweetness'] >= min_sweetness]
+
+    if max_sweetness is not None:
+        # 최대 당도 필터링
+        filtered_coffees = [coffee for coffee in filtered_coffees if coffee['sweetness'] <= max_sweetness]
+
+    if min_bitterness is not None:
+        # 최소 쓴맛 필터링
+        filtered_coffees = [coffee for coffee in filtered_coffees if coffee['bitterness'] >= min_bitterness]
+
+    if max_bitterness is not None:
+        # 최대 쓴맛 필터링
+        filtered_coffees = [coffee for coffee in filtered_coffees if coffee['bitterness'] <= max_bitterness]
+
+    if max_price is not None:
+        # 최대 가격 필터링
+        filtered_coffees = [coffee for coffee in filtered_coffees if coffee['price'] <= max_price]
+
+    return filtered_coffees
+
+@app.get("/menu")
+async def get_menu(
+    menu_name: str = Query(default=None),
+    max_price: float = Query(default=None, ge=0),
+    min_spicy_level: int = Query(default=None, ge=1, le=5),
+    max_spicy_level: int = Query(default=None, ge=1, le=5),
+    max_calories: int = Query(default=None, ge=0),
+):
+    filtered_menu = menu_items
+
+    if menu_name is not None:
+        # 메뉴 이름 필터링
+        filtered_menu = [item for item in filtered_menu if menu_name.lower() in item['menu_name'].lower()]
+
+    if max_price is not None:
+        # 최대 가격 필터링
+        filtered_menu = [item for item in filtered_menu if item['price'] <= max_price]
+
+    if min_spicy_level is not None:
+        # 최소 맵기 필터링
+        filtered_menu = [item for item in filtered_menu if item['spicy_level'] >= min_spicy_level]
+
+    if max_spicy_level is not None:
+        # 최대 맵기 필터링
+        filtered_menu = [item for item in filtered_menu if item['spicy_level'] <= max_spicy_level]
+
+    if max_calories is not None:
+        # 최대 칼로리 필터링
+        filtered_menu = [item for item in filtered_menu if item['calories'] <= max_calories]
+
+    return filtered_menu
+
+@app.get("/products")
+async def get_products(
+    product_name: str = Query(default=None),
+    max_price: float = Query(default=None, ge=0),
+    category: str = Query(default=None),
+    sale_colors: List[str] = Query(default=None),
+    min_sales: int = Query(default=None, ge=0),
+    keywords: List[str] = Query(default=None),
+):
+    filtered_products = products
+
+    if product_name is not None:
+        # 제품명 필터링
+        filtered_products = [product for product in filtered_products if product_name.lower() in product['product_name'].lower()]
+
+    if max_price is not None:
+        # 최대 가격 필터링
+        filtered_products = [product for product in filtered_products if product['price'] <= max_price]
+
+    if category is not None:
+        # 종류 필터링
+        filtered_products = [product for product in filtered_products if product['category'].lower() == category.lower()]
+
+    if sale_colors is not None:
+        # 판매 색상 필터링
+        filtered_products = [product for product in filtered_products if set(sale_colors).intersection(set(product['sale_colors']))]
+
+    if min_sales is not None:
+        # 최소 판매량 필터링
+        filtered_products = [product for product in filtered_products if product['sales'] >= min_sales]
+
+    if keywords is not None:
+        # 키워드 필터링
+        filtered_products = [product for product in filtered_products if set(keywords).intersection(set(product['keywords']))]
+
+    return filtered_products
+
+@app.get("/travel-packages")
+async def get_travel_packages(
+    destination: str = Query(default=None),
+    min_duration: int = Query(default=None, ge=1),
+    max_duration: int = Query(default=None, ge=1),
+    max_price: int = Query(default=None, ge=0),
+):
+    filtered_packages = travel_packages
+
+    if destination is not None:
+        # 여행지 필터링
+        filtered_packages = [package for package in filtered_packages if destination.lower() in package['destination'].lower()]
+
+    if min_duration is not None:
+        # 최소 여행기간 필터링
+        filtered_packages = [package for package in filtered_packages if int(package['duration'].split()[0]) >= min_duration]
+
+    if max_duration is not None:
+        # 최대 여행기간 필터링
+        filtered_packages = [package for package in filtered_packages if int(package['duration'].split()[0]) <= max_duration]
+
+    if max_price is not None:
+        # 최대 가격 필터링
+        filtered_packages = [package for package in filtered_packages if package['price'] <= max_price]
+
+    return filtered_packages
+
+@app.get("/job-listings")
+async def get_job_listings(
+    company_name: str = Query(default=None),
+    min_salary: int = Query(default=None, ge=0),
+    position: str = Query(default=None),
+    min_employee_count: int = Query(default=None, ge=0),
+):
+    filtered_listings = job_listings
+
+    if company_name is not None:
+        # 회사명 필터링
+        filtered_listings = [listing for listing in filtered_listings if company_name.lower() in listing['company_name'].lower()]
+
+    if min_salary is not None:
+        # 최소 급여 필터링
+        filtered_listings = [listing for listing in filtered_listings if listing['salary'] >= min_salary]
+
+    if position is not None:
+        # 구직 포지션 필터링
+        filtered_listings = [listing for listing in filtered_listings if position.lower() in listing['position'].lower()]
+
+    if min_employee_count is not None:
+        # 최소 직원수 필터링
+        filtered_listings = [listing for listing in filtered_listings if listing['employee_count'] >= min_employee_count]
+
+    return filtered_listings
