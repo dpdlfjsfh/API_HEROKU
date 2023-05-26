@@ -1,6 +1,8 @@
-from fastapi import FastAPI, Query
-from fastapi.openapi.utils import get_openapi #OAS 생성용
-from fastapi.responses import JSONResponse    #OAS 생성용
+from fastapi import FastAPI, Request, Query
+from fastapi.openapi.utils import get_openapi
+from fastapi.responses import JSONResponse
+from docx import Document
+from io import BytesIO
 
 app = FastAPI()
 
@@ -17,9 +19,36 @@ def custom_openapi():
     return app.openapi_schema
 
 @app.get("/docs", include_in_schema=False)
-async def get_docs():
+async def get_docs(request: Request):
     openapi_schema = custom_openapi()
-    return JSONResponse(content=openapi_schema)
+
+    # Create a new Word document
+    doc = Document()
+
+    # Add title and description to the document
+    doc.add_heading(openapi_schema["info"]["title"], level=1)
+    doc.add_paragraph(openapi_schema["info"]["description"])
+
+    # Add paths and operations to the document
+    for path, path_item in openapi_schema["paths"].items():
+        doc.add_heading(path, level=2)
+        for method, operation in path_item.items():
+            doc.add_heading(method.upper(), level=3)
+            doc.add_paragraph(operation["summary"])
+            doc.add_paragraph(operation["description"])
+
+    # Save the document to a BytesIO object
+    doc_stream = BytesIO()
+    doc.save(doc_stream)
+    doc_stream.seek(0)
+
+    # Set the appropriate headers for downloading the Word document
+    headers = {
+        "Content-Disposition": "attachment; filename=openapi.docx",
+        "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    }
+
+    return Response(content=doc_stream, headers=headers)
 
 @app.get("/openapi.json", include_in_schema=False)
 async def get_openapi_json():
