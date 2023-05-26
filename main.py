@@ -348,7 +348,7 @@ async def get_songs(
         # 출시일 필터링
         filtered_songs = [song for song in filtered_songs if release_date == song['release_date']]
 
-    return filtered_s
+    return filtered_songs
 
 @app.get("/coffees")
 async def get_coffees(
