@@ -182,7 +182,7 @@ job_listings = [
 
 @app.get("/courses")
 async def get_courses(
-    id: int = Query(default=None),
+    id: str = Query(default=None),
     과목명: str = Query(default=None),
     담당교수: str = Query(default=None),
     학점: int = Query(default=None, gt=0),
@@ -194,7 +194,7 @@ async def get_courses(
 
     if id is not None:
         # id 필터링
-        filtered_courses = [course for course in filtered_courses if course["id"] == id]
+        filtered_courses = [course for course in filtered_courses if id.lower() in course["id"].lower()]
 
     if 과목명 is not None:
         # 이름 포함 필터링
