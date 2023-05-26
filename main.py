@@ -89,16 +89,16 @@ novels = [
 
 # 가상의 영화 데이터
 movies = [
-    Movie(id=1, title="Inception", director="Christopher Nolan",spectator=100000, genre="Sci-Fi", release_year=2010),
-    Movie(id=2, title="The Shawshank Redemption", director="Frank Darabont",spectator=120000, genre="Drama", release_year=1994),
-    Movie(id=3, title="Pulp Fiction", director="Quentin Tarantino",spectator=130000, genre="Crime", release_year=1994),
-    Movie(id=4, title="The Godfather", director="Francis Ford Coppola",spectator=170000, genre="Crime", release_year=1972),
-    Movie(id=5, title="The Dark Knight", director="Christopher Nolan",spectator=160000, genre="Action", release_year=2008),
-    Movie(id=6, title="Fight Club", director="David Fincher",spectator=140000, genre="Drama", release_year=1999),
-    Movie(id=7, title="Interstellar", director="Christopher Nolan",spectator=130000, genre="Sci-Fi", release_year=2014),
-    Movie(id=8, title="Goodfellas", director="Martin Scorsese",spectator=140000, genre="Crime", release_year=1990),
-    Movie(id=9, title="The Matrix", director="Lana Wachowski,spectator=120000, Lilly Wachowski", genre="Sci-Fi", release_year=1999),
-    Movie(id=10, title="Seven", director="David Fincher",spectator=150000, genre="Crime", release_year=1995)
+    {"title": "The Shawshank Redemption", "director": "Frank Darabont", "year": 1994, "genre": "Drama", "rating": 9.3},
+    {"title": "The Godfather", "director": "Francis Ford Coppola", "year": 1972, "genre": "Crime", "rating": 9.2},
+    {"title": "The Dark Knight", "director": "Christopher Nolan", "year": 2008, "genre": "Action", "rating": 9.0},
+    {"title": "Pulp Fiction", "director": "Quentin Tarantino", "year": 1994, "genre": "Crime", "rating": 8.9},
+    {"title": "Fight Club", "director": "David Fincher", "year": 1999, "genre": "Drama", "rating": 8.8},
+    {"title": "Inception", "director": "Christopher Nolan", "year": 2010, "genre": "Action", "rating": 8.7},
+    {"title": "The Matrix", "director": "Lana Wachowski", "year": 1999, "genre": "Action", "rating": 8.7},
+    {"title": "Goodfellas", "director": "Martin Scorsese", "year": 1990, "genre": "Crime", "rating": 8.7},
+    {"title": "Seven", "director": "David Fincher", "year": 1995, "genre": "Crime", "rating": 8.6},
+    {"title": "Interstellar", "director": "Christopher Nolan", "year": 2014, "genre": "Sci-Fi", "rating": 8.6}
 ]
 
 @app.get("/courses")
@@ -185,33 +185,25 @@ async def get_movies(
     title: str = Query(default=None),
     director: str = Query(default=None),
     genre: str = Query(default=None),
-    release_year: int = Query(default=None, ge=0)
+    min_rating: float = Query(default=None, ge=0.0, le=10.0)
 ):
     filtered_movies = movies
 
     if title is not None:
-        # 제목 포함 필터링
-        filtered_movies = [movie for movie in filtered_movies if title.lower() in movie.title.lower()]
+        # 제목 필터링
+        filtered_movies = [movie for movie in filtered_movies if title.lower() in movie['title'].lower()]
 
     if director is not None:
-        # 감독 포함 필터링
-        filtered_movies = [movie for movie in filtered_movies if director.lower() in movie.director.lower()]
+        # 감독 필터링
+        filtered_movies = [movie for movie in filtered_movies if director.lower() in movie['director'].lower()]
 
     if genre is not None:
         # 장르 필터링
-        filtered_movies = [movie for movie in filtered_movies if genre.lower() == movie.genre.lower()]
+        filtered_movies = [movie for movie in filtered_movies if genre.lower() == movie['genre'].lower()]
 
-    if release_year is not None:
-        # 개봉 연도 필터링
-        filtered_movies = [movie for movie in filtered_movies if movie.release_year == release_year]
-    
-    if min_spectator is not None:
-        # 최소 관객 필터링
-        filtered_flights = [movie for movie in filtered_movies if movie["spectator"] >= min_spectator]
-        
-    if max_spectator is not None:
-        # 최대 관중 필터링
-        filtered_flights = [movie for movie in filtered_movies if movie["spectator"] <= max_spectator]
+    if min_rating is not None:
+        # 최소 평점 필터링
+        filtered_movies = [movie for movie in filtered_movies if movie['rating'] >= min_rating]
 
     return filtered_movies
 
