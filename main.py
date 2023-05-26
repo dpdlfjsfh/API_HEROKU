@@ -52,7 +52,9 @@ async def get_courses(
     과목명: str = Query(default=None),
     담당교수: str = Query(default=None),
     학점: int = Query(default=None, gt=0),
-    최소학점: int = Query(default=None, gt=0)
+    최소학점: int = Query(default=None, gt=0),
+    학과: str = Query(default=None),
+    구분: str = Query(default=None)
 ):
     filtered_courses = courses
 
@@ -67,6 +69,14 @@ async def get_courses(
     if 담당교수 is not None:
         # 교수명 포함 필터링
         filtered_courses = [course for course in filtered_courses if 담당교수.lower() in course["담당교수"].lower()]
+        
+    if 구분 is not None:
+        # 구분 포함 필터링
+        filtered_courses = [course for course in filtered_courses if 구분.lower() in course["구분"].lower()]
+        
+    if 학과 is not None:
+        # 학과 포함 필터링
+        filtered_courses = [course for course in filtered_courses if 학과.lower() in course["학과"].lower()]
 
     if 학점 is not None:
         # 학점 필터링
