@@ -212,13 +212,9 @@ async def get_courses(
         # 학과 포함 필터링
         filtered_courses = [course for course in filtered_courses if 학과.lower() in course["학과"].lower()]
 
-    if 학점 is not None:
-        # 학점 필터링
-        filtered_courses = [course for course in filtered_courses if course["학점"] >= credits]
-
     if 최소학점 is not None:
-        # 최소 학점 필터링
-        filtered_courses = [course for course in filtered_courses if course["학점"] >= min_credits]
+        # 학점 필터링
+        filtered_courses = [course for course in filtered_courses if course["학점"] >= 최소학점]
 
     return filtered_courses
 
