@@ -218,7 +218,7 @@ async def get_courses(
 
     if 최소학점 is not None:
         # 최소 학점 필터링
-        filtered_courses = [course for course in filtered_courses if course["최소학점"] >= min_credits]
+        filtered_courses = [course for course in filtered_courses if course["학점"] >= min_credits]
 
     return filtered_courses
 
