@@ -84,7 +84,7 @@ novels = [
     {"title": "The Legendary Mechanic", "author": "Chocolion", "downloads": 85000, "genre": "Game", "release_year": 2016, "platform": "Qidian"},
     {"title": "Martial God Asura", "author": "Kindhearted Bee", "downloads": 110000, "genre": "Fantasy", "release_year": 2013, "platform": "Webnovel"},
     {"title": "I Shall Seal the Heavens", "author": "Er Gen", "downloads": 75000, "genre": "Fantasy", "release_year": 2014, "platform": "Qidian"},
-    {"title": "The Great Thief", "author": "Boating Lyrics", "downloads": 85000, "genre": "Game", "release_year": 2015, "platform": "Webnovel"},
+    {"title": "The Great Thief", "author": "Boating Lyrics", "downloads": 85000, "genre": "Game", "release_year": 2015, "platform": "Webnovel"}
 ]
 
 # 가상의 영화 데이터
@@ -98,7 +98,7 @@ movies = [
     Movie(id=7, title="Interstellar", director="Christopher Nolan",spectator=130000, genre="Sci-Fi", release_year=2014),
     Movie(id=8, title="Goodfellas", director="Martin Scorsese",spectator=140000, genre="Crime", release_year=1990),
     Movie(id=9, title="The Matrix", director="Lana Wachowski,spectator=120000, Lilly Wachowski", genre="Sci-Fi", release_year=1999),
-    Movie(id=10, title="Seven", director="David Fincher",spectator=150000, genre="Crime", release_year=1995),
+    Movie(id=10, title="Seven", director="David Fincher",spectator=150000, genre="Crime", release_year=1995)
 ]
 
 @app.get("/courses")
@@ -150,7 +150,7 @@ async def get_flights(
     departure: str = Query(default=None),
     destination: str = Query(default=None),
     min_price: int = Query(default=None, gt=0),
-    max_price: int = Query(default=None, gt=0),
+    max_price: int = Query(default=None, gt=0)
 ):
     filtered_flights = flights
 
