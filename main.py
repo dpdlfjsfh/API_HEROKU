@@ -1,6 +1,33 @@
 from fastapi import FastAPI, Query
+from fastapi.openapi.utils import get_openapi #OAS 생성용
+from fastapi.responses import JSONResponse    #OAS 생성용
 
 app = FastAPI()
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="My Custom API",
+        version="1.0.0",
+        description="This is a custom API for demonstration purposes",
+        routes=app.routes,
+    )
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+@app.get("/docs", include_in_schema=False)
+async def get_docs():
+    openapi_schema = custom_openapi()
+    return JSONResponse(content=openapi_schema)
+
+@app.get("/openapi.json", include_in_schema=False)
+async def get_openapi_json():
+    openapi_schema = custom_openapi()
+    return JSONResponse(content=openapi_schema)
+
+
+
 
 # 가상의 수업 데이터
 courses = [
@@ -87,3 +114,5 @@ async def get_courses(
         filtered_courses = [course for course in filtered_courses if course["최소학점"] >= min_credits]
 
     return filtered_courses
+
+
