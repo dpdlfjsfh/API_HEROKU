@@ -3143,9 +3143,1106 @@ def filter_traditional_instruments(
 
     return filtered_list
 
+singing_room_data = [
+    ["세븐스타노래연습장", "경기 성남시 분당구 야탑로69번길 24-6 두만프라자 지하 3층 세븐스타", True, True, "2곡", 1000],
+    ["짱노래연습장", "경기 성남시 수정구 산성대로255번길 5-1", False, False, "30분", 5000],
+    ["질러노래연습장", "경기 성남시 분당구 성남대로926번길 6 대덕구프라자 313", False, True, "1시간", 25000],
+    ["세븐스타노래연습장", "경기 성남시 분당구 성남대로331번길 9-6 3층", True, False, "2곡", 1000],
+    ["타임앤노래연습장", "경기 성남시 분당구 판교로 445 미라보상가 지하1층 5호, 6호", True, True, "1곡", 500]
+]
+
+@app.get("/singing_room")
+def filter_singing_room(
+    name: str = Query(None, description="매장명"),
+    coinTF: bool = Query(..., description="코인노래방 여부"),
+    undergroundTF: bool = Query(None, description="지하 여부"),
+    unit: str = Query(None, description="요금 단위"),
+    min_price: int = Query(None, description="최소 가격"),
+    max_price: int = Query(None, description="최대 가격"),
+):
+    filtered_list = singing_room_data
+
+    if name:
+        filtered_list = [item for item in filtered_list if name in item[0]]
+    filtered_list = [item for item in filtered_list if coinTF == item[2]]
+    if undergroundTF is not None:
+        filtered_list = [item for item in filtered_list if undergroundTF == item[3]]
+    if unit:
+        filtered_list = [item for item in filtered_list if unit in item[4]]
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[5] >= min_price]
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[5] <= max_price]
+
+    return filtered_list
 
 
 
+coin_laundromat_data = [
+    ["크린토피아 크린워시", "경기 성남시 수정구 복정로42번길 2", 4, 6, 3000, 4000, False],
+    ["크린토피아 크린워시", "경기 성남시 분당구 미금일로90번길 11 (금성백조빌라 정문 앞)", 6, 7, 4000, 5000, False],
+    ["코인워시24", "경기 성남시 수정구 산성대로515번길 3", 4, 3, 3500, 4000, True],
+    ["코리아런드리 워시앤조이", "경기 성남시 수정구 성남대로1480번길 16 1층", 5, 4, 4000, 4500, False],
+    ["뽀송뽀송코인워시 홈플러스", "경기 성남시 분당구 탄천상로151번길 20 홈플러스 지하1층 셀프빨래방", 9, 8, 3500, 5000, True]
+]
+
+@app.get("/coin_laundromat")
+def filter_coin_laundromat(
+    name: str = Query(..., description="매장명"),
+    address: str = Query(None, description="주소"),
+    min_washerCount: int = Query(None, description="최소 세탁기 갯수"),
+    min_dryerCount: int = Query(None, description="최소 건조기 갯수"),
+    washerPrice: int = Query(None, description="세탁기 이용 가격"),
+    dryerPrice: int = Query(None, description="건조기 이용 가격"),
+    cleanserTF: bool = Query(None, description="세제 제공 여부"),
+):
+    filtered_list = coin_laundromat_data
+
+    filtered_list = [item for item in filtered_list if name in item[0]]
+    if address:
+        filtered_list = [item for item in filtered_list if address in item[1]]
+    if min_washerCount is not None:
+        filtered_list = [item for item in filtered_list if item[2] >= min_washerCount]
+    if min_dryerCount is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_dryerCount]
+    if washerPrice is not None:
+        filtered_list = [item for item in filtered_list if item[4] >= washerPrice]
+    if dryerPrice is not None:
+        filtered_list = [item for item in filtered_list if item[5] >= dryerPrice]
+    if cleanserTF is not None:
+        filtered_list = [item for item in filtered_list if cleanserTF == item[6]]
+
+    return filtered_list
+
+paint_data = [
+    ["삼화페인트", "아이생각 친환경 수성내부프로", ["화이트"], 4, 14900, 10],
+    ["삼화페인트", "홈스타 월페이퍼 무광", ["베이지", "브라운", "그레이"], 4, 52400, 200],
+    ["노루페인트", "순앤수100 친환경 수성페인트 무광", ["화이트"], 4, 10900, 30],
+    ["노루페인트", "친환경 프리미엄 팬톤페인트", ["핑크", "퍼플", "그린"], 1, 13500, 100],
+    ["베어", "그래나이트 그립", ["아이보리", "오렌지", "올리브"], 4, 109000, 40]
+]
+
+@app.get("/paint")
+def filter_paint(
+    manufacture: str = Query(..., description="제조사"),
+    name: str = Query(None, description="상품명"),
+    color: str = Query(None, description="색상"),
+    min_weight: float = Query(None, description="최소 용량(kg)"),
+    max_weight: float = Query(None, description="최대 용량(kg)"),
+    min_price: int = Query(None, description="최소 가격"),
+    max_price: int = Query(None, description="최대 가격"),
+    min_stock: int = Query(None, description="최소 재고"),
+):
+    filtered_list = paint_data
+
+    filtered_list = [item for item in filtered_list if manufacture in item[0]]
+    if name:
+        filtered_list = [item for item in filtered_list if name in item[1]]
+    if color:
+        filtered_list = [item for item in filtered_list if color in item[2]]
+    if min_weight is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_weight]
+    if max_weight is not None:
+        filtered_list = [item for item in filtered_list if item[3] <= max_weight]
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[4] >= min_price]
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_price]
+    if min_stock is not None:
+        filtered_list = [item for item in filtered_list if item[5] >= min_stock]
+
+    return filtered_list
+
+wallpaper_data = [
+    ["현대벽지", "HD5016", ["라이트그레이", "딥그레이", "민트"], "합지", True, 93, 35500],
+    ["신한벽지", "SH70259", ["화이트", "그린"], "실크", True, 106, 38500],
+    ["현대벽지", "HD5034", ["퍼플", "그레이"], "실크", False, 106, 38500],
+    ["신한벽지", "SH70256", ["지베르니"], "실크", 95, 41000],
+    ["개나리벽지", "G77309", ["화이트", "라이트그레이", "베이지"], "합지", False, 106, 38000]
+]
+
+@app.get("/wallpaper")
+def filter_wallpaper(
+    manufacture: str = Query(None, description="제조사"),
+    name: str = Query(None, description="상품명"),
+    color: str = Query(None, description="색상"),
+    category: str = Query(..., description="카테고리 ex) 합지, 실크"),
+    glueTF: bool = Query(None, description="풀바름 여부"),
+    min_width: float = Query(None, description="최소 폭(cm)"),
+    min_price: int = Query(None, description="최소 가격"),
+    max_price: int = Query(None, description="최대 가격"),
+):
+    filtered_list = wallpaper_data
+
+    if manufacture:
+        filtered_list = [item for item in filtered_list if manufacture in item[0]]
+    if name:
+        filtered_list = [item for item in filtered_list if name in item[1]]
+    if color:
+        filtered_list = [item for item in filtered_list if color in item[2]]
+    filtered_list = [item for item in filtered_list if category in item[3]]
+    if glueTF is not None:
+        filtered_list = [item for item in filtered_list if item[4] == glueTF]
+    if min_width is not None:
+        filtered_list = [item for item in filtered_list if item[5] >= min_width]
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[6] >= min_price]
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[6] <= max_price]
+
+    return filtered_list
+
+singing_room_song_data = [
+    ["83490", "헤어지자말해요", "박재정", "발라드", ["여자", "남자"], "03:41"],
+    ["83138", "심", "DK(디셈버)", "발라드", ["남자"], "04:10"],
+    ["83434", "I AM", "IVE", "K-POP", ["여자"], "03:30"],
+    ["83602", "퀸카(Queencard)", "(여자)아이들", "K-POP", ["여자"], "03:55"],
+    ["80548", "사랑은늘도망가(신사와아가씨OST)", "임영웅", "트로트", ["여자", "남자"], "04:20"],
+]
+
+@app.get("/singing_room_song")
+def filter_singing_room_song(
+    songNum: str = Query(None, description="곡 번호"),
+    title: str = Query(None, description="곡 제목"),
+    musician: str = Query(None, description="가수"),
+    genre: str = Query(..., description="장르"),
+    key: str = Query(None, description="노래 키 구분 ex)여자, 남자"),
+    max_time: float = Query(None, description="최대 반주시간"),
+):
+    filtered_list = singing_room_song_data
+
+    if songNum:
+        filtered_list = [item for item in filtered_list if songNum in item[0]]
+    if title:
+        filtered_list = [item for item in filtered_list if title in item[1]]
+    if musician:
+        filtered_list = [item for item in filtered_list if musician in item[2]]
+    filtered_list = [item for item in filtered_list if genre in item[3]]
+    if key:
+        filtered_list = [item for item in filtered_list if key in item[4]]
+    if max_time is not None:
+        filtered_list = [item for item in filtered_list if item[5] <= max_time]
+
+    return filtered_list
+
+korea_sauna_data = [
+    ["힐링수 사우나&찜질방", "경기 성남시 분당구 내정로113번길 4 지하1층", "031-0000-0001", True, 100000, "00:00-24:00"],
+    ["위례파크24시사우나", "경기 성남시 수정구 위례광장로 19 아이페리온 지하1층", "031-0000-0002", True, 11000, "05:00-22:00"],
+    ["크란츠스파랜드", "경기 성남시 중원구 둔촌대로 388 크란츠 테크노", "031-0000-0003", False, 9000, "00:00-24:00"],
+    ["쑥이랑 본점", "경기 성남시 분당구 성남대로 168 6층 605호", "031-0000-0004", False, 50000, "09:00-20:00"],
+    ["모란스파사우나", "경기 성남시 중원구 성남대로 1126 메가프라자", "031-0000-0005", True, 8000, "06:00-23:00"],
+]
+
+@app.get("/korea_sauna")
+def filter_korea_sauna(
+    name: str = Query(None, description="매장명"),
+    address: str = Query(None, description="주소"),
+    phone: str = Query(None, description="전화번호"),
+    recreationRoomYN: bool = Query(..., description="놀이방 유무"),
+    max_price: int = Query(None, description="최대 입장료"),
+    time: str = Query(None, description="영업시간"),
+):
+    filtered_list = korea_sauna_data
+
+    if name:
+        filtered_list = [item for item in filtered_list if name in item[0]]
+    if address:
+        filtered_list = [item for item in filtered_list if address in item[1]]
+    if phone:
+        filtered_list = [item for item in filtered_list if phone in item[2]]
+    filtered_list = [item for item in filtered_list if item[3] == recreationRoomYN]
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_price]
+    if time:
+        filtered_list = [item for item in filtered_list if time in item[5]]
+
+    return filtered_list
+
+air_fryer_data = [
+    ["쿠쿠전자", "CAF-G0610DW", "바스켓형", 5, 78720, "레트로 감성, 후면 공기 배출구"],
+    ["아이닉", "AO-16L", "오븐형", 16, 177990, "저소음, 논슬립 패드"],
+    ["디디오랩", "DAP-I14DH", "오븐형", 14, 155990, "식기세척기 사용 가능"],
+    ["재원전자", "FM1800", "오븐형", 8, 124000, "자동 전원 차단 기능"],
+    ["보만", "AF41EG1I", "바스켓형", 4, 129000, "유리 바스켓"],
+]
+
+@app.get("/air_fryer")
+def filter_air_fryer(
+    manufacture: str = Query(None, description="제조사"),
+    name: str = Query(None, description="모델명"),
+    type: str = Query(..., description="형태 ex)앞문 개방형, 서랍형"),
+    min_capacity: float = Query(None, description="최저 용량(L)"),
+    min_price: int = Query(None, description="최소 가격"),
+    max_price: int = Query(None, description="최대 가격"),
+    keyword: str = Query(None, description="에어프라이어의 특징을 검색하는 키워드입니다."),
+):
+    filtered_list = air_fryer_data
+
+    if manufacture:
+        filtered_list = [item for item in filtered_list if manufacture in item[0]]
+    if name:
+        filtered_list = [item for item in filtered_list if name in item[1]]
+    filtered_list = [item for item in filtered_list if item[2] == type]
+    if min_capacity is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_capacity]
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[4] >= min_price]
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_price]
+    if keyword:
+        filtered_list = [item for item in filtered_list if keyword in item[5]]
+
+    return filtered_list
+
+dog_harness_data = [
+    ["바잇미", "Y형", ["s", "m", "l"], 32900, "두껍고 튼튼한 웨빙"],
+    ["후르타", "L형", ["xs", "s", "m", "l", "2l"], 51000, "탈부착 리플렉터"],
+    ["후르타", "Y형", ["sm", "m", "l", "3l"], 51000, "손잡이 부착"],
+    ["인히어런트", "Y형", ["xs", "s", "m"], 17000, "아세탈 재질로 충격완화 가능"],
+    ["하울고", "L형", ["l", "2l"], 14000, "국내 생산 고급 부자재"],
+]
+
+@app.get("/dog_harness")
+def filter_dog_harness(
+    brand: str = Query(None, description="브랜드"),
+    type: str = Query(..., description="형태 ex)H형, L형, Y형"),
+    size: str = Query(None, description="사이즈 ex) xs, s, m, l, 2l"),
+    min_price: int = Query(None, description="최소 가격"),
+    max_price: int = Query(None, description="최대 가격"),
+    keyword: str = Query(None, description="하네스의 특징을 검색하는 키워드입니다."),
+):
+    filtered_list = dog_harness_data
+
+    if brand:
+        filtered_list = [item for item in filtered_list if brand in item[0]]
+    filtered_list = [item for item in filtered_list if item[1] == type]
+    if size:
+        filtered_list = [item for item in filtered_list if size in item[2]]
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_price]
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[3] <= max_price]
+    if keyword:
+        filtered_list = [item for item in filtered_list if keyword in item[4]]
+
+    return filtered_list
+
+accommodations_reservation_data = [
+    ["부킹닷컴", "김비안", "010-0000-0001", 5, "2023.08.01", "2023.08.05", True, 580000],
+    ["에어비앤비", "강수인", "010-0000-0002", 2, "2023.08.03", "2023.08.05", False, 320000],
+    ["아고다", "안지영", "010-0000-0003", 3, "2023.08.13", "2023.08.19", False, 800000],
+    ["아고다", "공성철", "010-0000-0004", 4, "2023.08.15", "2023.08.16", True, 150000],
+    ["에어비앤비", "한다름", "010-0000-0005", 6, "2023.08.06", "2023.08.08", True, 310000],
+]
+
+@app.get("/accommodations_reservation")
+def filter_accommodations_reservation(
+    route: str = Query(..., description="숙소 예약 경로 ex) 아고다, 부킹닷컴, 에어비앤비"),
+    name: str = Query(None, description="예약자명"),
+    phone: str = Query(None, description="전화번호"),
+    min_people: int = Query(None, description="최소 예약인원"),
+    min_inDay: str = Query(None, description="최소 입실일"),
+    max_outDay: str = Query(None, description="최대 퇴실일"),
+    petTF: bool = Query(None, description="반려동물 동반 여부"),
+    min_price: int = Query(None, description="최소 가격"),
+):
+    filtered_list = accommodations_reservation_data
+
+    filtered_list = [item for item in filtered_list if item[0] == route]
+    if name:
+        filtered_list = [item for item in filtered_list if name in item[1]]
+    if phone:
+        filtered_list = [item for item in filtered_list if phone in item[2]]
+    if min_people is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_people]
+    if min_inDay:
+        filtered_list = [item for item in filtered_list if item[4] >= min_inDay]
+    if max_outDay:
+        filtered_list = [item for item in filtered_list if item[5] <= max_outDay]
+    if petTF is not None:
+        filtered_list = [item for item in filtered_list if item[6] == petTF]
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[7] >= min_price]
+
+    return filtered_list
+
+apptech_reward_data = [
+    ["모니모", "출석", 41, "2023.08.01", False, True],
+    ["페이북", "구독", 30, "2023.08.01", True, True],
+    ["모니모", "걷기", 24, "2023.08.02", False, True],
+    ["국민은행", "퀴즈", 20, "2023.08.05", False, True],
+    ["캐시워크", "걷기", 100, "2023.08.02", True, False],
+]
+
+@app.get("/apptech_reward")
+def filter_apptech_reward(
+    appName: str = Query(None, description="어플 이름 ex)캐시워크, 모니모, 캐시닥, 국민은행"),
+    category: str = Query(..., description="카테고리 ex) 출석체크, 퀴즈, 미션, 구독"),
+    min_reward: int = Query(None, description="최소 리워드"),
+    max_reward: int = Query(None, description="최대 리워드"),
+    date: str = Query(None, description="참여일자"),
+    goodsExchangeTF: bool = Query(None, description="상품 교환 가능 여부"),
+    cashExchangeTF: bool = Query(None, description="현금 교환 가능 여부"),
+):
+    filtered_list = apptech_reward_data
+
+    if appName:
+        filtered_list = [item for item in filtered_list if item[0] == appName]
+    filtered_list = [item for item in filtered_list if item[1] == category]
+    if min_reward is not None:
+        filtered_list = [item for item in filtered_list if item[2] >= min_reward]
+    if max_reward is not None:
+        filtered_list = [item for item in filtered_list if item[2] <= max_reward]
+    if date:
+        filtered_list = [item for item in filtered_list if item[3] == date]
+    if goodsExchangeTF is not None:
+        filtered_list = [item for item in filtered_list if item[4] == goodsExchangeTF]
+    if cashExchangeTF is not None:
+        filtered_list = [item for item in filtered_list if item[5] == cashExchangeTF]
+
+    return filtered_list
+
+train_line_data = [
+    ["SRT", "569", "천안", "대전", "08:15", "08:30", 7200, 152],
+    ["무궁화호", "447", "대구", "용산", "17:00", "22:30", 19000, 301],
+    ["KTX", "1523", "수원", "전주", "15:42", "17:15", 31000, 15],
+    ["ITX", "778", "대전", "부산", "18:00", "19:46", 21000, 50],
+    ["KTX", "1671", "순천", "천안", "10:00", "11:10", 23500, 3],
+]
+
+@app.get("/train_line")
+def filter_train_line(
+    trainType: str = Query(None, description="열차 종류 ex) KTX, SRT, 무궁화호, ITX"),
+    trainNum: str = Query(None, description="열차 번호"),
+    departure: str = Query(None, description="출발지"),
+    arrival: str = Query(..., description="도착지"),
+    min_departureTime: str = Query(None, description="최소 출발시간"),
+    max_arrivalTime: str = Query(None, description="최대 도착시간"),
+    max_price: int = Query(None, description="최대 가격"),
+    min_availableSeat: int = Query(None, description="최소 예약가능한 좌석 수"),
+):
+    filtered_list = train_line_data
+
+    if trainType:
+        filtered_list = [item for item in filtered_list if item[0] == trainType]
+    if trainNum:
+        filtered_list = [item for item in filtered_list if item[1] == trainNum]
+    if departure:
+        filtered_list = [item for item in filtered_list if item[2] == departure]
+    filtered_list = [item for item in filtered_list if item[3] == arrival]
+    if min_departureTime:
+        filtered_list = [item for item in filtered_list if item[4] >= min_departureTime]
+    if max_arrivalTime:
+        filtered_list = [item for item in filtered_list if item[5] <= max_arrivalTime]
+    if max_price:
+        filtered_list = [item for item in filtered_list if item[6] <= max_price]
+    if min_availableSeat:
+        filtered_list = [item for item in filtered_list if item[7] >= min_availableSeat]
+
+    return filtered_list
+
+mobile_sub_brand_data = [
+    ["슈가 모바일", 11, 300, 50, "U+", "LTE", 38000],
+    ["이지 모바일", 25, 500, 500, "KT", "5G", 45000],
+    ["인스 모바일", 5, 200, 200, "SKT", "LTE", 12000],
+    ["티 플러스", 2, 100, 50, "U+", "LTE", 4500],
+    ["모빙", 30, 500, 1000, "KT", "5G", 53000],
+]
+
+@app.get("/mobile_sub_brand")
+def filter_mobile_sub_brand(
+    telCompany: str = Query(None, description="통신사 ex) 스노우 모바일, 헬로우 모바일"),
+    min_data: float = Query(None, description="최소 데이터(GB)"),
+    min_call: int = Query(None, description="최소 통화(분)"),
+    min_message: int = Query(None, description="최소 문자"),
+    network: str = Query(..., description="사용 망 ex) KT, SKT, U+"),
+    lte5G: str = Query(None, description="데이터 종류 ex) LTE or 5G"),
+    max_price: int = Query(None, description="최대 월요금"),
+):
+    filtered_list = mobile_sub_brand_data
+
+    if telCompany:
+        filtered_list = [item for item in filtered_list if item[0] == telCompany]
+    if min_data:
+        filtered_list = [item for item in filtered_list if item[1] >= min_data]
+    if min_call:
+        filtered_list = [item for item in filtered_list if item[2] >= min_call]
+    if min_message:
+        filtered_list = [item for item in filtered_list if item[3] >= min_message]
+    filtered_list = [item for item in filtered_list if item[4] == network]
+    if lte5G:
+        filtered_list = [item for item in filtered_list if item[5] == lte5G]
+    if max_price:
+        filtered_list = [item for item in filtered_list if item[6] <= max_price]
+
+    return filtered_list
+
+pod_cast_data = [
+    ["손에 잡히는 경제", "MBC", "비즈니스", "매일", 4.7, 742],
+    ["송은이 김숙의 비밀보장", "컨텐츠랩비보", "코미디", "화요일", 4.4, 420],
+    ["여둘톡", "여둘톡", "일기", "수요일", 4.8, 60],
+    ["주제넘는 데이트", "kyunakimberly", "예술", "금요일", 3.2, 10],
+    ["김동환 이진우 정영진의 신과함께", "이브로드캐스팅", "비즈니스", "화요일", 3.9, 275],
+]
+
+@app.get("/pod_cast")
+def filter_pod_cast(
+    programName: str = Query(None, description="프로그램 이름 ex) 손에 잡히는 경제, 북저널리즘, 듣똑라"),
+    copyright: str = Query(None, description="저작권"),
+    category: str = Query(..., description="카테고리 ex) 코미디, 비즈니스, 투자, 교육"),
+    updatePeriod: str = Query(None, description="업데이트 주기 ex) 매일, 월요일, 수요일"),
+    min_grade: float = Query(None, description="최소 평점", ge=0, le=5),
+    min_episodeNum: int = Query(None, description="최소 에피소드 수"),
+):
+    filtered_list = pod_cast_data
+
+    if programName:
+        filtered_list = [item for item in filtered_list if item[0] == programName]
+    if copyright:
+        filtered_list = [item for item in filtered_list if item[1] == copyright]
+    filtered_list = [item for item in filtered_list if item[2] == category]
+    if updatePeriod:
+        filtered_list = [item for item in filtered_list if item[3] == updatePeriod]
+    if min_grade:
+        filtered_list = [item for item in filtered_list if item[4] >= min_grade]
+    if min_episodeNum:
+        filtered_list = [item for item in filtered_list if item[5] >= min_episodeNum]
+
+    return filtered_list
+
+olympic_accomodation_data = [
+    ["벨기에", "알파인 스키", 3, ["샘 마스", "아르망 마르샹", "드리스 판덴브루커"], "101동", "201호"],
+    ["우크라이나", "알파인 스키", 6, ["이반 코프바스니유크", "아나스타샤 셰필렌코"], "102동", "101호"],
+    ["브라질", "봅슬레이", 6, ["에드송 루케스 빈딜라티", "에릭 길손 비안나 제로니모", "에드송 히카르두 마륭스", "하파에우 수자 다시우", "재클린 모라우"], "201동", "301호"],
+    ["이스라엘", "피겨 스케이팅", 2, ["알렉세이 바이첸코"], "102동", "501호"],
+    ["벨라루스", "스피드 스케이팅", 4, ["이그나트 골로바추크", "한나 니판타바", "에카테리나 슬로에바", "야우헤니야 바라뵤바"], "101동", "103호"],
+]
+
+@app.get("/olympic_accomodation")
+def filter_olympic_accomodation(
+    country: str = Query(None, description="나라"),
+    events: str = Query(..., description="종목 ex) 스케이트, 양궁, 피겨 스케이팅, 축구"),
+    min_people: int = Query(None, description="최소 인실"),
+    player: str = Query(None, description="선수"),
+    dong: str = Query(None, description="동"),
+    ho: str = Query(None, description="호"),
+):
+    filtered_list = olympic_accomodation_data
+
+    if country:
+        filtered_list = [item for item in filtered_list if item[0] == country]
+    filtered_list = [item for item in filtered_list if item[1] == events]
+    if min_people:
+        filtered_list = [item for item in filtered_list if item[2] >= min_people]
+    if player:
+        filtered_list = [item for item in filtered_list if player in item[3]]
+    if dong:
+        filtered_list = [item for item in filtered_list if item[4] == dong]
+    if ho:
+        filtered_list = [item for item in filtered_list if item[5] == ho]
+
+    return filtered_list
+
+olympic_play_data = [
+    ["양궁", "2020.07.24", "16:45", "16:00", ["한국", "일본"], ["SBS", "KBS", "MBC"]],
+    ["수영", "2020.07.07", "10:43", "11:45", ["미국", "한국", "중국", "러시아"], ["SBS"]],
+    ["남자 축구", "2020.07.23", "17:30", "19:25", ["한국", "온두라스"], ["KBS", "SBS"]],
+    ["여자 배구", "2020.07.28", "21:40", "23:20", ["한국", "브라질"], ["MBC"]],
+    ["태권도 여자", "2020.07.27", "21:30", "23:15", ["한국", "우크라이나", "그리스", "이탈리아", "가나", "프랑스"], ["KBS"]],
+]
+
+@app.get("/olympic_play")
+def filter_olympic_play(
+    events: str = Query(..., description="종목 ex) 스케이트, 양궁, 피겨 스케이팅, 축구"),
+    min_date: str = Query(None, description="최소 날짜"),
+    min_startTime: str = Query(None, description="최소 시작시간"),
+    max_endTime: str = Query(None, description="최대 종료시간"),
+    country: str = Query(None, description="출전 나라"),
+    broadcast: str = Query(None, description="방영 채널"),
+):
+    filtered_list = olympic_play_data
+
+    filtered_list = [item for item in filtered_list if item[0] == events]
+    if min_date:
+        filtered_list = [item for item in filtered_list if item[1] >= min_date]
+    if min_startTime:
+        filtered_list = [item for item in filtered_list if item[2] >= min_startTime]
+    if max_endTime:
+        filtered_list = [item for item in filtered_list if item[3] <= max_endTime]
+    if country:
+        filtered_list = [item for item in filtered_list if country in item[4]]
+    if broadcast:
+        filtered_list = [item for item in filtered_list if broadcast in item[5]]
+
+    return filtered_list
+
+delivery_order_data = [
+    ["요기요", "불고기전골2", "서울 송파구 송파대로 32길 8 가락우성아파트", True, True, False, 35000],
+    ["배달의 민족", "훈제구이 삼겹살(중)", "서울 송파구 중대로 24", True, False, False, 41000],
+    ["쿠팡 잇츠", "고기주는 비빔냉면2+고기주는 물냉면2", "서울 송파구 동남로8길 25", True, True, True, 51000],
+    ["배달의 민족", "고기듬뿍 도시락2+제육덮밥1", "서울 송파구 송파대로 345 헬리오시티", True, False, False, 28000],
+    ["쿠팡 잇츠", "닭갈비정식1+제육덮밥", "서울 송파구 송파대로 39길", False, False, False, 18000],
+]
+
+@app.get("/delivery_order")
+def filter_delivery_order(
+    route: str = Query(..., description="주문 경로 ex) 배달의 민족, 요기요, 쿠팡잇츠"),
+    cookingTF: bool = Query(None, description="조리 여부"),
+    driverContectTF: bool = Query(None, description="배차 여부"),
+    deliveryTF: bool = Query(None, description="배달완료 여부"),
+    min_price: int = Query(None, description="최소 가격"),
+    keyword: str = Query(None, description="주문 메뉴와 주소를 검색하는 키워드입니다."),
+):
+    filtered_list = delivery_order_data
+
+    filtered_list = [item for item in filtered_list if item[0] == route]
+    if cookingTF is not None:
+        filtered_list = [item for item in filtered_list if item[3] == cookingTF]
+    if driverContectTF is not None:
+        filtered_list = [item for item in filtered_list if item[4] == driverContectTF]
+    if deliveryTF is not None:
+        filtered_list = [item for item in filtered_list if item[5] == deliveryTF]
+    if min_price:
+        filtered_list = [item for item in filtered_list if item[6] >= min_price]
+    if keyword:
+        filtered_list = [item for item in filtered_list if keyword in item[1] or keyword in item[2]]
+
+    return filtered_list
+
+
+cafeteria_menu_data = [
+    ["2023.08.01", "한식", ["된장국", "계란말이", "새우볶음"], ["새우", "계란"], 450],
+    ["2023.08.02", "중식", ["중국식 냉면", "볶음밥", "꽃빵"], ["땅콩", "계란"], 700],
+    ["2023.08.02", "양식", ["알리오 올리오", "복숭아 샐러드", "함박스테이크"], ["복숭아"], 765],
+    ["2023.08.05", "분식", ["떡볶이", "튀김", "순대"], ["새우"], 550],
+    ["2023.08.06", "한식", ["김치찌개", "오이무침", "땅콩조림"], ["땅콩", "오이"], 380],
+]
+
+@app.get("/cafeteria_menu")
+def filter_cafeteria_menu(
+    date: str = Query(None, description="날짜"),
+    category: str = Query(..., description="카테고리 ex) 한식, 중식, 일식, 양식"),
+    menu: str = Query(None, description="메뉴 ex) 김치찌개, 우동"),
+    allergyContain: str = Query(None, description="알레르기 유발 음식"),
+    max_calory: int = Query(None, description="최대 칼로리"),
+):
+    filtered_list = cafeteria_menu_data
+
+    if date is not None:
+        filtered_list = [item for item in filtered_list if item[0] == date]
+    filtered_list = [item for item in filtered_list if item[1] == category]
+    if menu is not None:
+        filtered_list = [item for item in filtered_list if menu in item[2]]
+    if allergyContain is not None:
+        filtered_list = [item for item in filtered_list if allergyContain in item[3]]
+    if max_calory is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_calory]
+
+    return filtered_list
+
+
+game_grade_data = [
+    [2, "Bronze", "Beginner", 400, 400],
+    [16, "Silver", "Beginner", 5200, 22500],
+    [48, "Bronze", "Veteran", 4600, 84500],
+    [81, "Gold", "Veteran", 4800, 291100],
+    [97, "Bronze", "Expert", 8400, 403900],
+]
+
+@app.get("/game_grade")
+def filter_game_grade(
+    level: int = Query(None, description="레벨"),
+    medalColor: str = Query(..., description="메달색 ex) Bronze, Silver, Gold"),
+    medalName: str = Query(None, description="메달 칭호 ex) Beginner, Veteran, Expert"),
+    min_needExPoint: int = Query(None, description="최소 필요 경험치"),
+    min_totalExPoint: int = Query(None, description="최소 총 경험치"),
+    max_totalExPoint: int = Query(None, description="최대 총 경험치"),
+):
+    filtered_list = game_grade_data
+
+    if level is not None:
+        filtered_list = [item for item in filtered_list if item[0] == level]
+    filtered_list = [item for item in filtered_list if item[1] == medalColor]
+    if medalName is not None:
+        filtered_list = [item for item in filtered_list if item[2] == medalName]
+    if min_needExPoint is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_needExPoint]
+    if min_totalExPoint is not None:
+        filtered_list = [item for item in filtered_list if item[4] >= min_totalExPoint]
+    if max_totalExPoint is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_totalExPoint]
+
+    return filtered_list
+
+form_roller_data = [
+    ["파비츠", "하드", "EVA", 33, 14, True, 25600],
+    ["이화에스엠피", "소프트", "EPP", 90, 60, False, 15900],
+    ["뉴포츠", "소프트", "EVA", 35, 11.5, True, 12900],
+    ["무브먼트", "하드", "EPP", 45, 8, False, 12000],
+    ["고무나라", "하드", "EVA", 80, 15, False, 21000],
+]
+
+@app.get("/form_roller")
+def filter_form_roller(
+    brand: str = Query(None, description="브랜드"),
+    hardSoft: str = Query(..., description="하드/소프트"),
+    material: str = Query(None, description="재질 ex) EVA, EPP"),
+    min_length: float = Query(None, description="최소 길이(cm)"),
+    max_length: float = Query(None, description="최대 길이(cm)"),
+    min_diameter: float = Query(None, description="최소 지름"),
+    max_diameter: float = Query(None, description="최대 지름"),
+    massageTF: bool = Query(None, description="지압형 여부"),
+    max_price: int = Query(None, description="최대 가격"),
+):
+    filtered_list = form_roller_data
+
+    if brand is not None:
+        filtered_list = [item for item in filtered_list if item[0] == brand]
+    filtered_list = [item for item in filtered_list if item[1] == hardSoft]
+    if material is not None:
+        filtered_list = [item for item in filtered_list if item[2] == material]
+    if min_length is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_length]
+    if max_length is not None:
+        filtered_list = [item for item in filtered_list if item[3] <= max_length]
+    if min_diameter is not None:
+        filtered_list = [item for item in filtered_list if item[4] >= min_diameter]
+    if max_diameter is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_diameter]
+    if massageTF is not None:
+        filtered_list = [item for item in filtered_list if item[5] == massageTF]
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[6] <= max_price]
+
+    return filtered_list
+
+weather_forecast_data = [
+    ["2023.08.01", "서울", 30, 10, 24, 31],
+    ["2023.08.01", "대전", 80, 75, 21, 28],
+    ["2023.08.02", "부산", 90, 90, 28, 34],
+    ["2023.08.03", "부산", 10, 5, 29, 35],
+    ["2023.08.03", "서울", 20, 60, 25, 31],
+]
+
+@app.get("/weather_forecast")
+def filter_weather_forecast(
+    date: str = Query(..., description="날짜"),
+    area: str = Query(None, description="지역"),
+    amRainPer: float = Query(None, description="오전 강수 확률"),
+    pmRainPer: float = Query(None, description="오후 강수 확률"),
+    min_lowTemper: float = Query(None, description="최소 최저기온"),
+    max_lowTemper: float = Query(None, description="최대 최저기온"),
+    min_highTemper: float = Query(None, description="최소 최고기온"),
+    max_highTemper: float = Query(None, description="최대 최고기온"),
+):
+    filtered_list = weather_forecast_data
+
+    filtered_list = [item for item in filtered_list if item[0] == date]
+    if area is not None:
+        filtered_list = [item for item in filtered_list if item[1] == area]
+    if amRainPer is not None:
+        filtered_list = [item for item in filtered_list if item[2] == amRainPer]
+    if pmRainPer is not None:
+        filtered_list = [item for item in filtered_list if item[3] == pmRainPer]
+    if min_lowTemper is not None:
+        filtered_list = [item for item in filtered_list if item[4] >= min_lowTemper]
+    if max_lowTemper is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_lowTemper]
+    if min_highTemper is not None:
+        filtered_list = [item for item in filtered_list if item[5] >= min_highTemper]
+    if max_highTemper is not None:
+        filtered_list = [item for item in filtered_list if item[5] <= max_highTemper]
+
+    return filtered_list
+
+spam_call_data = [
+    ["02-0000-0001", "보이스피싱", 765, 1402, "검찰을 사칭해서 개인정보 요구"],
+    ["042-0000-0001", "보험판매", 21, 85, "치아보험 가입 권유"],
+    ["031-0000-0001", "보험판매", 55, 40, "한국생명 보험 가입 권유"],
+    ["054-0000-0001", "휴대폰판매", 112, 358, "공짜폰인 것 처럼 휴대폰 판매"],
+    ["02-0000-0002", "투자", 275, 120, "비트코인 포인트를 지급한다며 접근"],
+]
+
+@app.get("/spam_call")
+def filter_spam_call(
+    phoneNum: str = Query(None, description="스팸전화번호"),
+    type: str = Query(..., description="신고유형 ex) 대출안내, 보험 판매, 보이스피싱"),
+    min_reportCnt: int = Query(None, description="최소 스팸신고건수"),
+    min_blockUserCnt: int = Query(None, description="최소 차단한 사용자 수"),
+    keyword: str = Query(None, description="신고 내용을 검색하는 키워드입니다."),
+):
+    filtered_list = spam_call_data
+
+    if phoneNum is not None:
+        filtered_list = [item for item in filtered_list if item[0] == phoneNum]
+    filtered_list = [item for item in filtered_list if item[1] == type]
+    if min_reportCnt is not None:
+        filtered_list = [item for item in filtered_list if item[2] >= min_reportCnt]
+    if min_blockUserCnt is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_blockUserCnt]
+    if keyword is not None:
+        filtered_list = [item for item in filtered_list if keyword in item[4]]
+
+    return filtered_list
+
+power_strip_data = [
+    ["AEGIS", 4, 1.5, True, True, 23862],
+    ["모노케어", 4, 3, True, False, 7500],
+    ["써지오", 3, 2, False, False, 5800],
+    ["스윗홈", 6, 1.5, False, False, 7900],
+    ["아이정", 2, 0.3, False, True, 15000],
+]
+
+@app.get("/power_strip")
+def filter_power_strip(
+    manufacture: str = Query(None, description="제조사"),
+    min_holeCnt: int = Query(None, description="최소 멀티탭 구의 갯수"),
+    max_holeCnt: int = Query(None, description="최대 멀티탭 구의 갯수"),
+    min_length: float = Query(None, description="최저 길이(m)"),
+    eachEnergy: bool = Query(..., description="개별절전 여부"),
+    fireplugTF: bool = Query(None, description="자동소화기능 유무"),
+    min_price: int = Query(None, description="최소 가격"),
+    max_price: int = Query(None, description="최대 가격"),
+):
+    filtered_list = power_strip_data
+
+    if manufacture is not None:
+        filtered_list = [item for item in filtered_list if item[0] == manufacture]
+    if min_holeCnt is not None:
+        filtered_list = [item for item in filtered_list if item[1] >= min_holeCnt]
+    if max_holeCnt is not None:
+        filtered_list = [item for item in filtered_list if item[1] <= max_holeCnt]
+    if min_length is not None:
+        filtered_list = [item for item in filtered_list if item[2] >= min_length]
+    filtered_list = [item for item in filtered_list if item[3] == eachEnergy]
+    if fireplugTF is not None:
+        filtered_list = [item for item in filtered_list if item[4] == fireplugTF]
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[5] >= min_price]
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[5] <= max_price]
+
+    return filtered_list
+
+package_forwarding_data = [
+    ["김나영", "아레나 수영복", "스포츠", "미국", 1.2, 4500],
+    ["안정아", "강아지 노즈워크 장난감", "반려동물", "캐나다", 3, 13000],
+    ["유호식", "가정용 로봇청소기", "전자기기", "중국", 8, 21500],
+    ["강순철", "텃밭가꾸기 공구 세트", "잡화", "미국", 15, 38000],
+    ["임한빛", "어린이 영양젤리", "식품", "캐나다", 0.5, 4200],
+]
+
+@app.get("/package_forwarding")
+def filter_package_forwarding(
+    name: str = Query(None, description="주문자명"),
+    product: str = Query(None, description="주문상품"),
+    category: str = Query(None, description="카테고리 ex) 의류, 반려동물용품, 식품"),
+    country: str = Query(..., description="나라"),
+    min_weight: float = Query(None, description="최소 무게(kg)"),
+    max_weight: float = Query(None, description="최대 무게(kg)"),
+    min_deliverFee: int = Query(None, description="최소 택배비"),
+    max_deliverFee: int = Query(None, description="최대 택배비"),
+):
+    filtered_list = package_forwarding_data
+
+    if name is not None:
+        filtered_list = [item for item in filtered_list if item[0] == name]
+    if product is not None:
+        filtered_list = [item for item in filtered_list if item[1] == product]
+    if category is not None:
+        filtered_list = [item for item in filtered_list if item[2] == category]
+    filtered_list = [item for item in filtered_list if item[3] == country]
+    if min_weight is not None:
+        filtered_list = [item for item in filtered_list if item[4] >= min_weight]
+    if max_weight is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_weight]
+    if min_deliverFee is not None:
+        filtered_list = [item for item in filtered_list if item[5] >= min_deliverFee]
+    if max_deliverFee is not None:
+        filtered_list = [item for item in filtered_list if item[5] <= max_deliverFee]
+
+    return filtered_list
+
+bank_deposit_data = [
+    ["농협은행", "위례중앙점", 12, 3.2, 50],
+    ["국민은행", "성남시청점", 12, 4.5, 20],
+    ["국민은행", "강남구청점", 24, 6.1, 50],
+    ["기업은행", "경주중앙점", 30, 5.5, 100],
+    ["농협은행", "문정동지점", 24, 4.3, 30],
+]
+
+@app.get("/bank_deposit")
+def filter_bank_deposit(
+    bank: str = Query(..., description="은행이름"),
+    spot: str = Query(None, description="지점명 ex)종로광장, 춘천"),
+    duration: int = Query(None, description="납부기간(개월)"),
+    min_rate: float = Query(None, description="최저 이율"),
+    min_limit: int = Query(None, description="최소 월 입금 한도(만원)"),
+):
+    filtered_list = bank_deposit_data
+
+    filtered_list = [item for item in filtered_list if item[0] == bank]
+    if spot is not None:
+        filtered_list = [item for item in filtered_list if item[1] == spot]
+    if duration is not None:
+        filtered_list = [item for item in filtered_list if item[2] == duration]
+    if min_rate is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_rate]
+    if min_limit is not None:
+        filtered_list = [item for item in filtered_list if item[4] >= min_limit]
+
+    return filtered_list
+
+question_investigation_data = [
+    ["사회", "지역축제 바가지 요금 논란", 2000, 54785, 15, True],
+    ["경제", "라면값 인하", 1500, 335424, 5, False],
+    ["경제", "금융사기 가해자에 대한 처벌방법", 2500, 11247667, 35, True],
+    ["연예", "오징어게임2 과연 흥행할까?", 5000, 45778354, 20, True],
+    ["사회", "강력범죄 가해자의 신상공개", 3000, 1523444, 10, False],
+]
+
+@app.get("/question_investigation")
+def filter_question_investigation(
+    category: str = Query(..., description="카테고리 ex)사회, 정치, 경제, 연예"),
+    question_name: str = Query(None, description="설문조사명"),
+    min_total_people: int = Query(None, description="최소 최대인원(만명)"),
+    min_join_people: int = Query(None, description="최소 현재 참여자 수"),
+    max_join_people: int = Query(None, description="최대 현재 참여자 수"),
+    max_question: int = Query(None, description="최대 문항 수"),
+    join_tf: bool = Query(None, description="참여 여부"),
+):
+    filtered_list = question_investigation_data
+
+    filtered_list = [item for item in filtered_list if item[0] == category]
+    if question_name is not None:
+        filtered_list = [item for item in filtered_list if item[1] == question_name]
+    if min_total_people is not None:
+        filtered_list = [item for item in filtered_list if item[2] >= min_total_people]
+    if min_join_people is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_join_people]
+    if max_join_people is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_join_people]
+    if max_question is not None:
+        filtered_list = [item for item in filtered_list if item[5] <= max_question]
+    if join_tf is not None:
+        filtered_list = [item for item in filtered_list if item[6] == join_tf]
+
+    return filtered_list
+
+swimming_goggles_data = [
+    ["미즈노", True, True, False, 38000],
+    ["나이키스윔", False, True, True, 45000],
+    ["스피도", True, False, False, 29000],
+    ["아레나", True, False, True, 32500],
+    ["피닉스", False, True, True, 15000],
+]
+
+@app.get("/swimming_goggles")
+def filter_swimming_goggles(
+    brand: str = Query(None, description="브랜드"),
+    mirror_tf: bool = Query(None, description="미러 유무"),
+    packing_tf: bool = Query(..., description="패킹 유무"),
+    strong_tf: bool = Query(None, description="도수가능여부"),
+    min_price: int = Query(None, description="최소 가격"),
+    max_price: int = Query(None, description="최대 가격"),
+):
+    filtered_list = swimming_goggles_data
+
+    if brand is not None:
+        filtered_list = [item for item in filtered_list if item[0] == brand]
+    if mirror_tf is not None:
+        filtered_list = [item for item in filtered_list if item[1] == mirror_tf]
+    if strong_tf is not None:
+        filtered_list = [item for item in filtered_list if item[3] == strong_tf]
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[4] >= min_price]
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_price]
+
+    return filtered_list
+
+exchange_student_data = [
+    ["김유라", "미국", "정치외교", "2211342", 4.12, 950],
+    ["김형식", "영국", "경영", "220115", 4.30, 800],
+    ["안재훈", "호주", "영어영문", "222704", 2.93, 980],
+    ["한현화", "미국", "경영", "223085", 3.52, 700],
+    ["차영혜", "호주", "산업공학", "222784", 3.14, 650],
+]
+
+@app.get("/exchange_student")
+def filter_exchange_student(
+    name: str = Query(None, description="이름"),
+    country: str = Query(..., description="희망국가"),
+    major: str = Query(None, description="학과"),
+    student_id: str = Query(None, description="학번"),
+    min_grade: float = Query(None, ge=0, le=5, description="최소 성적"),
+    max_grade: float = Query(None, ge=0, le=5, description="최대 성적"),
+    min_eng_score: int = Query(None, le=990, description="최소 영어점수"),
+):
+    filtered_list = exchange_student_data
+
+    if name is not None:
+        filtered_list = [item for item in filtered_list if item[0] == name]
+    filtered_list = [item for item in filtered_list if item[1] == country]
+    if major is not None:
+        filtered_list = [item for item in filtered_list if item[2] == major]
+    if student_id is not None:
+        filtered_list = [item for item in filtered_list if item[3] == student_id]
+    if min_grade is not None:
+        filtered_list = [item for item in filtered_list if item[4] >= min_grade]
+    if max_grade is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_grade]
+    if min_eng_score is not None:
+        filtered_list = [item for item in filtered_list if item[5] >= min_eng_score]
+
+    return filtered_list
+
+used_trading_data = [
+    ["하얀마음", "송파동", "반려동물", "강아지하네스+리쉬", 45000, False, "판매중"],
+    ["김두팔", "가락동", "의류", "한번 시착한 여름 원피스", 25600, True, "예약중"],
+    ["지지언니", "문정동", "전자기기", "아이폰13 미니 스타라이트", 300000, False, "거래완료"],
+    ["유리아빠다", "송파동", "전자기기", "소니 영상용 카메라", 500000, True, "판매중"],
+    ["문정야구팬", "문정동", "스포츠", "야구공+글로브 세트", 10000, False, "판매중"],
+]
+
+@app.get("/used_trading")
+def filter_used_trading(
+    name: str = Query(None, description="거래자명"),
+    region: str = Query(..., description="거래지역(동)"),
+    category: str = Query(None, description="카테고리 ex)가전제품, 가구, 식품, 의류"),
+    product_name: str = Query(None, description="상품명"),
+    min_price: int = Query(None, description="최소 가격"),
+    max_price: int = Query(None, description="최대 가격"),
+    discount_tf: bool = Query(None, description="가격제안여부"),
+    state: str = Query(None, description="거래상태 ex) 판매중, 예약중, 거래완료"),
+):
+    filtered_list = used_trading_data
+
+    if name is not None:
+        filtered_list = [item for item in filtered_list if item[0] == name]
+    filtered_list = [item for item in filtered_list if item[1] == region]
+    if category is not None:
+        filtered_list = [item for item in filtered_list if item[2] == category]
+    if product_name is not None:
+        filtered_list = [item for item in filtered_list if item[3] == product_name]
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[4] >= min_price]
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_price]
+    if discount_tf is not None:
+        filtered_list = [item for item in filtered_list if item[5] == discount_tf]
+    if state is not None:
+        filtered_list = [item for item in filtered_list if item[6] == state]
+
+    return filtered_list
+
+sidedish_grocery_data = [
+    ["진미채 오징어볶음", "마른반찬", ["땅콩"], "2023.08.01", "2023.08.21", 260],
+    ["어묵탕", "탕", ["새우", "꽃게"], "2023.08.02", "2023.08.09", 450],
+    ["갈비찜", "고기반찬", ["밤"], "2023.08.01", "2023.08.16", 700],
+    ["꽃게 된장국", "국", ["꽃게"], "2023.08.02", "2023.08.05", 330],
+    ["오이소박이", "김치", ["오이", "복숭아"], "2023.08.03", "2023.09.03", 625],
+]
+
+@app.get("/sidedish_grocery")
+def filter_sidedish_grocery(
+    name: str = Query(None, description="상품명"),
+    category: str = Query(None, description="카테고리 ex)국, 김치, 고기반찬, 마른반찬"),
+    allergy_contain: str = Query(None, description="알레르기 성분"),
+    min_product_date: str = Query(None, description="최소 만든 날짜 (ex. XXXX.YY.ZZ)"),
+    max_exp_date: str = Query(None, description="최대 섭취날짜 (ex. XXXX.YY.ZZ)"),
+    min_calory: float = Query(None, description="최소 칼로리"),
+    max_calory: float = Query(None, description="최대 칼로리"),
+):
+    filtered_list = sidedish_grocery_data
+
+    if name is not None:
+        filtered_list = [item for item in filtered_list if item[0] == name]
+    if category is not None:
+        filtered_list = [item for item in filtered_list if item[1] == category]
+    if allergy_contain is not None:
+        filtered_list = [item for item in filtered_list if allergy_contain in item[2]]
+    if min_product_date is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_product_date]
+    if max_exp_date is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_exp_date]
+    if min_calory is not None:
+        filtered_list = [item for item in filtered_list if item[5] >= min_calory]
+    if max_calory is not None:
+        filtered_list = [item for item in filtered_list if item[5] <= max_calory]
+
+    return filtered_list
+
+talent_market_data = [
+    ["건강", 4.1, 60000, "힙따봉", 1, "개인"],
+    ["미용", 3.85, 50000, "퍼스널상담소", 2, "기업"],
+    ["공예", 4.7, 45000, "라탄연구소", 3, "기업"],
+    ["건강", 3.2, 60000, "런닝메이트 훈", 1, "개인"],
+    ["공예", 3.6, 65000, "공블리", 5, "개인"],
+]
+
+@app.get("/talent_market")
+def filter_talent_market(
+    category: str = Query(None, description="카테고리 ex)it, 공예, 마케팅, 인테리어"),
+    min_grade: float = Query(None, description="최소 평점", ge=0, le=5),
+    max_price: int = Query(None, description="최대 가격"),
+    name: str = Query(None, description="전문가 이름"),
+    max_answer_time: float = Query(None, description="최대 평균응답시간(시간)"),
+    sort: str = Query(None, description="회원구분 ex)개인/기업"),
+):
+    filtered_list = talent_market_data
+
+    if category is not None:
+        filtered_list = [item for item in filtered_list if item[0] == category]
+    if min_grade is not None:
+        filtered_list = [item for item in filtered_list if item[1] >= min_grade]
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[2] <= max_price]
+    if name is not None:
+        filtered_list = [item for item in filtered_list if item[3] == name]
+    if max_answer_time is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_answer_time]
+    if sort is not None:
+        filtered_list = [item for item in filtered_list if item[5] == sort]
+
+    return filtered_list
+
+parttime_job_data = [
+    ["김훈사무실", "사무", ["수요일", "금요일"], "09:00", "18:00", 1, 10000],
+    ["독서의민족", "IT", ["화요일"], "08:30", "17:30", 6, 12000],
+    ["서울대 수학학원", "교육", ["월요일", "수요일", "금요일"], "14:00", "20:00", 5, 15000],
+    ["김영 영어학원", "교육", ["화요일", "목요일"], "09:00", "15:00", 12, 20000],
+    ["떡볶이연구소", "사무", ["월요일"], "15:00", "19:00", 3, 9500],
+]
+
+@app.get("/parttime_job")
+def filter_parttime_job(
+    company: str = Query(None, description="회사명"),
+    category: str = Query(None, description="카테고리 ex) 교육, 요식업, IT"),
+    day: str = Query(None, description="요일"),
+    min_in_time: str = Query(None, description="최소 출근시간"),
+    max_out_time: str = Query(None, description="최대 퇴근시간"),
+    max_duration: int = Query(None, description="최대 기간(개월)"),
+    min_pay: int = Query(None, description="최소 시급(만원)"),
+):
+    filtered_list = parttime_job_data
+
+    if company is not None:
+        filtered_list = [item for item in filtered_list if item[0] == company]
+    if category is not None:
+        filtered_list = [item for item in filtered_list if item[1] == category]
+    if day is not None:
+        filtered_list = [item for item in filtered_list if day in item[2]]
+    if min_in_time is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_in_time]
+    if max_out_time is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_out_time]
+    if max_duration is not None:
+        filtered_list = [item for item in filtered_list if item[5] <= max_duration]
+    if min_pay is not None:
+        filtered_list = [item for item in filtered_list if item[6] >= min_pay]
+
+    return filtered_list
 
 
 
