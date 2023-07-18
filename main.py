@@ -4245,11 +4245,383 @@ def filter_parttime_job(
     return filtered_list
 
 
+betta_fish_data = [
+    ["하프문", "수컷", "화이트", 50000, "덤보, 빅이어 종류로 순백색 베타입니다", True],
+    ["크라운", "수컷", "블랙", 58000, "블랙과 화이트가 섞인 블랙 드래손 크라운 베타입니다", True],
+    ["플라캇", "암컷", "캔디", 60000, "캔디 색상으로 불리는 조합의 베타입니다", True],
+    ["롱테일", "수컷", "블루", 110000, "야생 베타 롱테일 핀 종류입니다", False],
+    ["더블테일", "암컷", "레드", 70000, "더블테일의 레드 발색이 진한 베타입니다", True],
+]
+
+@app.get("/BettaFish")
+def filter_betta_fish(
+    category: str = Query(..., description="종류 (예: 하프문, 크라운 등)"),
+    sex: str = Query(None, description="성별"),
+    color: str = Query(None, description="색상 (예: 화이트, 블랙, 캔디 등)"),
+    min_price: int = Query(None, description="최소 가격"),
+    max_price: int = Query(None, description="최대 가격"),
+    available: bool = Query(None, description="예약가능여부"),
+):
+    filtered_list = betta_fish_data
+
+    filtered_list = [item for item in filtered_list if item[0] == category]
+
+    if sex is not None:
+        filtered_list = [item for item in filtered_list if item[1] == sex]
+    if color is not None:
+        filtered_list = [item for item in filtered_list if item[2] == color]
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_price]
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[3] <= max_price]
+    if available is not None:
+        filtered_list = [item for item in filtered_list if item[5] == available]
+
+    return filtered_list
+
+water_plant_data = [
+    ["크립토코리네 팔바", "전경수초", True, 13000, "키가 작은 크립토코리네이며 다른 종보다 더 많은 빛을 필요로 합니다."],
+    ["미크란테뭄 몬테카를로", "전경수초", True, 11000, "적은 광량에서도 성장하지만 예쁜 모습을 위해서는 높은 광량이 좋습니다."],
+    ["알테란테라 레이넥키 미니", "중경수초", True, 13000, "짙은 빨강을 유지하려면 높은 빛을 필요로 합니다."],
+    ["아포노게톤 마다가스카렌시스", "후경수초", False, 25000, "대형으로 자라는 레이스 플랜트입니다."],
+    ["발리스네리아 나나", "후경수초", True, 15000, "가는 줄기를 가진 식물입니다. 작은 수조에도 잘 어울립니다."]
+]
+
+@app.get("/WaterPlant")
+def filter_water_plant(
+    name: str = Query(None, description="수초이름"),
+    use: str = Query(..., description="용도 (예: 전경수초, 중경수초, 후경수초 등)"),
+    tissue_culture: bool = Query(None, description="조직배양수초여부"),
+    min_price: int = Query(None, description="최소 가격"),
+    max_price: int = Query(None, description="최대 가격"),
+):
+    filtered_list = water_plant_data
+
+    if name is not None:
+        filtered_list = [item for item in filtered_list if item[0] == name]
+
+    filtered_list = [item for item in filtered_list if item[1] == use]
+
+    if tissue_culture is not None:
+        filtered_list = [item for item in filtered_list if item[2] == tissue_culture]
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_price]
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[3] <= max_price]
+
+    return filtered_list
+
+pajama_data = [
+    ["블루 스트라이프", "반팔 반바지 세트", ["S", "M", "L"], "여성", "순면", 45000, "순면 소재의 시원한 색감."],
+    ["꼬빠", "반팔 반바지 세트", ["S", "M"], "여성", "면 혼방", 55000, "레트로하고 귀여운 무드."],
+    ["마레", "반팔 반바지 세트", ["S", "M", "L", "XL"], "공용", "순면", 65000, "플로럴 패턴이 들어간 남여공용 파자마."],
+    ["여름느낌", "반팔 긴바지 세트", ["S", "M", "L"], "남성", "거즈면", 55000, "거즈면 소재로 시원함"],
+    ["블랑 셋업", "나시 긴바지 세트", ["S", "M", "L"], "여성", "레이온", 75000, "고급스러운 무드."]
+]
+
+@app.get("/Pajama")
+def filter_pajama(
+    name: str = Query(None, description="상품이름"),
+    category: str = Query(..., description="종류 (예: 반팔 반바지 세트, 나시 긴바지 세트 등)"),
+    size: str = Query(None, description="사이즈 (예: S, M, L 등)"),
+    gender: str = Query(None, description="성별 (예: 남성, 여성)"),
+    texture: str = Query(None, description="소재 (예: 순면, 면 혼방 등)"),
+    min_price: int = Query(None, description="최소 가격"),
+    max_price: int = Query(None, description="최대 가격"),
+):
+    filtered_list = pajama_data
+
+    if name is not None:
+        filtered_list = [item for item in filtered_list if item[0] == name]
+
+    filtered_list = [item for item in filtered_list if item[1] == category]
+
+    if size is not None:
+        filtered_list = [item for item in filtered_list if size in item[2]]
+
+    if gender is not None:
+        filtered_list = [item for item in filtered_list if item[3] == gender]
+
+    if texture is not None:
+        filtered_list = [item for item in filtered_list if item[4] == texture]
+
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[5] >= min_price]
+
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[5] <= max_price]
+
+    return filtered_list
+
+
+noncaffeine_data = [
+    ["진한 보리차", ["볶은 보리"], True, 4000, "국내산 보리를 직접 볶아서 진하게 끓여낸 보리차입니다."],
+    ["루이보스티", ["루이보스"], False, 4500, "프리미엄 루이보스를 사용하였습니다."],
+    ["검은콩차", ["볶은 검은콩"], False, 4500, "국내산 검은콩을 직접 볶아서 진하게 끓여낸 보리차입니다."],
+    ["우엉차", ["말린 우엉"], False, 4500, "국내산 우엉을 사용한 차입니다."],
+    ["트로피컬 루이보스차", ["루이보스", "레몬", "베르가못"], True, 6000, "프리미엄 루이보스와 레몬필이 들어간 블랜딩 티입니다."]
+]
+
+@app.get("/NonCaffeine")
+def filter_noncaffeine(
+    name: str = Query(None, description="음료이름"),
+    stuff: str = Query(..., description="재료 (예: 볶은 보리, 말린 우엉 등)"),
+    cold: bool = Query(None, description="찬음료가능여부"),
+    min_price: int = Query(None, description="최소 가격"),
+    max_price: int = Query(None, description="최대 가격"),
+):
+    filtered_list = noncaffeine_data
+
+    if name is not None:
+        filtered_list = [item for item in filtered_list if item[0] == name]
+
+    filtered_list = [item for item in filtered_list if item[1] == stuff]
+
+    if cold is not None:
+        filtered_list = [item for item in filtered_list if item[2] == cold]
+
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_price]
+
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[3] <= max_price]
+
+    return filtered_list
+
+donator_data = [
+    ["이윤희", "서울시", "없음", 33, 450000, False, "010-0000-0000"],
+    ["이선화", "서울시", "환경연합", 53, 1200000, True, "010-0000-0000"],
+    ["김지영", "인천시", "시민의숲", 45, 2300000, True, "010-0000-0000"],
+    ["윤나영", "제주시", "없음", 23, 850000, False, "010-0000-0000"],
+    ["김상혁", "제주시", "제주푸른터", 65, 4300000, True, "010-0000-0000"],
+]
+
+@app.get("/Donator")
+def filter_donator(
+    name: str = Query(None, description="성명"),
+    location: str = Query(None, description="지역 (예: 서울시, 인천시 등)"),
+    agency: str = Query(None, description="소속 (예: 없음, 환경연합 등)"),
+    min_age: int = Query(None, description="최저연령"),
+    max_age: int = Query(None, description="최고연령"),
+    min_price: int = Query(None, description="최소금액"),
+    max_price: int = Query(None, description="최대금액"),
+    periodic: bool = Query(..., description="정기기부여부"),
+):
+    filtered_list = donator_data
+
+    if name is not None:
+        filtered_list = [item for item in filtered_list if item[0] == name]
+
+    if location is not None:
+        filtered_list = [item for item in filtered_list if item[1] == location]
+
+    if agency is not None:
+        filtered_list = [item for item in filtered_list if item[2] == agency]
+
+    if min_age is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_age]
+
+    if max_age is not None:
+        filtered_list = [item for item in filtered_list if item[3] <= max_age]
+
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[4] >= min_price]
+
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[4] <= max_price]
+
+    filtered_list = [item for item in filtered_list if item[5] == periodic]
+
+    return filtered_list
 
 
 
+volunteer_data = [
+    ["이윤희", "서울시", "없음", 33, False, "2023-08-01", "010-0000-0000"],
+    ["이선화", "서울시", "환경연합", 53, True, "2023-08-01", "010-0000-0000"],
+    ["김지영", "인천시", "시민의숲", 45, True, "2023-08-02", "010-0000-0000"],
+    ["윤나영", "제주시", "없음", 23, False, "2023-08-02", "010-0000-0000"],
+    ["김상혁", "제주시", "제주푸른터", 65, True, "2023-08-03", "010-0000-0000"],
+]
+
+@app.get("/AnimalShelterVolunteer")
+def filter_animal_shelter_volunteer(
+    name: str = Query(None, description="성명"),
+    location: str = Query(..., description="지역 (예: 서울시, 인천시 등)"),
+    agency: str = Query(None, description="소속 (예: 없음, 환경연합 등)"),
+    min_age: int = Query(None, description="최저연령"),
+    max_age: int = Query(None, description="최고연령"),
+    pet: bool = Query(None, description="반려동물여부"),
+    date: str = Query(None, description="자원봉사일"),
+):
+    filtered_list = volunteer_data
+
+    if name is not None:
+        filtered_list = [item for item in filtered_list if item[0] == name]
+
+    if agency is not None:
+        filtered_list = [item for item in filtered_list if item[2] == agency]
+
+    if min_age is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_age]
+
+    if max_age is not None:
+        filtered_list = [item for item in filtered_list if item[3] <= max_age]
+
+    if pet is not None:
+        filtered_list = [item for item in filtered_list if item[4] == pet]
+
+    if date is not None:
+        filtered_list = [item for item in filtered_list if item[5] == date]
+
+    return filtered_list
 
 
+customer_data = [
+    ["이윤희", "서울시 마포구 연남로 43-2", "씰스티커", 23000, True, True, "010-0000-0000"],
+    ["이선화", "서울시 마포구 연남동 390-56", "접이식 테이블", 43000, True, True, "010-0000-0000"],
+    ["김지영", "서울시 관악구 인헌로 43-12", "돗자리세트", 32000, True, False, "010-0000-0000"],
+    ["윤나영", "제주시 탑동로2길 3", "캠핑 테이블", 93000, False, False, "010-0000-0000"],
+    ["김상혁", "제주시 한림읍 명랑로 8", "타프 스트랩", 19000, False, False, "010-0000-0000"],
+]
+
+@app.get("/GroupBuying")
+def filter_group_buying(
+    name: str = Query(None, description="성명"),
+    location: str = Query(None, description="지역 (예: 서울시, 관악구, 마포구 등)"),
+    product: str = Query(None, description="구매상품"),
+    pay: bool = Query(..., description="입금여부"),
+    delivery: bool = Query(None, description="발송여부"),
+):
+    filtered_list = customer_data
+
+    if name is not None:
+        filtered_list = [item for item in filtered_list if item[0] == name]
+
+    if location is not None:
+        filtered_list = [item for item in filtered_list if item[1] == location]
+
+    if product is not None:
+        filtered_list = [item for item in filtered_list if item[2] == product]
+
+    if delivery is not None:
+        filtered_list = [item for item in filtered_list if item[5] == delivery]
+
+    return filtered_list
+
+
+product_data = [
+    ["레이스 양산", "화이트", "3단", True, False, 56000, 35],
+    ["쿨링 제로퍼제로", "네이비", "5단", True, True, 75000, 15],
+    ["눈꽃코팅", "화이트", "5단", False, False, 36000, 35],
+    ["초경량 암막 양산", "블랙", "3단", True, True, 46000, 25],
+    ["캐릭터 양산", "옐로우", "5단", True, False, 66000, 15],
+]
+
+@app.get("/SunUmbrella")
+def filter_sun_umbrella(
+    name: str = Query(None, description="상품명"),
+    color: str = Query(..., description="색상 (예: 화이트, 네이비 등)"),
+    category: str = Query(None, description="접이식종류 (예: 3단, 5단 등)"),
+    uv_protection: bool = Query(None, description="자외선차단여부"),
+    umbrella: bool = Query(None, description="우양산여부"),
+    min_price: float = Query(None, ge=0, description="최소 가격"),
+    max_price: float = Query(None, ge=0, description="최대 가격"),
+):
+    filtered_list = product_data
+
+    if name is not None:
+        filtered_list = [item for item in filtered_list if item[0] == name]
+
+    if color is not None:
+        filtered_list = [item for item in filtered_list if item[1] == color]
+
+    if category is not None:
+        filtered_list = [item for item in filtered_list if item[2] == category]
+
+    if uv_protection is not None:
+        filtered_list = [item for item in filtered_list if item[3] == uv_protection]
+
+    if umbrella is not None:
+        filtered_list = [item for item in filtered_list if item[4] == umbrella]
+
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[5] >= min_price]
+
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[5] <= max_price]
+
+    return filtered_list
+
+sticker_data = [
+    ["레트로 다이어리 데코팩", "스몰데코", "모조지", 12000, 132],
+    ["못난이 MBTI", "빅포인트", "유포지", 8000, 32],
+    ["캘리 알파벳 숫자 세트", "손글씨", "PVC", 6500, 232],
+    ["마음사진 세트 팩", "포토", "모조지", 8000, 92],
+    ["피피 라벨링 스티커", "라벨", "모조지", 3000, 182],
+]
+
+@app.get("/StickerSearch")
+def filter_sticker_search(
+    name: str = Query(None, description="상품명"),
+    d_category: str = Query(..., description="디자인종류 (예: 스몰데코, 빅포인트, 패턴, 포토,라벨, 손글씨 등)"),
+    material: str = Query(None, description="재질 (예: 모조지, PVC 등)"),
+    min_price: float = Query(None, ge=0, description="최소 가격"),
+    max_price: float = Query(None, ge=0, description="최대 가격"),
+):
+    filtered_list = sticker_data
+
+    if name is not None:
+        filtered_list = [item for item in filtered_list if item[0] == name]
+
+    if d_category is not None:
+        filtered_list = [item for item in filtered_list if item[1] == d_category]
+
+    if material is not None:
+        filtered_list = [item for item in filtered_list if item[2] == material]
+
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[3] >= min_price]
+
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[3] <= max_price]
+
+    return filtered_list
+
+glass_data = [
+    ["데플로리안 와인잔", "와인잔", 8900, False, 132],
+    ["레트로 주름 유리컵", "고블렛", 8000, False, 32],
+    ["레터링 스택글라스", "카페유리컵", 6500, False, 232],
+    ["내열 플라워 유리컵", "일러스트컵", 18000, True, 92],
+    ["킨토 내열 이중 브라운 글라스", "손잡이컵", 23000, True, 182],
+]
+
+@app.get("/GlassSearch")
+def filter_glass_search(
+    name: str = Query(None, description="상품명"),
+    category: str = Query(..., description="형태별분류 (예: 와인잔, 고블렛, 손잡이컵, 일러스트컵, 카페유리컵 등)"),
+    min_price: float = Query(None, ge=0, description="최소 가격"),
+    max_price: float = Query(None, ge=0, description="최대 가격"),
+    heatresisting: bool = Query(None, description="내열유리여부"),
+):
+    filtered_list = glass_data
+
+    if name is not None:
+        filtered_list = [item for item in filtered_list if item[0] == name]
+
+    if category is not None:
+        filtered_list = [item for item in filtered_list if item[1] == category]
+
+    if min_price is not None:
+        filtered_list = [item for item in filtered_list if item[2] >= min_price]
+
+    if max_price is not None:
+        filtered_list = [item for item in filtered_list if item[2] <= max_price]
+
+    if heatresisting is not None:
+        filtered_list = [item for item in filtered_list if item[3] == heatresisting]
+
+    return filtered_list
 
 
 
