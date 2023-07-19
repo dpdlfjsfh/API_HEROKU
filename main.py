@@ -4982,11 +4982,11 @@ def filter_printshop_customer(
     return filtered_list
 
 houseplant_data = [
-    ["초보자","드라세나 마지나타","madagascar dragon tree","백합과","아프리카","없음","폭이 좁고 가는잎"],
-    ["전문가","박쥐란","common staghorn fern","고사리과","호주","없음","사슴뿔 모양"],
-    ["초보자","개운죽","Sander's dracaena","백합과","아프리카","있음","대나무를 닮았으나 대나무 아님"],
-    ["초보자","치자나무","common gardenia","꼭두서니과","아시아","있음","향기가 매우 강함"],
-    ["경험자","공작야자","Fish tail palm","야자과","인도네시아","있음","열매색이 빨강색"]
+    ["초보자","드라세나 마지나타","madagascar dragon tree","백합과","아프리카",False,"폭이 좁고 가는잎"],
+    ["전문가","박쥐란","common staghorn fern","고사리과","호주",False,"사슴뿔 모양"],
+    ["초보자","개운죽","Sander's dracaena","백합과","아프리카",True,"대나무를 닮았으나 대나무 아님"],
+    ["초보자","치자나무","common gardenia","꼭두서니과","아시아",True,"향기가 매우 강함"],
+    ["경험자","공작야자","Fish tail palm","야자과","인도네시아",True,"열매색이 빨강색"]
 ]
 
 @app.get("/houseplant")
