@@ -1632,35 +1632,35 @@ pantone_color_data = [
         "name": "비바 마젠타(Viva Magenta)",
         "year": 2023,
         "series": "레드",
-        "description": "용감하고 두려움이 없으며, 즐겁고 낙관적인 맥동적인 색"
+        "matt": False
     },
     {
         "number": "13-1106",
         "name": "샌드 달러(Sand dollar)",
         "year": 2006,
         "series": "브라운",
-        "description": "중립적인 색"
+        "matt": True
     },
     {
         "number": "19-4052",
         "name": "클래식 블루(Classic Blue)",
         "year": 2020,
         "series": "블루",
-        "description": "심플함이 돋보이는 색"
+        "matt": True
     },
     {
         "number": "18-2120",
         "name": "탠저린 탱고(Tangerine Tango)",
         "year": 2012,
         "series": "레드",
-        "description": "세련되면서도 극적이고 유혹적인 색"
+        "matt": True
     },
     {
         "number": "19-1664",
         "name": "True Red(트루 레드)",
         "year": 2002,
         "series": "레드",
-        "description": "애국적인 색"
+        "matt": False
     }
 ]
 
