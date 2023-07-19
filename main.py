@@ -4277,6 +4277,8 @@ def filter_coriander_food(
         filtered_foods = [food for food in filtered_foods if food[0] == food_name]
     if country:
         filtered_foods = [food for food in filtered_foods if food[1] == country]
+    if stuff:
+        filtered_foods = [food for food in filtered_foods if food[2] in r_name]
     if taste:
         filtered_foods = [food for food in filtered_foods if food[3] == taste]
     if r_name:
