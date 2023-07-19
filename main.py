@@ -1691,6 +1691,43 @@ async def filter_pantone_color(
     
     return filtered_colors
 
+@app.get("/CVSPB")
+async def filter_CVSPB(
+    CVS_name: str = Query(..., description="편의점명"),
+    type: str = Query(None, description="상품종류 ex) 스낵, 음료, 도시락"),
+    product_name: str = Query(None, description="상품명"),
+    max_price: int = Query(None, ge=0, description="최대 가격"),
+    discount: float = Query(None, description="할인율"),
+):
+    # 편의점 PB 상품 데이터
+    CVSPB = [
+        ["CU", "스낵", "콘소메맛 팝콘", 2000, 10],
+        ["GS25", "도시락", "김혜자 도시락", 3900, 20],
+        ["GS25", "음료", "카페 25", 2100, 50],
+        ["CU", "음료", "GET 커피", 2000, 90],
+        ["CU", "스낵", "HEYROO감자칩", 2500, 20],
+    ]
+
+    filtered_products = []
+
+    for product in CVSPB:
+        if (
+            (product[0] == CVS_name) and
+            (product[1] == type if type else True) and
+            (product[2] == product_name if product_name else True) and
+            (product[3] == max_price if max_price else True) and
+            (product[4] == discount if discount else True)
+        ):
+            filtered_products.append({
+                "CVS_name": product[0],
+                "type": product[1],
+                "product_name": product[2],
+                "price": product[3],
+                "discount": product[4]
+            })
+
+    return filtered_products
+
 atm_data = [
     {
         "name": "신협은행",
@@ -3243,11 +3280,11 @@ def filter_salon_reservation(
     if new:
         filtered_reservations = [reservation for reservation in filtered_reservations if reservation[2] == new]
     if length:
-        filtered_reservations = [reservation for reservation in filtered_reservations if reservation[3] == length]
+        filtered_reservations = [reservation for reservation in filtered_reservations if reservation[4] == length]
     if designer:
-        filtered_reservations = [reservation for reservation in filtered_reservations if reservation[4] == designer]
+        filtered_reservations = [reservation for reservation in filtered_reservations if reservation[5] == designer]
     if keyword:
-        filtered_reservations = [reservation for reservation in filtered_reservations if keyword in reservation[5]]
+        filtered_reservations = [reservation for reservation in filtered_reservations if keyword in reservation[3]]
 
     return filtered_reservations
 
