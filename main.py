@@ -5673,15 +5673,15 @@ def filter_world_regional_festival(
 
     filtered_list = [festival for festival in filtered_list if name == festival[0]]
     if nation:
-        filtered_list = [festival for festival in filtered_list if nation == festival[1]]
+        filtered_list = [festival for festival in filtered_list if festival[1] in nation]
     if region:
-        filtered_list = [festival for festival in filtered_list if region == festival[2]]
+        filtered_list = [festival for festival in filtered_list if festival[1] in region]
     if contents:
-        filtered_list = [festival for festival in filtered_list if contents == festival[3]]
+        filtered_list = [festival for festival in filtered_list if contents == festival[2]]
     if month:
-        filtered_list = [festival for festival in filtered_list if month == festival[4]]
+        filtered_list = [festival for festival in filtered_list if month == festival[3]]
     if min_congestion:
-        filtered_list = [festival for festival in filtered_list if min_congestion <= festival[5]]
+        filtered_list = [festival for festival in filtered_list if min_congestion <= festival[4]]
 
     return filtered_list
 
