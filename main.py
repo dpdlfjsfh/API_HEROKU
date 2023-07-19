@@ -4090,41 +4090,47 @@ def filter_illustration_fair(
 
     return filtered_illustration
 
-korean_chinese_food_data = [
-    ["짜장면",["면","짜장","춘장","돼지고기"],"단맛",1,7500,"수타면을 사용한 짜장입니다."],
-    ["짬뽕",["면","오징어","홍합","돼지고기"],"매운맛",1,7500,"불맛이 가득한 짬뽕입니다."],
-    ["볶음밥",["밥","양파","계란","돼지고기"],"담백한맛",1,7500,"계란볶음밥. 짜장소스는 없습니다."],
-    ["경장육사",["오이","건두부","춘장","돼지고기"],"짭짤한맛",3,25500,"건두부에 볶은 돼지고기를 싸먹는 요리입니다."],
-    ["유산슬",["계란","새우","오징어","해삼"],"담백한맛",3,32000,"신선한 해산물을 가득 넣었습니다."]
-]
-
 @app.get("/KoreanChineseFood")
-def filter_korean_chinese_food(
+async def filter_KoreanChineseFood(
     menu: str = Query(None, description="메뉴이름"),
-    food_stuff: str = Query(..., description="재료"),
-    taste: str = Query(None, description="맛"),
-    min_amount: int = Query(None, gt=0, description="최소인분"),
-    max_amount: int = Query(None, gt=0, description="최대인분"),
-    min_price: int = Query(None, gt=0, description="최소가격"),
-    max_price: int = Query(None, gt=0, description="최대가격"),
+    food_stuff: List[str] = Query(..., description="재료 (예: 짜장, 춘장, 돼지고기 등)"),
+    taste: str = Query(None, description="맛 (예: 단맛, 신맛 등)"),
+    min_amount: float = Query(None, ge=0, description="최소인분 (양, 1인분 등)"),
+    max_amount: float = Query(None, description="최대인분 (양, 1인분 등)"),
+    min_price: float = Query(None, ge=0, description="최소가격"),
+    max_price: float = Query(None, description="최대가격"),
 ):
-    filtered_food = korean_chinese_food_data
+    # 중식 메뉴 데이터
+    KoreanChineseFood = [
+        ["짜장면", ["면", "짜장", "춘장", "돼지고기"], "단맛", 1, 7500, "수타면을 사용한 짜장입니다."],
+        ["짬뽕", ["면", "오징어", "홍합", "돼지고기"], "매운맛", 1, 7500, "불맛이 가득한 짬뽕입니다."],
+        ["볶음밥", ["밥", "양파", "계란", "돼지고기"], "담백한맛", 1, 7500, "계란볶음밥. 짜장소스는 없습니다."],
+        ["경장육사", ["오이", "건두부", "춘장", "돼지고기"], "짭짤한맛", 3, 25500, "건두부에 볶은 돼지고기를 싸먹는 요리입니다."],
+        ["유산슬", ["계란", "새우", "오징어", "해삼"], "담백한맛", 3, 32000, "신선한 해산물을 가득 넣었습니다."]
+    ]
 
-    if menu:
-        filtered_food = [food for food in filtered_food if food[0] == menu]
-    filtered_food = [food for food in filtered_food if all(ingredient in food[1] for ingredient in food_stuff)]
-    if taste:
-        filtered_food = [food for food in filtered_food if food[2] == taste]
-    if min_amount:
-        filtered_food = [food for food in filtered_food if food[3] >= min_amount]
-    if max_amount:
-        filtered_food = [food for food in filtered_food if food[3] <= max_amount]
-    if min_price:
-        filtered_food = [food for food in filtered_food if food[4] >= min_price]
-    if max_price:
-        filtered_food = [food for food in filtered_food if food[4] <= max_price]
+    filtered_menus = []
 
-    return filtered_food
+    for menu_item in KoreanChineseFood:
+        if (
+            (menu_item[0] == menu if menu else True) and
+            all(food in menu_item[1] for food in food_stuff) and
+            (menu_item[2] == taste if taste else True) and
+            (menu_item[3] == min_amount if min_amount else True) and
+            (menu_item[3] == max_amount if max_amount else True) and
+            (menu_item[4] == min_price if min_price else True) and
+            (menu_item[4] == max_price if max_price else True)
+        ):
+            filtered_menus.append({
+                "menu": menu_item[0],
+                "food_stuff": menu_item[1],
+                "taste": menu_item[2],
+                "amount": menu_item[3],
+                "price": menu_item[4],
+                "desc": menu_item[5]
+            })
+
+    return filtered_menus
 
 cat_sitter_member_data = [
     ["까망이","여",1,"없음","코숏","동결건조닭고기를 좋아함","000-0000-0001"],
