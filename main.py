@@ -2351,7 +2351,7 @@ async def filter_salon_reservation(
     back_num: int = Query(None, description="휴대폰 뒷번호")
 ):
     # 미용실 예약자 데이터
-    salon_reservations = [
+    salonreservations = [
         ["김나라", "08월 14일", "14시 30분", "커트", "010-5555-5555"],
         ["김국진", "07월 12일", "10시", "펌", "010-6666-6666"],
         ["이나영", "07월 14일", "16시", "염색", "010-7777-7777"],
@@ -2359,9 +2359,9 @@ async def filter_salon_reservation(
         ["최진영", "07월 26일", "12시", "커트", "010-9999-9999"]
     ]
 
-    filtered_salon_reservations = []
+    filtered_salonreservations = []
 
-    for reservation in salon_reservations:
+    for reservation in salonreservations:
         if (
             (reservation[0] == name if name else True) and
             (reservation[1] == reservation_date) and
@@ -2369,7 +2369,7 @@ async def filter_salon_reservation(
             (reservation[3] == type if type else True) and
             (reservation[4] == back_num if back_num else True)
         ):
-            filtered_salon_reservations.append({
+            filtered_salonreservations.append({
                 "Name": reservation[0],
                 "Reservation_date": reservation[1],
                 "Reservation_time": reservation[2],
@@ -2377,7 +2377,7 @@ async def filter_salon_reservation(
                 "phone_num": reservation[4]
             })
 
-    return filtered_salon_reservations
+    return filtered_salonreservations
 
 @app.get("/InteriorCompany")
 async def filter_interior_company(
