@@ -4370,7 +4370,7 @@ def filter_vintage_store(
         filtered_stores = [store for store in filtered_stores if store[0] == s_name]
     if o_name:
         filtered_stores = [store for store in filtered_stores if store[1] == o_name]
-    filtered_stores = [store for store in filtered_stores if store[2] == location]
+    filtered_stores = [store for store in filtered_stores if location in store[2] ]
     if dayoff:
         filtered_stores = [store for store in filtered_stores if store[3] == dayoff]
 
@@ -4430,7 +4430,7 @@ def filter_coin_laundry(
 
     if name:
         filtered_laundries = [laundry for laundry in filtered_laundries if laundry[0] == name]
-    filtered_laundries = [laundry for laundry in filtered_laundries if laundry[1] == location]
+    filtered_laundries = [laundry for laundry in filtered_laundries if location in laundry[1]]
     if min_price:
         filtered_laundries = [laundry for laundry in filtered_laundries if laundry[2] >= min_price]
     if max_price:
@@ -4524,7 +4524,7 @@ def filter_hanbok_rental_shop(
     if shop_name:
         filtered_hanbok = [h for h in filtered_hanbok if h[0] == shop_name]
     if location:
-        filtered_hanbok = [h for h in filtered_hanbok if h[1] == location]
+        filtered_hanbok = [h for h in filtered_hanbok if location in h[1] ]
     if category:
         filtered_hanbok = [h for h in filtered_hanbok if category in h[2]]
     if rating:
