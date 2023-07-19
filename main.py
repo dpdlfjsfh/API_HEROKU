@@ -4116,10 +4116,10 @@ async def filter_KoreanChineseFood(
             (menu_item[0] == menu if menu else True) and
             all(food in menu_item[1] for food in food_stuff) and
             (menu_item[2] == taste if taste else True) and
-            (menu_item[3] == min_amount if min_amount else True) and
-            (menu_item[3] == max_amount if max_amount else True) and
-            (menu_item[4] == min_price if min_price else True) and
-            (menu_item[4] == max_price if max_price else True)
+            (menu_item[3] >= min_amount if min_amount else True) and
+            (menu_item[3] <= max_amount if max_amount else True) and
+            (menu_item[4] >= min_price if min_price else True) and
+            (menu_item[4] <= max_price if max_price else True)
         ):
             filtered_menus.append({
                 "menu": menu_item[0],
