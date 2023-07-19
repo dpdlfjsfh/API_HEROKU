@@ -1,7 +1,2785 @@
 from fastapi import FastAPI, Query
-from typing import List
+from typing import List, Optional
 
 app = FastAPI()
+
+### 0719 Update ###
+
+cake_data = [
+    {
+        "name": "블랙포레스트",
+        "stuff": ["체리", "생크림", "초콜릿"],
+        "size": "2호",
+        "price": 38000,
+        "calorie": 395,
+        "desc": "상큼한 생체리, 부드러운 초콜릿스폰지에 가나슈와 생크림의 조화"
+    },
+    {
+        "name": "얼그레이케이크",
+        "stuff": ["얼그레이 크림", "생크림", "초콜릿"],
+        "size": "1호",
+        "price": 31000,
+        "calorie": 345,
+        "desc": "얼그레이 향이 푸부한 생크림에 초콜릿크런치를 바닥에 깔아 심플하면서도 홍차맛 가득한 베스트 케이크"
+    },
+    {
+        "name": "말차케이크",
+        "stuff": ["말차", "생크림", "팥앙금"],
+        "size": "조각",
+        "price": 8000,
+        "calorie": 295,
+        "desc": "진한 말차와 팥앙금을 넣어서 맛의 조화를 시도한 녹차 매니아에게는 축복인 진한 맛의 케이크"
+    },
+    {
+        "name": "가또쇼콜라",
+        "stuff": ["건포도", "럼", "다크초콜릿"],
+        "size": "2호",
+        "price": 42000,
+        "calorie": 385,
+        "desc": "다크초콜릿 가나슈와 럼에절인 건포도를 바닥에 조금 넣어서 기호에따라 건포도를 빼서 먹을수 있는 다크초콜릿케이크"
+    },
+    {
+        "name": "마롱케이크",
+        "stuff": ["머랭과자", "밤크림", "팥앙금"],
+        "size": "2호",
+        "price": 43000,
+        "calorie": 355,
+        "desc": "바삭하게 구운 머랭과자, 팥앙금과 밤크림을 샌드한 밤맛과 머랭의 바삭한 식감이 살아있는 정성가득 손이 많아가는 케이크"
+    }
+]
+
+@app.get("/CakeMenuSearch")
+async def filter_cake_menu_search(
+    name: Optional[str] = Query(None, description="케이크명"),
+    stuff: Optional[str] = Query(None, description="재료 (예: 레몬, 체리, 복숭아, 생크림, 초콜릿 등)"),
+    size: Optional[str] = Query(None, description="크기 (예: 조각, 1호, 2호, 4호)"),
+    min_price: Optional[float] = Query(None, ge=0, description="최소 가격"),
+    max_price: Optional[float] = Query(None, ge=0, description="최대 가격"),
+    min_calorie: Optional[float] = Query(None, ge=0, description="최저칼로리 (1인 분량 당 칼로리)"),
+    max_calorie: Optional[float] = Query(None, ge=0, description="최고저칼로리 (1인 분량 당 칼로리)")
+):
+    filtered_cakes = []
+    for cake in cake_data:
+        if name and name != cake["name"]:
+            continue
+        if stuff and stuff not in cake["stuff"]:
+            continue
+        if size and size != cake["size"]:
+            continue
+        if min_price is not None and cake["price"] < min_price:
+            continue
+        if max_price is not None and cake["price"] > max_price:
+            continue
+        if min_calorie is not None and cake["calorie"] < min_calorie:
+            continue
+        if max_calorie is not None and cake["calorie"] > max_calorie:
+            continue
+        filtered_cakes.append(cake)
+    
+    return filtered_cakes
+
+flower_seed_data = [
+    {
+        "name": "백일홍 더블살몬",
+        "color": "다홍색",
+        "trait": ["1년생"],
+        "month": [3, 4, 5, 6, 7],
+        "price": 3000,
+        "amount": 10,
+        "desc": "꽃은 반겹꽃, 겹꽃, 홑꽃 모두 나옵니다."
+    },
+    {
+        "name": "오드리에타 스카이블루",
+        "color": "하늘색",
+        "trait": ["2년생", "다년생"],
+        "month": [9, 10],
+        "price": 3000,
+        "amount": 10,
+        "desc": "비탈길이나 돌계단에 잘 어울립니다."
+    },
+    {
+        "name": "델피늄 썸머블루스",
+        "color": "하늘색",
+        "trait": ["다년생", "전국 노지월동"],
+        "month": [5, 6, 7, 8, 9, 10],
+        "price": 3500,
+        "amount": 20,
+        "desc": "2년생 이상부터 꽃을 볼 수 있습니다."
+    },
+    {
+        "name": "매발톱 로즈화이트 윙키",
+        "color": "분홍색",
+        "trait": ["다년생", "전국 노지월동"],
+        "month": [9, 10, 11, 12],
+        "price": 3600,
+        "amount": 10,
+        "desc": "첫해에는 보온 월동이 필요합니다."
+    },
+    {
+        "name": "아르메니아 발레리나",
+        "color": "흰색",
+        "trait": ["다년생", "제주 노지월동"],
+        "month": [9, 10, 11, 12, 1, 2, 3],
+        "price": 3800,
+        "amount": 10,
+        "desc": "발아시 촉촉함 유지가 중요합니다."
+    }
+]
+
+@app.get("/FlowerSeed")
+async def filter_flower_seed(
+    name: Optional[str] = Query(None, description="꽃이름"),
+    color: Optional[str] = Query(None, description="색상 (예: 흰색, 분홍색 등)"),
+    trait: Optional[str] = Query(None, description="특성 (예: 1년생, 2년생, 다년생, 전국 노지월동 등)"),
+    month: Optional[int] = Query(None, description="파종시기 (예: (달 기준)1, 2, 3 등)"),
+    min_price: Optional[float] = Query(None, ge=0, description="최소 가격"),
+    max_price: Optional[float] = Query(None, ge=0, description="최대 가격")
+):
+    filtered_flower_seeds = []
+    for flower_seed in flower_seed_data:
+        if name and name != flower_seed["name"]:
+            continue
+        if color and color != flower_seed["color"]:
+            continue
+        if trait and trait not in flower_seed["trait"]:
+            continue
+        if month is not None and month not in flower_seed["month"]:
+            continue
+        if min_price is not None and flower_seed["price"] < min_price:
+            continue
+        if max_price is not None and flower_seed["price"] > max_price:
+            continue
+        filtered_flower_seeds.append(flower_seed)
+    
+    return filtered_flower_seeds
+
+coffee_bean_regular_delivery_data = [
+    {
+        "name": "에스쇼콜라",
+        "period": "1주",
+        "taste": ["밀크초콜릿", "밸런스", "크리미"],
+        "roasting": "중",
+        "price": 14000,
+        "desc": "다크초콜릿을 한입 베어먹은 듯한 여운과 함께 크리미한 질감, 스윗니스와 바디감"
+    },
+    {
+        "name": "에스쇼콜라",
+        "period": "2주",
+        "taste": ["밀크초콜릿", "밸런스", "크리미"],
+        "roasting": "중",
+        "price": 22000,
+        "desc": "다크초콜릿을 한입 베어먹은 듯한 여운과 함께 크리미한 질감, 스윗니스와 바디감"
+    },
+    {
+        "name": "므쵸베리",
+        "period": "1달",
+        "taste": ["믹스베리", "체리", "초콜릿"],
+        "roasting": "강",
+        "price": 15000,
+        "desc": "에티오피아, 브라질 두 산지의 내추럴 커피로 조성되었으며, 초콜렛의 단맛을 베이스로 믹스베리, 체리 등 다양한 베리류의 향미"
+    },
+    {
+        "name": "므쵸베리",
+        "period": "2달",
+        "taste": ["믹스베리", "체리", "초콜릿"],
+        "roasting": "강",
+        "price": 30000,
+        "desc": "에티오피아, 브라질 두 산지의 내추럴 커피로 조성되었으며, 초콜렛의 단맛을 베이스로 믹스베리, 체리 등 다양한 베리류의 향미"
+    },
+    {
+        "name": "프루티봉봉",
+        "period": "1달",
+        "taste": ["베르가못", "자스민", "만다린", "카라멜"],
+        "roasting": "약",
+        "price": 16000,
+        "desc": "프루티 봉봉은 이름처럼 과일, 꽃을 연상시키는 향미와 새콤달콤함을 가짐"
+    }
+]
+
+@app.get("/CoffeeBeanRegularDelivery")
+async def filter_coffee_bean_regular_delivery(
+    name: Optional[str] = Query(None, description="원두상품이름"),
+    period: Optional[str] = Query(None, description="배달주기 (예: 1달, 2달,2주,1주)"),
+    taste: Optional[str] = Query(None, description="맛 (예: 크리미, 카라멜, 베리 등의 맛 표현)"),
+    roasting: Optional[str] = Query(None, description="로스팅 정도 (예: 강, 중, 약)"),
+    min_price: Optional[float] = Query(None, ge=0, description="최소 가격"),
+    max_price: Optional[float] = Query(None, ge=0, description="최대 가격")
+):
+    filtered_coffee_beans = []
+    for coffee_bean in coffee_bean_regular_delivery_data:
+        if name and name != coffee_bean["name"]:
+            continue
+        if period and period != coffee_bean["period"]:
+            continue
+        if taste and taste not in coffee_bean["taste"]:
+            continue
+        if roasting and roasting != coffee_bean["roasting"]:
+            continue
+        if min_price is not None and coffee_bean["price"] < min_price:
+            continue
+        if max_price is not None and coffee_bean["price"] > max_price:
+            continue
+        filtered_coffee_beans.append(coffee_bean)
+    
+    return filtered_coffee_beans
+
+vegetable_delivery_data = [
+    {
+        "name": "신선꾸러미",
+        "period": "1주",
+        "constitute": ["두부", "애호박", "쌈채소", "유정란"],
+        "price": 29000,
+        "desc": "4인 가구에게 추천하는 매주 배송 상품"
+    },
+    {
+        "name": "제철꾸러미",
+        "period": "2주",
+        "constitute": ["두부", "애호박", "쌈채소", "유정란", "과일", "해조류"],
+        "price": 35000,
+        "desc": "4인가구에게 추천하는 과일과 해조류를 포함한 상품"
+    },
+    {
+        "name": "1인꾸러미",
+        "period": "1달",
+        "constitute": ["두부", "과일", "쌈채소", "밑반찬"],
+        "price": 25000,
+        "desc": "1인가구에게 추천하는 상품. 농가공 반찬 포함."
+    },
+    {
+        "name": "요리도우미꾸러미",
+        "period": "2달",
+        "constitute": ["과일", "나물", "유정란", "밑반찬"],
+        "price": 30000,
+        "desc": "신선 나물이 포함된 상품."
+    },
+    {
+        "name": "채식꾸러미",
+        "period": "1달",
+        "constitute": ["두부", "애호박", "오이", "고추", "쌈채소"],
+        "price": 28000,
+        "desc": "채식 생활을 도와주는 상품."
+    }
+]
+
+@app.get("/vegetable_delivery")
+async def filter_vegetable_delivery(
+    name: Optional[str] = Query(None, description="상품이름"),
+    period: Optional[str] = Query(None, description="배달주기 (예: 1달, 2달, 2주, 1주)"),
+    constitute: Optional[str] = Query(None, description="구성품목 (예: 애호박, 쌈채소, 두부 등)"),
+    min_price: Optional[float] = Query(None, ge=0, description="최소 가격"),
+    max_price: Optional[float] = Query(None, ge=0, description="최대 가격")
+):
+    filtered_vegetables = []
+    for vegetable in vegetable_delivery_data:
+        if name and name != vegetable["name"]:
+            continue
+        if period and period != vegetable["period"]:
+            continue
+        if constitute and constitute not in vegetable["constitute"]:
+            continue
+        if min_price is not None and vegetable["price"] < min_price:
+            continue
+        if max_price is not None and vegetable["price"] > max_price:
+            continue
+        filtered_vegetables.append(vegetable)
+    
+    return filtered_vegetables
+
+egg_menu_data = [
+    {
+        "name": "날달걀밥",
+        "category": "밥",
+        "stuff": ["밥", "간장"],
+        "difficulty": 1,
+        "desc": "신선한 날달걀을 따끈한 밥 위에 얹어서 간장을 곁들인다. 추가적으로 명란젓이나 김치, 아보카도를 곁들여도 좋다."
+    },
+    {
+        "name": "에그베네딕트",
+        "category": "빵",
+        "stuff": ["잉글리시 머핀", "토마토", "베이컨", "상추", "버터", "소금", "후추", "레몬즙"],
+        "difficulty": 2,
+        "desc": "/홀랜다이즈 소스/ 1. 무염버터를 전자레인지에서 약 40초 가열해서 녹인다. 2. 거기에 레몬즙을 약간 추가하고 버터를 조금씩 더 넣어가면서 거품을 낸다. 걸쭉해지면 소금과 후추를 넣는다. /에그 베네딕트/ 1. 냄비에 물을 넣고 끓인다. 2. 물이 끓으면 약불로 줄이고 소금과 식초를 약간 넣은 뒤에 계란을 넣어 수란을 만든다. 3. 베이컨과 잉글리시 머핀을 구운 뒤에 홀랜다이즈 소스와 상추, 토마로를 얹는다."
+    },
+    {
+        "name": "달걀국",
+        "category": "국",
+        "stuff": ["육수", "간장", "소금", "파"],
+        "difficulty": 2,
+        "desc": "1. 날달걀을 볼에 깨뜨려 넣고 잘 풀어준다. 2. 육수를 냄비에 넣고 불에 올려 데운 뒤에 간장과 소금으로 간을 한다. 3. 물이 끓어오르면 계란을 풀어서 넣어주고 잘게 썬 파를 넣는다."
+    },
+    {
+        "name": "푸딩",
+        "category": "디저트",
+        "stuff": ["설탕", "우유", "생크림", "카라멜소스"],
+        "difficulty": 4,
+        "desc": "1. 카라멜소스를 푸딩 틀에 넣어준다. 2. 달걀 노른자 3개와 생크림과 우유를 넣고 거품기로 거품이 일지 않게 잘 섞어준다. 3. 푸딩 틀에 계란물을 조심스럽게 넣어주고 160도로 예열한 오븐에서 45분 가량 구워준다. 오븐 팬에는 푸딩틀이 약간 잠길 정도로 뜨거운 물을 넣는다. 4. 한 김 식으면 냉장고에 넣어 차게 만든다."
+    },
+    {
+        "name": "토마토달걀볶음",
+        "category": "반찬",
+        "stuff": ["토마토", "마늘", "소금", "파", "양파", "참기름"],
+        "difficulty": 2,
+        "desc": "1. 볼에 달걀을 넣고 깨뜨려 잘 풀어놓는다. 2. 프라이펜에 참기름을 둘러 달군 뒤에 마늘을 넣고 볶다가 약불로 줄인다. 3. 토마토와 파와 양파를 썰어논 것을 같이 볶는다. 4. 계란물을 넣고 약한 불에 같이 볶아주며 소금으로 간을 한다."
+    }
+]
+
+@app.get("/EggMenu")
+async def filter_egg_menu(
+    name: Optional[str] = Query(None, description="요리이름"),
+    category: Optional[str] = Query(None, description="요리종류 (예: 밥, 반찬, 국, 빵, 디저트 등)"),
+    stuff: Optional[str] = Query(..., description="재료 (예: 밥, 간장, 설탕, 양파 등)"),
+    min_difficulty: Optional[float] = Query(None, ge=1, le=5, description="최저난이도(1에서 5까지)"),
+    max_difficulty: Optional[float] = Query(None, ge=1, le=5, description="최고난이도(1에서 5까지)")
+):
+    filtered_menus = []
+    for menu in egg_menu_data:
+        if name and name != menu["name"]:
+            continue
+        if category and category != menu["category"]:
+            continue
+        if stuff and stuff not in menu["stuff"]:
+            continue
+        if min_difficulty is not None and menu["difficulty"] < min_difficulty:
+            continue
+        if max_difficulty is not None and menu["difficulty"] > max_difficulty:
+            continue
+        filtered_menus.append(menu)
+    
+    return filtered_menus
+
+greek_yogurt_data = [
+    {
+        "name": "그릭데이",
+        "gooey": 4,
+        "price": 14000,
+        "protein": 11.42,
+        "sugar": 1.86
+    },
+    {
+        "name": "오디오시",
+        "gooey": 5,
+        "price": 19500,
+        "protein": 6.6,
+        "sugar": 2
+    },
+    {
+        "name": "요즘",
+        "gooey": 3,
+        "price": 16500,
+        "protein": 11.42,
+        "sugar": 2.4
+    },
+    {
+        "name": "룩스 아이슬란딕",
+        "gooey": 1,
+        "price": 9000,
+        "protein": 3,
+        "sugar": 10.6
+    },
+    {
+        "name": "매일 바이오",
+        "gooey": 1,
+        "price": 6500,
+        "protein": 5,
+        "sugar": 4.5
+    }
+]
+
+@app.get("/GreekYogurt")
+async def filter_greek_yogurt(
+    name: str = Query(..., description="상품명"),
+    min_gooey: Optional[float] = Query(None, ge=0, le=5, description="최저꾸덕함(1에서 5까지)"),
+    max_gooey: Optional[float] = Query(None, ge=0, le=5, description="최고꾸덕함(1에서 5까지)"),
+    min_price: Optional[float] = Query(None, ge=0, description="최소가격(500g기준)"),
+    max_price: Optional[float] = Query(None, ge=0, description="최대가격(500g기준)"),
+    min_protein: Optional[float] = Query(None, ge=0, description="최소단백질함량(100g 기준)"),
+    max_protein: Optional[float] = Query(None, ge=0, description="최대단백질함량(100g 기준)")
+):
+    filtered_yogurts = []
+    for yogurt in greek_yogurt_data:
+        if name != yogurt["name"]:
+            continue
+        if min_gooey is not None and yogurt["gooey"] < min_gooey:
+            continue
+        if max_gooey is not None and yogurt["gooey"] > max_gooey:
+            continue
+        if min_price is not None and yogurt["price"] < min_price:
+            continue
+        if max_price is not None and yogurt["price"] > max_price:
+            continue
+        if min_protein is not None and yogurt["protein"] < min_protein:
+            continue
+        if max_protein is not None and yogurt["protein"] > max_protein:
+            continue
+        filtered_yogurts.append(yogurt)
+    
+    return filtered_yogurts
+
+
+toilet_paper_data = [
+    {
+        "name": "깨끗한나라 순수 시그니처",
+        "sheets": "3겹",
+        "aroma": True,
+        "natural": True,
+        "non_fluore": True,
+        "length": 28,
+        "price": 21500,
+        "review": "먼지 적고 좋아요"
+    },
+    {
+        "name": "노브랜드 서프라이즈",
+        "sheets": "3겹",
+        "aroma": False,
+        "natural": True,
+        "non_fluore": False,
+        "length": 30,
+        "price": 18500,
+        "review": "가성비가 좋아요"
+    },
+    {
+        "name": "모나리자 자연이 좋은",
+        "sheets": "4겹",
+        "aroma": False,
+        "natural": True,
+        "non_fluore": True,
+        "length": 27,
+        "price": 25500,
+        "review": "도톰해요"
+    },
+    {
+        "name": "잘풀리는집 클래식 데코 플러스",
+        "sheets": "3겹",
+        "aroma": True,
+        "natural": False,
+        "non_fluore": False,
+        "length": 28,
+        "price": 23500,
+        "review": "향이 괜찮아요"
+    },
+    {
+        "name": "코디 에코그린 바스티슈",
+        "sheets": "4겹",
+        "aroma": False,
+        "natural": False,
+        "non_fluore": True,
+        "length": 30,
+        "price": 28500,
+        "review": "환경 생각하며 샀어요"
+    }
+]
+
+@app.get("/ToiletPaper")
+async def filter_toilet_paper(
+    name: str = Query(..., description="상품명"),
+    sheets: str = Query(..., description="겹수 (예: 2겹, 3겹, 4겹 등)"),
+    aroma: Optional[bool] = Query(None, description="향여부"),
+    natural: Optional[bool] = Query(None, description="천연펄프여부"),
+    non_fluore: Optional[bool] = Query(None, description="무형광여부"),
+    min_length: Optional[float] = Query(None, ge=0, description="최소길이(m단위)"),
+    max_length: Optional[float] = Query(None, ge=0, description="최대길이(m단위)"),
+    min_price: Optional[float] = Query(None, ge=0, description="최소가격"),
+    max_price: Optional[float] = Query(None, ge=0, description="최대가격")
+):
+    filtered_toilet_papers = []
+    for toilet_paper in toilet_paper_data:
+        if name != toilet_paper["name"]:
+            continue
+        if sheets != toilet_paper["sheets"]:
+            continue
+        if aroma is not None and aroma != toilet_paper["aroma"]:
+            continue
+        if natural is not None and natural != toilet_paper["natural"]:
+            continue
+        if non_fluore is not None and non_fluore != toilet_paper["non_fluore"]:
+            continue
+        if min_length is not None and toilet_paper["length"] < min_length:
+            continue
+        if max_length is not None and toilet_paper["length"] > max_length:
+            continue
+        if min_price is not None and toilet_paper["price"] < min_price:
+            continue
+        if max_price is not None and toilet_paper["price"] > max_price:
+            continue
+        filtered_toilet_papers.append(toilet_paper)
+    
+    return filtered_toilet_papers
+
+baby_fabric_data = [
+    {
+        "name": "토끼띠 배냇저고리 세트",
+        "category": "의류",
+        "gift": ["출산"],
+        "price": 132000,
+        "organic_cottonn": False,
+        "desc": "2023년 토끼의 해 배냇저고리를 선보입니다."
+    },
+    {
+        "name": "사슴 자수 매트",
+        "category": "침구",
+        "gift": ["출산", "백일", "일상"],
+        "price": 32000,
+        "organic_cottonn": False,
+        "desc": "갓난 아기부터, 배변 훈련을 시작한 유아기까지 유용하게 사용됩니다."
+    },
+    {
+        "name": "가제 손수건",
+        "category": "일상용품",
+        "gift": ["출산", "백일", "일상"],
+        "price": 12000,
+        "organic_cottonn": True,
+        "desc": "활용도가 좋은 가제 손수건. 자수가 놓여 있습니다."
+    },
+    {
+        "name": "사슴 딸랑이 인형",
+        "category": "장난감",
+        "gift": ["출산", "백일", "일상"],
+        "price": 72000,
+        "organic_cottonn": True,
+        "desc": "사슴 모양의 딸랑이 인형. 아기가 물고 빨아도 괜찮습니다."
+    },
+    {
+        "name": "유아 배꼽 이불",
+        "category": "침구",
+        "gift": ["출산", "백일", "일상", "돌"],
+        "price": 29000,
+        "organic_cottonn": False,
+        "desc": "여름이불이나 외출 이불로 적합합니다."
+    }
+]
+
+@app.get("/BabyFabric")
+async def filter_baby_fabric(
+    name: Optional[str] = Query(None, description="상품명"),
+    category: str = Query(..., description="상품종류 (예: 의류, 침구, 장난감 등)"),
+    gift: Optional[str] = Query(None, description="선물용도 (예: 출산, 백일, 돌, 일상 등)"),
+    min_price: Optional[float] = Query(None, ge=0, description="최소가격"),
+    max_price: Optional[float] = Query(None, ge=0, description="최대가격"),
+    organic_cottonn: Optional[bool] = Query(None, description="오가닉코튼여부")
+):
+    filtered_baby_fabrics = []
+    for baby_fabric in baby_fabric_data:
+        if name is not None and name != baby_fabric["name"]:
+            continue
+        if category != baby_fabric["category"]:
+            continue
+        if gift is not None and gift not in baby_fabric["gift"]:
+            continue
+        if min_price is not None and baby_fabric["price"] < min_price:
+            continue
+        if max_price is not None and baby_fabric["price"] > max_price:
+            continue
+        if organic_cottonn is not None and organic_cottonn != baby_fabric["organic_cottonn"]:
+            continue
+        filtered_baby_fabrics.append(baby_fabric)
+    
+    return filtered_baby_fabrics
+
+seasonal_vegetables_data = [
+    {
+        "name": "토마토",
+        "month": [7, 8, 9],
+        "menu": ["토마토 샐러드", "토마토 마리네이드", "스튜", "카레"],
+        "calorie": 14,
+        "desc": "레드푸드의 선두주자 토마토! 토마토는 과일일까요? 채소일까요? 정답은 채소!! 동맥경화와 간경화에 특히 좋습니다."
+    },
+    {
+        "name": "옥수수",
+        "month": [7, 8, 9],
+        "menu": ["옥수수 샐러드", "스프", "옥수수빠스", "옥수수죽"],
+        "calorie": 106,
+        "desc": "톡톡 터지는 알갱이가 씹는 맛을 주는 여름철 간식 옥수수. 옥수수만 먹지 말고 옥수수수염도 차로 끓여 드셔 보세요. 이뇨 효과에 아주 좋답니다."
+    },
+    {
+        "name": "고구마",
+        "month": [8, 9, 10],
+        "menu": ["고구마 튀김", "고구마밥", "고무마 맛탕", "고구마 케이크"],
+        "calorie": 128,
+        "desc": "식이섬유소가 풍부한 고구마는 영양간식으로 손색이 없답니다."
+    },
+    {
+        "name": "배추",
+        "month": [11, 12],
+        "menu": ["배추김치", "배추볶음", "구이", "배춧국"],
+        "calorie": 12,
+        "desc": "잎, 줄기, 뿌리를 모두 식용하며, 비타민이 풍부하게 함유되어 있어 버릴것이 없는 채소랍니다."
+    },
+    {
+        "name": "우엉",
+        "month": [1, 2, 3],
+        "menu": ["우엉 튀김", "우엉 잡채", "우엉차", "우엉 파스타"],
+        "calorie": 62,
+        "desc": "아삭아삭 씹는 맛이 매력인 뿌리채소 우엉! 당질의 일종인 이눌린이 풍부해 신장기능을 높여주고 풍부한 섬유소질이 배변을 촉진한답니다."
+    }
+]
+
+@app.get("/SeasonalVegetables")
+async def filter_seasonal_vegetables(
+    name: str = Query(..., description="채소이름"),
+    month: Optional[int] = Query(None, description="제철시기 (월 숫자로 표현)"),
+    menu: Optional[str] = Query(None, description="활용요리 (예: 토마토 마리네이드, 가지 절임 등)"),
+    min_calorie: Optional[float] = Query(None, ge=0, description="최저칼로리(100g 기준)"),
+    max_calorie: Optional[float] = Query(None, ge=0, description="최고칼로리(100g 기준)")
+):
+    filtered_seasonal_vegetables = []
+    for vegetable in seasonal_vegetables_data:
+        if name != vegetable["name"]:
+            continue
+        if month is not None and month not in vegetable["month"]:
+            continue
+        if menu is not None and menu not in vegetable["menu"]:
+            continue
+        if min_calorie is not None and vegetable["calorie"] < min_calorie:
+            continue
+        if max_calorie is not None and vegetable["calorie"] > max_calorie:
+            continue
+        filtered_seasonal_vegetables.append(vegetable)
+    
+    return filtered_seasonal_vegetables
+
+cat_scratcher_data = [
+    {
+        "name": "네네린도 우드 수직",
+        "material": "합판, 종이",
+        "category": "패드형",
+        "price": 25000,
+        "review": "리필형이라 좋아요"
+    },
+    {
+        "name": "가또나인 평판",
+        "material": "종이",
+        "category": "패드형",
+        "price": 18000,
+        "review": "가성비가 좋아요"
+    },
+    {
+        "name": "옥희독희 숨숨집",
+        "material": "종이",
+        "category": "하우스형",
+        "price": 39000,
+        "review": "디자인이 귀여워요"
+    },
+    {
+        "name": "따스넉 벽 스크래처",
+        "material": "카페트",
+        "category": "패드형",
+        "price": 45000,
+        "review": "공간 활용에 좋아요"
+    },
+    {
+        "name": "도레미파 냥오름",
+        "material": "카페트",
+        "category": "기둥형",
+        "price": 75000,
+        "review": "오래 쓸 수 있어요"
+    }
+]
+
+@app.get("/CatScratcher")
+async def filter_cat_scratcher(
+    name: Optional[str] = Query(None, description="상품명"),
+    material: str = Query(..., description="재질 (예: 박스, 카페트 등)"),
+    category: Optional[str] = Query(None, description="형태종류 (예: 패드형, 기둥형, 하우스형 등)"),
+    min_price: Optional[float] = Query(None, ge=0, description="최소가격"),
+    max_price: Optional[float] = Query(None, ge=0, description="최대가격")
+):
+    filtered_cat_scratcher = []
+    for scratcher in cat_scratcher_data:
+        if name is not None and name != scratcher["name"]:
+            continue
+        if material != scratcher["material"]:
+            continue
+        if category is not None and category != scratcher["category"]:
+            continue
+        if min_price is not None and scratcher["price"] < min_price:
+            continue
+        if max_price is not None and scratcher["price"] > max_price:
+            continue
+        filtered_cat_scratcher.append(scratcher)
+    
+    return filtered_cat_scratcher
+
+cat_toy_data = [
+    {
+        "name": "네네린도 쥐꼬리 막대",
+        "material": "깃털, 끈",
+        "category": "낚싯대",
+        "price": 25000,
+        "review": "리필형이라 좋아요"
+    },
+    {
+        "name": "가또나인 팡팡솜인형",
+        "material": "섬유",
+        "category": "인형",
+        "price": 18000,
+        "review": "가성비가 좋아요"
+    },
+    {
+        "name": "옥희독희 데구르 볼",
+        "material": "플라스틱",
+        "category": "공",
+        "price": 9000,
+        "review": "디자인이 귀여워요"
+    },
+    {
+        "name": "따스넉 바스락 터널",
+        "material": "섬유",
+        "category": "터널",
+        "price": 45000,
+        "review": "공간 활용에 좋아요"
+    },
+    {
+        "name": "도레미파 레이저",
+        "material": "금속",
+        "category": "레이저포인터",
+        "price": 25000,
+        "review": "오래 쓸 수 있어요"
+    }
+]
+
+@app.get("/CatToy")
+async def filter_cat_toy(
+    name: Optional[str] = Query(None, description="상품명"),
+    material: Optional[str] = Query(None, description="재질 (예: 깃털, 끈, 원목, 종이, 플라스틱 등)"),
+    category: str = Query(..., description="종류 (예: 낚싯대, 인형, 공, 터널, 주머니, 레이저포인터 등)"),
+    min_price: Optional[float] = Query(None, ge=0, description="최소가격"),
+    max_price: Optional[float] = Query(None, ge=0, description="최대가격")
+):
+    filtered_cat_toy = []
+    for toy in cat_toy_data:
+        if name is not None and name != toy["name"]:
+            continue
+        if material is not None and material != toy["material"]:
+            continue
+        if category != toy["category"]:
+            continue
+        if min_price is not None and toy["price"] < min_price:
+            continue
+        if max_price is not None and toy["price"] > max_price:
+            continue
+        filtered_cat_toy.append(toy)
+    
+    return filtered_cat_toy
+
+rose_cut_flower_data = [
+    {
+        "name": "언포켓터블",
+        "origin": "콜롬비아",
+        "aroma": "과일향",
+        "color": "아이보리",
+        "price": 29000,
+        "stock": 21
+    },
+    {
+        "name": "스노우플레이크",
+        "origin": "한국",
+        "aroma": "없음",
+        "color": "화이트",
+        "price": 19000,
+        "stock": 71
+    },
+    {
+        "name": "오렌지 크러쉬",
+        "origin": "볼리비아",
+        "aroma": "없음",
+        "color": "오렌지",
+        "price": 21000,
+        "stock": 51
+    },
+    {
+        "name": "푸에고",
+        "origin": "콜롬비아",
+        "aroma": "꽃향",
+        "color": "레드",
+        "price": 23000,
+        "stock": 11
+    },
+    {
+        "name": "하젤",
+        "origin": "한국",
+        "aroma": "과일향",
+        "color": "핑크",
+        "price": 21000,
+        "stock": 91
+    }
+]
+
+@app.get("/RoseCutFlower")
+async def filter_rose_cut_flower(
+    name: Optional[str] = Query(None, description="장미명"),
+    origin: Optional[str] = Query(None, description="원산지"),
+    aroma: Optional[str] = Query(None, description="향기"),
+    color: str = Query(..., description="색상 (예: 레드, 핑크, 화이트 등)"),
+    min_price: Optional[float] = Query(None, ge=0, description="최소가격"),
+    max_price: Optional[float] = Query(None, ge=0, description="최대가격")
+):
+    filtered_rose_cut_flower = []
+    for flower in rose_cut_flower_data:
+        if name is not None and name != flower["name"]:
+            continue
+        if origin is not None and origin != flower["origin"]:
+            continue
+        if aroma is not None and aroma != flower["aroma"]:
+            continue
+        if color != flower["color"]:
+            continue
+        if min_price is not None and flower["price"] < min_price:
+            continue
+        if max_price is not None and flower["price"] > max_price:
+            continue
+        filtered_rose_cut_flower.append(flower)
+    
+    return filtered_rose_cut_flower
+
+rose_plants_data = [
+    {
+        "name": "라이온스",
+        "origin": "독일",
+        "category": "관목",
+        "color": "아이보리",
+        "price": 16000,
+        "winter_t": -15,
+        "desc": "우아한 연살구빛, 화분용 추천"
+    },
+    {
+        "name": "헤리티지",
+        "origin": "영국",
+        "category": "덩굴",
+        "color": "핑크",
+        "price": 40000,
+        "winter_t": -5,
+        "desc": "데이비드 오스틴사의 핑크빛 장미"
+    },
+    {
+        "name": "클레어 오스틴",
+        "origin": "영국",
+        "category": "덩굴",
+        "color": "화이트",
+        "price": 42000,
+        "winter_t": -10,
+        "desc": "데이비드 오스틴사의 내병성 좋은 흰색 장미"
+    },
+    {
+        "name": "스칼렛 메이앙",
+        "origin": "프랑스",
+        "category": "관목",
+        "color": "레드",
+        "price": 35000,
+        "winter_t": -15,
+        "desc": "메이앙사의 관목형 미니 장미"
+    },
+    {
+        "name": "레이니 블루",
+        "origin": "일본",
+        "category": "관목",
+        "color": "퍼플",
+        "price": 76000,
+        "winter_t": -0,
+        "desc": "까다롭지만 아름다운 연보라색 장미"
+    }
+]
+
+@app.get("/RosePlants")
+async def filter_rose_plants(
+    name: Optional[str] = Query(None, description="장미명"),
+    origin: Optional[str] = Query(None, description="원산지"),
+    category: Optional[str] = Query(None, description="형태종류 (예: 덩굴, 관목)"),
+    color: str = Query(..., description="색상 (예: 레드, 핑크, 화이트 등)"),
+    min_price: Optional[float] = Query(None, ge=0, description="최소가격"),
+    max_price: Optional[float] = Query(None, ge=0, description="최대가격"),
+    min_winter_t: Optional[float] = Query(None, description="최소월동온도(섭씨 기준)"),
+    max_winter_t: Optional[float] = Query(None, description="최대월동온도(섭씨 기준)")
+):
+    filtered_rose_plants = []
+    for plant in rose_plants_data:
+        if name is not None and name != plant["name"]:
+            continue
+        if origin is not None and origin != plant["origin"]:
+            continue
+        if category is not None and category != plant["category"]:
+            continue
+        if color != plant["color"]:
+            continue
+        if min_price is not None and plant["price"] < min_price:
+            continue
+        if max_price is not None and plant["price"] > max_price:
+            continue
+        if min_winter_t is not None and plant["winter_t"] < min_winter_t:
+            continue
+        if max_winter_t is not None and plant["winter_t"] > max_winter_t:
+            continue
+        filtered_rose_plants.append(plant)
+    
+    return filtered_rose_plants
+
+door_to_door_parcel_reservation_data = [
+    {
+        "name": "이진서",
+        "address": "서울시 마포구 연남로 43-2",
+        "tel": "010-0000-0001",
+        "size": "소",
+        "weight": "소",
+        "date": "2023-07-14",
+        "pay": True
+    },
+    {
+        "name": "서유림",
+        "address": "서울시 마포구 연남동 390-56",
+        "tel": "010-0000-0002",
+        "size": "소",
+        "weight": "소",
+        "date": "2023-07-15",
+        "pay": False
+    },
+    {
+        "name": "윤진형",
+        "address": "서울시 관악구 인헌로 43-12",
+        "tel": "010-0000-0003",
+        "size": "소",
+        "weight": "중",
+        "date": "2023-07-25",
+        "pay": True
+    },
+    {
+        "name": "김준영",
+        "address": "제주시 탑동로2길 3",
+        "tel": "010-0000-0004",
+        "size": "대",
+        "weight": "소",
+        "date": "2023-07-19",
+        "pay": True
+    },
+    {
+        "name": "박선화",
+        "address": "제주시 한림읍 명랑로 8",
+        "tel": "010-0000-0005",
+        "size": "대",
+        "weight": "대",
+        "date": "2023-07-24",
+        "pay": False
+    }
+]
+
+@app.get("/DoorToDoorParcelReservation")
+async def filter_door_to_door_parcel_reservation(
+    name: str = Query(..., description="발송자"),
+    location: Optional[str] = Query(None, description="발송지 (구단위, 예: 마포구, 구로구 등)"),
+    tel: Optional[str] = Query(None, description="연락처 (발송자 연락처)"),
+    size: Optional[str] = Query(None, description="택배크기분류(소, 중, 대)"),
+    weight: Optional[str] = Query(None, description="택배중량분류(소, 중, 대)"),
+    date: Optional[str] = Query(None, description="예약일 (발송예약일 예: 2023-07-28)")
+):
+    filtered_reservations = []
+    for reservation in door_to_door_parcel_reservation_data:
+        if reservation["name"] != name:
+            continue
+        if location is not None and reservation["address"].find(location) == -1:
+            continue
+        if tel is not None and reservation["tel"] != tel:
+            continue
+        if size is not None and reservation["size"] != size:
+            continue
+        if weight is not None and reservation["weight"] != weight:
+            continue
+        if date is not None and reservation["date"] != date:
+            continue
+        filtered_reservations.append(reservation)
+    
+    return filtered_reservations
+
+apartment_management_data = [
+    {
+        "name": "이진서",
+        "age": 39,
+        "room_number": 102,
+        "f_number": 2,
+        "non_pay": 0,
+        "tel": "010-0000-0001"
+    },
+    {
+        "name": "서유림",
+        "age": 28,
+        "room_number": 101,
+        "f_number": 1,
+        "non_pay": 0,
+        "tel": "010-0000-0002"
+    },
+    {
+        "name": "윤진형",
+        "age": 45,
+        "room_number": 202,
+        "f_number": 4,
+        "non_pay": 0,
+        "tel": "010-0000-0003"
+    },
+    {
+        "name": "김준영",
+        "age": 37,
+        "room_number": 201,
+        "f_number": 1,
+        "non_pay": 23000,
+        "tel": "010-0000-0004"
+    },
+    {
+        "name": "박선화",
+        "age": 51,
+        "room_number": 301,
+        "f_number": 3,
+        "non_pay": 11000,
+        "tel": "010-0000-0005"
+    }
+]
+
+@app.get("/ApartmentManagement")
+async def filter_apartment_management(
+    name: Optional[str] = Query(None, description="대표자이름"),
+    age: Optional[int] = Query(None, description="대표자나이"),
+    room_number: int = Query(..., description="호수"),
+    f_number: Optional[int] = Query(None, description="거주자수"),
+    non_pay: Optional[int] = Query(None, description="관리비미납내역(총액, 원 단위 표기)")
+):
+    filtered_apartments = []
+    for apartment in apartment_management_data:
+        if name is not None and apartment["name"] != name:
+            continue
+        if age is not None and apartment["age"] != age:
+            continue
+        if apartment["room_number"] != room_number:
+            continue
+        if f_number is not None and apartment["f_number"] != f_number:
+            continue
+        if non_pay is not None and apartment["non_pay"] != non_pay:
+            continue
+        filtered_apartments.append(apartment)
+    
+    return filtered_apartments
+
+korean_traditional_wedding_data = [
+    {
+        "name": "민속촌 종가집",
+        "address": "제주도 서귀포시 표선면 민속해안로 631-34",
+        "people": 300,
+        "price": 60000,
+        "desc": "하객 한복대여 가능",
+        "tel": "064-000-0000"
+    },
+    {
+        "name": "광주향교",
+        "address": "광주 남구 중앙로107번길 5",
+        "people": 280,
+        "price": 54000,
+        "desc": "숙소 대여도 가능",
+        "tel": "062-672-7008"
+    },
+    {
+        "name": "삼청각",
+        "address": "서울 성북구 성북동 330-115",
+        "people": 400,
+        "price": 80000,
+        "desc": "여러가지 스타일의 예식 컨셉 선택 가능",
+        "tel": "02-765-3700"
+    },
+    {
+        "name": "한국의 집",
+        "address": "서울 중구 필동 2가 80-2",
+        "people": 800,
+        "price": 50000,
+        "desc": "전통 고증을 걸친 내용의 혼례",
+        "tel": "02-2270-1120~3"
+    },
+    {
+        "name": "궁중의례원",
+        "address": "서울 용산구 용산동1가 8번지",
+        "people": 200,
+        "price": 49000,
+        "desc": "비가 와도 실내에서 예식 진행 가능",
+        "tel": "02-3141-5400"
+    }
+]
+
+@app.get("/KoreanTraditionalWedding")
+async def filter_korean_traditional_wedding(
+    name: Optional[str] = Query(None, description="식장이름"),
+    location: str = Query(..., description="지역(예: 서울, 인천, 제주 등)"),
+    min_people: Optional[int] = Query(None, description="최소수용가능인원"),
+    max_people: Optional[int] = Query(None, description="최대수용가능인원"),
+    min_price: Optional[int] = Query(None, description="최소음식가격(1인 기준)"),
+    max_price: Optional[int] = Query(None, description="최대음식가격(1인 기준)")
+):
+    filtered_weddings = []
+    for wedding in korean_traditional_wedding_data:
+        if name is not None and wedding["name"] != name:
+            continue
+        if wedding["address"].startswith(location):
+            if min_people is not None and wedding["people"] < min_people:
+                continue
+            if max_people is not None and wedding["people"] > max_people:
+                continue
+            if min_price is not None and wedding["price"] < min_price:
+                continue
+            if max_price is not None and wedding["price"] > max_price:
+                continue
+            filtered_weddings.append(wedding)
+    
+    return filtered_weddings
+
+bagel_store_data = [
+    {
+        "name": "포비",
+        "address": "서울특별시 종로구 종로3길 17",
+        "parking": True,
+        "rating": 4.3,
+        "review": "세트가 가성비가 좋다"
+    },
+    {
+        "name": "에브리띵베이글",
+        "address": "서울특별시 서대문구 연희로11길 29",
+        "parking": True,
+        "rating": 4.2,
+        "review": "쫄깃한 식감"
+    },
+    {
+        "name": "코끼리베이글",
+        "address": "서울특별시 영등포구 선유로 176",
+        "parking": False,
+        "rating": 4.1,
+        "review": "화덕 탓인지 아주 맛있는 빵 맛"
+    },
+    {
+        "name": "훕훕베이글",
+        "address": "경기도 광명시 시청로 124",
+        "parking": True,
+        "rating": 3.9,
+        "review": "다채로운 종류의 토핑"
+    },
+    {
+        "name": "만동제과",
+        "address": "강원도 강릉시 금성로 6",
+        "parking": False,
+        "rating": 3.8,
+        "review": "짭쪼름한 맛"
+    }
+]
+
+@app.get("/BagelStore")
+async def filter_bagel_store(
+    name: Optional[str] = Query(None, description="업체명"),
+    location: str = Query(..., description="지역(구 단위, 예: 성동구, 구로구 등)"),
+    parking: Optional[bool] = Query(None, description="주차가능여부"),
+    min_rating: Optional[float] = Query(None, description="최소평점(1에서 5)"),
+    max_rating: Optional[float] = Query(None, description="최대평점(1에서 5)")
+):
+    filtered_stores = []
+    for store in bagel_store_data:
+        if name is not None and store["name"] != name:
+            continue
+        if store["address"].startswith(location):
+            if parking is not None and store["parking"] != parking:
+                continue
+            if min_rating is not None and store["rating"] < min_rating:
+                continue
+            if max_rating is not None and store["rating"] > max_rating:
+                continue
+            filtered_stores.append(store)
+    
+    return filtered_stores
+
+eco_friendly_packaging_data = [
+    {
+        "name": "버블페이퍼",
+        "category": "완충재",
+        "material": "종이",
+        "price": 23000,
+        "desc": "크라프트 종이로 된 완충재"
+    },
+    {
+        "name": "옥수수방울이",
+        "category": "완충재",
+        "material": "옥수수전분",
+        "price": 54000,
+        "desc": "물에 잘 녹는 옥수수 전분으로 만든 완충재"
+    },
+    {
+        "name": "메가페이퍼",
+        "category": "택배봉투",
+        "material": "종이",
+        "price": 28000,
+        "desc": "크라프트 종이로 된 완충재가 들어간 안전 봉투"
+    },
+    {
+        "name": "생분해 친구봉투",
+        "category": "택배봉투",
+        "material": "생분해성 비닐",
+        "price": 53000,
+        "desc": "생분해성 비닐을 이용해서 비가 오는 날도 안전하게"
+    },
+    {
+        "name": "친환경 크라프트테이프",
+        "category": "테이프",
+        "material": "종이",
+        "price": 26000,
+        "desc": "크라프트 종이와 실리콘으로 만들어져서 종이로 분류해서 버리는 종이테이프"
+    }
+]
+
+@app.get("/EcoFriendlyPackaging")
+async def filter_eco_friendly_packaging(
+    name: Optional[str] = Query(None, description="상품명"),
+    category: str = Query(..., description="종류(예: 완충재, 택배봉투 등)"),
+    material: Optional[str] = Query(None, description="재질 (예: 종이, 생분해성 비닐 등)"),
+    min_price: Optional[float] = Query(None, description="최소가격"),
+    max_price: Optional[float] = Query(None, description="최대가격")
+):
+    filtered_packaging = []
+    for packaging in eco_friendly_packaging_data:
+        if name is not None and packaging["name"] != name:
+            continue
+        if packaging["category"] == category:
+            if material is not None and packaging["material"] != material:
+                continue
+            if min_price is not None and packaging["price"] < min_price:
+                continue
+            if max_price is not None and packaging["price"] > max_price:
+                continue
+            filtered_packaging.append(packaging)
+    
+    return filtered_packaging
+
+cordless_electric_fan_data = [
+    {
+        "name": "미니아 무선 선풍기 무소음",
+        "category": "스탠드형",
+        "mode": ["초미풍", "초초미풍", "수면풍"],
+        "price": 149000,
+        "review": "파워도 좋고 아주 편리해요"
+    },
+    {
+        "name": "듀플랙스 미니미 화이트",
+        "category": "탁상형",
+        "mode": ["초미풍"],
+        "price": 39000,
+        "review": "디자인이 좋아요"
+    },
+    {
+        "name": "윈드프로 핸디",
+        "category": "휴대용",
+        "mode": ["초미풍"],
+        "price": 29000,
+        "review": "충전을 자주 해야해서 번거롭네요"
+    },
+    {
+        "name": "캠퍼프로 윈디",
+        "category": "탁상형",
+        "mode": ["수면풍"],
+        "price": 129000,
+        "review": "철제 디자인이라 좋아요"
+    },
+    {
+        "name": "접이식 오아 선풍기",
+        "category": "스탠드형",
+        "mode": ["초미풍", "초초미풍"],
+        "price": 249000,
+        "review": "접이식으로 작게 축소할 수 있어요"
+    }
+]
+
+@app.get("/CordlessElectricFan")
+async def filter_cordless_electric_fan(
+    name: Optional[str] = Query(None, description="상품명"),
+    category: str = Query(..., description="종류(예: 스탠드형, 탁상형, 휴대용 등)"),
+    mode: Optional[List[str]] = Query(None, description="바람모드 (예: 초미풍, 초초미풍, 수면풍)"),
+    min_price: Optional[float] = Query(None, description="최소가격"),
+    max_price: Optional[float] = Query(None, description="최대가격")
+):
+    filtered_fans = []
+    for fan in cordless_electric_fan_data:
+        if name is not None and fan["name"] != name:
+            continue
+        if fan["category"] == category:
+            if mode is not None and not set(mode).issubset(set(fan["mode"])):
+                continue
+            if min_price is not None and fan["price"] < min_price:
+                continue
+            if max_price is not None and fan["price"] > max_price:
+                continue
+            filtered_fans.append(fan)
+    
+    return filtered_fans
+
+
+jjamppong_data = [
+    {
+        "menu": "기본짬뽕",
+        "spicy": 1,
+        "stuff": ["오징어", "홍합", "양파", "당근"],
+        "price": 7000,
+        "review": "적당히 매워서 좋아요"
+    },
+    {
+        "menu": "쟁반짬뽕",
+        "spicy": 2,
+        "stuff": ["갑오징어", "버섯", "오징어", "홍합", "양파", "당근"],
+        "price": 9000,
+        "review": "불맛나는 볶음짬뽕 맛있어요"
+    },
+    {
+        "menu": "차돌짬뽕",
+        "spicy": 3,
+        "stuff": ["차돌박이", "버섯", "양파", "당근"],
+        "price": 11000,
+        "review": "국물이 아주 좋아요"
+    },
+    {
+        "menu": "굴짬뽕",
+        "spicy": 2,
+        "stuff": ["오징어", "홍합", "굴", "양파", "당근"],
+        "price": 10000,
+        "review": "굴이 들어가서 아주 시원해요"
+    },
+    {
+        "menu": "불짬뽕",
+        "spicy": 5,
+        "stuff": ["오징어", "홍합", "양파", "당근", "콩나물"],
+        "price": 9000,
+        "review": "속이 풀리는 매운맛"
+    }
+]
+
+@app.get("/Jjamppong")
+async def filter_jjamppong(
+    menu: Optional[str] = Query(None, description="메뉴명"),
+    spicy: Optional[int] = Query(None, description="맵기정도(1에서 5까지)"),
+    stuff: str = Query(..., description="재료 (예: 차돌박이, 오징어, 굴 등)"),
+    min_price: Optional[float] = Query(None, description="최소가격"),
+    max_price: Optional[float] = Query(None, description="최대가격")
+):
+    filtered_jjamppong = []
+    for jjamppong in jjamppong_data:
+        if menu is not None and jjamppong["menu"] != menu:
+            continue
+        if jjamppong["spicy"] == spicy:
+            if stuff is not None and stuff not in jjamppong["stuff"]:
+                continue
+            if min_price is not None and jjamppong["price"] < min_price:
+                continue
+            if max_price is not None and jjamppong["price"] > max_price:
+                continue
+            filtered_jjamppong.append(jjamppong)
+    
+    return filtered_jjamppong
+
+home_shopping_data = [
+    {
+        "type": "식품",
+        "name": "오늘담근 포기김치",
+        "price": 35000,
+        "discount": True,
+        "rating": 4.2
+    },
+    {
+        "type": "뷰티",
+        "name": "도브 데오드란트",
+        "price": 11000,
+        "discount": False,
+        "rating": 4.7
+    },
+    {
+        "type": "패션",
+        "name": "바캉스 원피스",
+        "price": 17500,
+        "discount": True,
+        "rating": 4.1
+    },
+    {
+        "type": "식품",
+        "name": "카무트 쌀",
+        "price": 7900,
+        "discount": False,
+        "rating": 4.6
+    },
+    {
+        "type": "패션",
+        "name": "토리버치 샌들",
+        "price": 95000,
+        "discount": True,
+        "rating": 4.8
+    }
+]
+
+@app.get("/HomeShopping")
+async def filter_home_shopping(
+    type: Optional[str] = Query(None, description="제품 유형 ex) 식품, 패션, 리빙, 뷰티"),
+    name: Optional[str] = Query(None, description="상품명"),
+    min_price: Optional[int] = Query(None, description="최소 가격"),
+    max_price: Optional[int] = Query(None, description="최대 가격"),
+    discount: bool = Query(..., description="할인여부")
+):
+    filtered_items = []
+    for item in home_shopping_data:
+        if type is not None and item["type"] != type:
+            continue
+        if name is not None and item["name"] != name:
+            continue
+        if min_price is not None and item["price"] < min_price:
+            continue
+        if max_price is not None and item["price"] > max_price:
+            continue
+        if item["discount"] != discount:
+            continue
+        filtered_items.append(item)
+    
+    return filtered_items
+
+electric_car_data = [
+    {
+        "brand": "TESLA",
+        "country": "미국",
+        "founder": "일론 머스크",
+        "market_cap": "950조원",
+        "ranking": 1,
+        "model": "모델 Y"
+    },
+    {
+        "brand": "Volkswagen",
+        "country": "독일",
+        "founder": "아돌프 히틀러",
+        "market_cap": "117조원",
+        "ranking": 2,
+        "model": "ID.4"
+    },
+    {
+        "brand": "Hyundai Kia",
+        "country": "한국",
+        "founder": "정주영",
+        "market_cap": "41조원",
+        "ranking": 3,
+        "model": "아이오닉6"
+    },
+    {
+        "brand": "Stellantis",
+        "country": "네덜란드",
+        "founder": "잔니 아넬리",
+        "market_cap": "73조원",
+        "ranking": 4,
+        "model": "램 1500"
+    },
+    {
+        "brand": "RNM",
+        "country": "네덜란드",
+        "founder": "장 도미니크 세나르",
+        "market_cap": "37조원",
+        "ranking": 5,
+        "model": "트위지"
+    }
+]
+
+@app.get("/ElectricCar")
+async def filter_electric_car(
+    brand: Optional[str] = Query(None, description="브랜드 영문명"),
+    country: str = Query(..., description="자동차를 만든 제조 국가"),
+    founder: Optional[str] = Query(None, description="브랜드 창립자"),
+    market_cap: Optional[str] = Query(None, description="브랜드 시가 총액 (예: 31조. 910억 등)"),
+    ranking: Optional[int] = Query(None, description="인도량 순위")
+):
+    filtered_cars = []
+    for car in electric_car_data:
+        if brand is not None and car["brand"] != brand:
+            continue
+        if car["country"] != country:
+            continue
+        if founder is not None and car["founder"] != founder:
+            continue
+        if market_cap is not None and car["market_cap"] != market_cap:
+            continue
+        if ranking is not None and car["ranking"] != ranking:
+            continue
+        filtered_cars.append(car)
+    
+    return filtered_cars
+
+coffee_brand_data = [
+    {
+        "brand": "스타벅스",
+        "price": 4500,
+        "ranking": 1,
+        "market_cap": 1200,
+        "preference": 25.7
+    },
+    {
+        "brand": "투썸플레이스",
+        "price": 4100,
+        "ranking": 2,
+        "market_cap": 1000,
+        "preference": 6.9
+    },
+    {
+        "brand": "메가커피",
+        "price": 1500,
+        "ranking": 3,
+        "market_cap": 1232,
+        "preference": 14.3
+    },
+    {
+        "brand": "이디야커피",
+        "price": 3200,
+        "ranking": 4,
+        "market_cap": 3000,
+        "preference": 6.8
+    },
+    {
+        "brand": "빽다방",
+        "price": 1500,
+        "ranking": 5,
+        "market_cap": 750,
+        "preference": 8
+    }
+]
+
+@app.get("/CoffeeBrands")
+async def filter_coffee_brands(
+    brand: Optional[str] = Query(None, description="브랜드"),
+    min_price: Optional[int] = Query(None, description="최소가격"),
+    max_price: Optional[int] = Query(None, description="최대가격"),
+    ranking: int = Query(..., description="순위"),
+    stores_max: Optional[int] = Query(None, description="최대 매장수")
+):
+    filtered_brands = []
+    for coffee_brand in coffee_brand_data:
+        if brand is not None and coffee_brand["brand"] != brand:
+            continue
+        if min_price is not None and coffee_brand["price"] < min_price:
+            continue
+        if max_price is not None and coffee_brand["price"] > max_price:
+            continue
+        if coffee_brand["ranking"] != ranking:
+            continue
+        if stores_max is not None and coffee_brand["market_cap"] > stores_max:
+            continue
+        filtered_brands.append(coffee_brand)
+    
+    return filtered_brands
+
+counseling_center_data = [
+    {
+        "name": "박혜인",
+        "subject": "개인상담",
+        "center": "미소담심리상담센터",
+        "num": 17514,
+        "gender": "여성",
+        "doctor_name": "김도희"
+    },
+    {
+        "name": "주석진",
+        "subject": "집단상담",
+        "center": "디딤돌심리상담센터",
+        "num": 59815,
+        "gender": "남성",
+        "doctor_name": "이주안"
+    },
+    {
+        "name": "김도영",
+        "subject": "부부상담",
+        "center": "미소담심리센터",
+        "num": 15899,
+        "gender": "남성",
+        "doctor_name": "최석호"
+    },
+    {
+        "name": "이지선",
+        "subject": "개인상담",
+        "center": "솔숲심리상담센터",
+        "num": 49868,
+        "gender": "여성",
+        "doctor_name": "김지우"
+    },
+    {
+        "name": "진소하",
+        "subject": "부부상담",
+        "center": "디딤돌상담센터",
+        "num": 17985,
+        "gender": "여성",
+        "doctor_name": "유미래"
+    }
+]
+
+@app.get("/CounselingCenter")
+async def filter_counseling_center(
+    name: Optional[str] = Query(None, description="고객명"),
+    subject: str = Query(..., description="주제"),
+    center: Optional[str] = Query(None, description="상담센터명"),
+    num: Optional[int] = Query(None, description="고객 등록 번호"),
+    gender: Optional[str] = Query(None, description="고객 성별")
+):
+    filtered_customers = []
+    for customer in counseling_center_data:
+        if name is not None and customer["name"] != name:
+            continue
+        if customer["subject"] != subject:
+            continue
+        if center is not None and customer["center"] != center:
+            continue
+        if num is not None and customer["num"] != num:
+            continue
+        if gender is not None and customer["gender"] != gender:
+            continue
+        filtered_customers.append(customer)
+    
+    return filtered_customers
+
+pantone_color_data = [
+    {
+        "number": "18-1750",
+        "name": "비바 마젠타(Viva Magenta)",
+        "year": 2023,
+        "series": "레드",
+        "description": "용감하고 두려움이 없으며, 즐겁고 낙관적인 맥동적인 색"
+    },
+    {
+        "number": "13-1106",
+        "name": "샌드 달러(Sand dollar)",
+        "year": 2006,
+        "series": "브라운",
+        "description": "중립적인 색"
+    },
+    {
+        "number": "19-4052",
+        "name": "클래식 블루(Classic Blue)",
+        "year": 2020,
+        "series": "블루",
+        "description": "심플함이 돋보이는 색"
+    },
+    {
+        "number": "18-2120",
+        "name": "탠저린 탱고(Tangerine Tango)",
+        "year": 2012,
+        "series": "레드",
+        "description": "세련되면서도 극적이고 유혹적인 색"
+    },
+    {
+        "number": "19-1664",
+        "name": "True Red(트루 레드)",
+        "year": 2002,
+        "series": "레드",
+        "description": "애국적인 색"
+    }
+]
+
+@app.get("/PantoneColor")
+async def filter_pantone_color(
+    number: Optional[str] = Query(None, description="컬러번호"),
+    name_KOR: Optional[str] = Query(None, description="한글명"),
+    name_ENG: Optional[str] = Query(None, description="영문명"),
+    year: Optional[int] = Query(None, description="선정 연도"),
+    series: str = Query(..., description="계열"),
+    matte: Optional[bool] = Query(None, description="유무광구분")
+):
+    filtered_colors = []
+    for color in pantone_color_data:
+        if number is not None and color["number"] != number:
+            continue
+        if name_KOR is not None and color["name"].split('(')[0] != name_KOR:
+            continue
+        if name_ENG is not None and color["name"].split('(')[1][:-1] != name_ENG:
+            continue
+        if year is not None and color["year"] != year:
+            continue
+        if color["series"] != series:
+            continue
+        if matte is not None and bool(matte) != bool(matte):
+            continue
+        filtered_colors.append(color)
+    
+    return filtered_colors
+
+atm_data = [
+    {
+        "name": "신협은행",
+        "city": "충청북도",
+        "district": "청주시",
+        "town": "상당구",
+        "available": True,
+        "operating_time": "매일 07:00 - 24:00"
+    },
+    {
+        "name": "신한은행",
+        "city": "경기도",
+        "district": "안산시",
+        "town": "상록구",
+        "available": False,
+        "operating_time": "매일 07:00 - 23:30"
+    },
+    {
+        "name": "우리은행",
+        "city": "경기도",
+        "district": "수원시",
+        "town": "권선구",
+        "available": True,
+        "operating_time": "매일 09:00 - 24:00"
+    },
+    {
+        "name": "농협은행",
+        "city": "경기도",
+        "district": "수원시",
+        "town": "팔달구",
+        "available": False,
+        "operating_time": "매일 07:00 - 23:00"
+    },
+    {
+        "name": "하나은행",
+        "city": "경기도",
+        "district": "안양시",
+        "town": "만안구",
+        "available": True,
+        "operating_time": "매일 08:00 - 24:00"
+    }
+]
+
+@app.get("/ATM")
+async def filter_atm(
+    name: str = Query(None, description="은행명"),
+    city: str = Query(None, description="광역시도"),
+    district: str = Query(None, description="시군구"),
+    town: str = Query(None, description="읍면동"),
+    available: bool = Query(..., description="24시간 운영 여부")
+):
+    filtered_atm = []
+    for item in atm_data:
+        if name is not None and item["name"] != name:
+            continue
+        if city is not None and item["city"] != city:
+            continue
+        if district is not None and item["district"] != district:
+            continue
+        if town is not None and item["town"] != town:
+            continue
+        if item["available"] != available:
+            continue
+        filtered_atm.append(item)
+    
+    return filtered_atm
+
+netflix_data = [
+    {
+        "name": "하트시그널",
+        "year": 2023,
+        "director": "박철환",
+        "genre": "리얼리티",
+        "ranking": 6,
+        "viewing_age": 15,
+        "episodes": 14
+    },
+    {
+        "name": "귀멸의 칼날",
+        "year": 2021,
+        "director": "소토자키 하루오",
+        "genre": "애니",
+        "ranking": 7,
+        "viewing_age": 19,
+        "episodes": 26
+    },
+    {
+        "name": "마당이 있는집",
+        "year": 2023,
+        "director": "정지현",
+        "genre": "드라마",
+        "ranking": 2,
+        "viewing_age": 15,
+        "episodes": 8
+    },
+    {
+        "name": "킹더랜드",
+        "year": 2023,
+        "director": "임현욱",
+        "genre": "드라마",
+        "ranking": 3,
+        "viewing_age": 15,
+        "episodes": 16
+    },
+    {
+        "name": "사냥개들",
+        "year": 2023,
+        "director": "김주환",
+        "genre": "드라마",
+        "ranking": 4,
+        "viewing_age": 18,
+        "episodes": 8
+    }
+]
+
+@app.get("/Netflix")
+async def filter_netflix(
+    name: str = Query(None, description="작품명"),
+    year: int = Query(None, description="작품이 나온 연도"),
+    director: str = Query(None, description="감독"),
+    genre: str = Query(..., description="장르"),
+    ranking: int = Query(None, gt=0, le=10, description="순위"),
+    min_viewing_age: int = Query(None, gt=0, description="최소 관람연령")
+):
+    filtered_netflix = []
+    for item in netflix_data:
+        if name is not None and item["name"] != name:
+            continue
+        if year is not None and item["year"] != year:
+            continue
+        if director is not None and item["director"] != director:
+            continue
+        if item["genre"] != genre:
+            continue
+        if ranking is not None and item["ranking"] != ranking:
+            continue
+        if min_viewing_age is not None and item["viewing_age"] < min_viewing_age:
+            continue
+        filtered_netflix.append(item)
+    
+    return filtered_netflix
+
+book_cafe_data = [
+    {
+        "cafe_name": "인덱스숍",
+        "address": "서울시 광진구 자양동 17-1",
+        "rating": 4.6,
+        "Business_Hours": 11,
+        "closing_time": 22,
+        "review": ["구경하러 들어갔다가 책을 2권이나 사버렸어요.", "공간도 다양하고 책도 많고 볼거리도 많음"]
+    },
+    {
+        "cafe_name": "이리카페",
+        "address": "서울시 마포구 상수동 337-4",
+        "rating": 4.5,
+        "Business_Hours": 11,
+        "closing_time": 24,
+        "review": ["음료맛나고 분위기좋고 다음에또가고싶다", "넉넉히 대화할 수 있는 곳"]
+    },
+    {
+        "cafe_name": "단편집",
+        "address": "서울 마포구 동교동 179-10",
+        "rating": 4.73,
+        "Business_Hours": 12,
+        "closing_time": 20,
+        "review": ["따듯하다는 단어가 잘 어울리는 북카페입니다", "커피도 커피인데 책 맛집이예요."]
+    },
+    {
+        "cafe_name": "카페꼼마",
+        "address": "서울 영등포구 여의도동 34-8",
+        "rating": 4.3,
+        "Business_Hours": 7,
+        "closing_time": 21,
+        "review": ["힐링 할 수 있는 너무 좋은 북카페에요", "내부가 넓고 층고가 높아 마음 속이 시원해지는 곳이에요 :)"]
+    },
+    {
+        "cafe_name": "밀크북",
+        "address": "경기도 파주시 문발동 532-3",
+        "rating": 4.44,
+        "Business_Hours": 10,
+        "closing_time": 20,
+        "review": ["아이랑 같이 와서 책읽고 티타임하기 좋아요~", "주차하기 좋고 책도 많아요"]
+    }
+]
+
+@app.get("/BookCafe")
+async def filter_book_cafe(
+    cafe_name: str = Query(None, description="카페 이름"),
+    city: str = Query(..., description="광역시도"),
+    district: str = Query(..., description="시군구"),
+    town: str = Query(None, description="읍면동"),
+    min_rating: float = Query(None, gt=0, le=5, description="최소평점"),
+    opening_hours: int = Query(None, description="영업시작시간 (예: 5, 7, 11(시간))"),
+    closing_time: int = Query(None, description="영업마감시간 (예: 5, 7, 11(시간))")
+):
+    filtered_book_cafe = []
+    for item in book_cafe_data:
+        if cafe_name is not None and item["cafe_name"] != cafe_name:
+            continue
+        if item["address"].startswith(city) and item["address"].find(district) != -1:
+            if town is not None and item["address"].find(town) == -1:
+                continue
+        else:
+            continue
+        if min_rating is not None and item["rating"] < min_rating:
+            continue
+        if opening_hours is not None and item["Business_Hours"] != opening_hours:
+            continue
+        if closing_time is not None and item["closing_time"] != closing_time:
+            continue
+        filtered_book_cafe.append(item)
+    
+    return filtered_book_cafe
+
+fruit_data = [
+    {
+        "name": "사과",
+        "type": "빨간색",
+        "nutrient": "리코펜",
+        "efficacy": "암예방",
+        "calories": 57
+    },
+    {
+        "name": "파파야",
+        "type": "주황색",
+        "nutrient": "베타카로틴",
+        "efficacy": "심장 및 눈 질환 예방",
+        "calories": 25
+    },
+    {
+        "name": "레몬",
+        "type": "노란색",
+        "nutrient": "리모넨",
+        "efficacy": "혈관 강화",
+        "calories": 31
+    },
+    {
+        "name": "키위",
+        "type": "녹색",
+        "nutrient": "이소시아닌",
+        "efficacy": "암예방",
+        "calories": 50
+    },
+    {
+        "name": "자두",
+        "type": "보라색",
+        "nutrient": "안토시아닌",
+        "efficacy": "기억력 향상",
+        "calories": 34
+    },
+    {
+        "name": "블랙베리",
+        "type": "보라색",
+        "nutrient": "안토시아닌",
+        "efficacy": "기억력 향상",
+        "calories": 37
+    }
+]
+
+@app.get("/fruitsearch")
+async def filter_fruit_search(
+    name: str = Query(None, description="과일 이름"),
+    color: str = Query(..., description="과일의 색 ex) 빨간색, 주황색, 보라색 등"),
+    nutrient: str = Query(None, description="영양소 ex) 베타카로틴, 리코펜 등"),
+    efficacy: str = Query(None, description="효능 ex) 암예방, 혈관 강화 등"),
+    min_calories: int = Query(None, ge=0, description="최소 칼로리")
+):
+    filtered_fruit = []
+    for item in fruit_data:
+        if name is not None and item["name"] != name:
+            continue
+        if item["type"] != color:
+            continue
+        if nutrient is not None and item["nutrient"] != nutrient:
+            continue
+        if efficacy is not None and item["efficacy"] != efficacy:
+            continue
+        if min_calories is not None and item["calories"] < min_calories:
+            continue
+        filtered_fruit.append(item)
+    
+    return filtered_fruit
+
+@app.get("/NewBookList")
+async def filter_new_book_list(
+    BookName: str = Query(None, description="책이름"),
+    author: str = Query(None, description="작가명"),
+    publisher: str = Query(None, description="출판사"),
+    field: str = Query(..., description="분야"),
+    max_pages: int = Query(None, ge=0, description="최대 쪽수"),
+    min_pages: int = Query(None, ge=0, description="최소 쪽수")
+):
+    # 신간 책 데이터
+    books = [
+        ["꽁꽁꽁 캠핑","윤정주","책읽는곰","유아 동화",44,9791158364120],
+        ["중대재해처벌법","이상국","대명출판사","사회/정치",564,9791198214829],
+        ["마루는 강쥐 1","모죠","문페이스","만화",308,9791191841466],
+        ["구덩이","루이스 새커","창비","청소년 문학",333,9788936456023],
+        ["역사논문 작성법","임경석","푸른역사","역사",216,9791156122494]
+    ]
+
+    filtered_books = []
+
+    for book in books:
+        if (
+            (BookName is None or book[0] == BookName) and
+            (author is None or book[1] == author) and
+            (publisher is None or book[2] == publisher) and
+            (field == book[3]) and
+            (max_pages is None or book[4] <= max_pages) and
+            (min_pages is None or book[4] >= min_pages)
+        ):
+            filtered_books.append({
+                "BookName": book[0],
+                "author": book[1],
+                "publisher": book[2],
+                "field": book[3],
+                "pages": book[4],
+                "ISBN": book[5]
+            })
+
+    return filtered_books
+
+@app.get("/Butter")
+async def filter_butter(
+    brand: str = Query(None, description="브랜드"),
+    salt: bool = Query(..., description="소금첨가유무"),
+    wrapped: bool = Query(None, description="개별포장 유무"),
+    max_weight: float = Query(None, ge=0, description="최대 무게"),
+    min_weight: float = Query(None, ge=0, description="최소 무게"),
+    origin: str = Query(None, description="원산지")
+):
+    # 버터 데이터
+    butters = [
+        ["폰테라", False, False, 454, "뉴질랜드"],
+        ["발렌타인", False, True, 7, "호주"],
+        ["이즈니", False, True, 10, "프랑스"],
+        ["루어팍", True, True, 10, "덴마크"],
+        ["라꽁비에뜨", True, False, 450, "프랑스"],
+        ["오뚜기", True, True, 10, "한국"]
+    ]
+
+    filtered_butters = []
+
+    for butter in butters:
+        if (
+            (brand is None or butter[0] == brand) and
+            (salt == butter[1]) and
+            (wrapped is None or butter[2] == wrapped) and
+            (max_weight is None or butter[3] <= max_weight) and
+            (min_weight is None or butter[3] >= min_weight) and
+            (origin is None or butter[4] == origin)
+        ):
+            filtered_butters.append({
+                "brand": butter[0],
+                "salt": butter[1],
+                "wrapped": butter[2],
+                "weight": butter[3],
+                "origin": butter[4]
+            })
+
+    return filtered_butters
+
+@app.get("/RealEstate")
+async def filter_real_estate(
+    city: str = Query(..., description="광역시도"),
+    district: str = Query(None, description="시군구"),
+    town: str = Query(None, description="읍면동"),
+    ForSale: str = Query(None, description="매물명"),
+    type: str = Query(None, description="종류 ex)아파트, 오피스텔, 주택 등"),
+    max_price: int = Query(None, description="최대 가격"),
+    min_price: int = Query(None, description="최소 가격"),
+    max_size: int = Query(None, ge=0, description="최대 평수"),
+    min_size: int = Query(None, ge=0, description="최소 평수")
+):
+    # 부동산 매물 데이터
+    real_estates = [
+        ["충청북도 음성군 맹동면 본성리 360-25", "음성아이파크", "아파트", 330000000, 33],
+        ["서울시 은평구 녹번동 144-28", "은평빌라", "빌라", 225000000, 11],
+        ["서울시 은평구 녹번동 81-17", "CS아르체", "오피스텔", 245000000, 20],
+        ["경상북도 상주시 가장동 739", "다가구4층", "주택", 580000000, 70],
+        ["제주도 제주시 이도2동 1011-3", "영도갤럭시타운", "아파트", 170000000, 10]
+    ]
+
+    filtered_real_estates = []
+
+    for real_estate in real_estates:
+        if (
+            (city == real_estate[0].split()[0]) and
+            (district is None or district == real_estate[0].split()[1]) and
+            (town is None or town == real_estate[0].split()[2]) and
+            (ForSale is None or ForSale == real_estate[1]) and
+            (type is None or type == real_estate[2]) and
+            (max_price is None or real_estate[3] <= max_price) and
+            (min_price is None or real_estate[3] >= min_price) and
+            (max_size is None or real_estate[4] <= max_size) and
+            (min_size is None or real_estate[4] >= min_size)
+        ):
+            filtered_real_estates.append({
+                "address": real_estate[0],
+                "ForSale": real_estate[1],
+                "type": real_estate[2],
+                "price": real_estate[3],
+                "size": real_estate[4]
+            })
+
+    return filtered_real_estates
+
+@app.get("/DaisoProducts")
+async def filter_daiso_products(
+    category: str = Query(..., description="상품 카테고리 ex) 주방, 욕실, 미용 등"),
+    product_name: str = Query(None, description="상품명"),
+    size: float = Query(None, description="크기"),
+    max_price: int = Query(None, ge=0, description="최대 가격"),
+    min_price: int = Query(None, ge=0, description="최소 가격"),
+    manufacture_country: str = Query(None, description="제조국")
+):
+    # 다이소 상품 데이터
+    daiso_products = [
+        ["주방", "무광스텐볼", 20, 3000, "중국", 86759],
+        ["욕실", "다회용 샤워캡", 16.5, 2000, "중국", 1022687],
+        ["주방", "전자렌지보관용기", 12, 1000, "한국", 1023012],
+        ["미용", "모공세안브러시", 7.5, 5000, "중국", 61627],
+        ["인테리어", "엔틱도어벨", 30, 3000, "한국", 66354],
+        ["수납", "와이드박스", 23.5, 2000, "일본", 949180031]
+    ]
+
+    filtered_daiso_products = []
+
+    for daiso_product in daiso_products:
+        if (
+            (category == daiso_product[0]) and
+            (product_name is None or product_name == daiso_product[1]) and
+            (size is None or size == daiso_product[2]) and
+            (max_price is None or daiso_product[3] <= max_price) and
+            (min_price is None or daiso_product[3] >= min_price) and
+            (manufacture_country is None or manufacture_country == daiso_product[4])
+        ):
+            filtered_daiso_products.append({
+                "category": daiso_product[0],
+                "product_name": daiso_product[1],
+                "size": daiso_product[2],
+                "price": daiso_product[3],
+                "manufacture_country": daiso_product[4],
+                "product_num": daiso_product[5]
+            })
+
+    return filtered_daiso_products
+
+@app.get("/RainBoots")
+async def filter_rain_boots(
+    brand: str = Query(..., description="브랜드"),
+    heel_height: float = Query(None, description="굽높이"),
+    min_price: int = Query(None, ge=0, description="최소 가격"),
+    max_price: int = Query(None, ge=0, description="최대 가격"),
+    size: int = Query(None, description="사이즈"),
+    min_rating: float = Query(None, ge=0, le=5, description="최소 평점")
+):
+    # 레인부츠 데이터
+    rain_boots = [
+        ["헌터", 3, 135000, [240, 250, 260], 4.8, ["무게감이 있어서 잘 벗겨지지 않네요.", "예뻐요. 사이즈는 반업하면 좋아요."]],
+        ["락피쉬", 3.3, 75000, [230, 235, 240], 4.7, ["발이 아프지 않고 편안하며 디자인도 예쁩니다.", "좋은 가격으로 구매해서 좋아요."]],
+        ["바버", 4, 119000, [255], 4.8, ["완전 예뻐용. 사이즈도 널널해요.", "안에도 부드럽고 착화감도 좋습니다."]],
+        ["벤시몽", 2, 80000, [230, 240, 250], 4.5, ["가볍고 딱 맞는 느낌이에요", "색상이 튀지 않아서 만족해요."]],
+        ["문스타", 3, 99000, [220], 4.8, ["디자인이 너무 귀엽고 착화감 푹신해서 좋아요.", "정사이즈하면 가볍고 좋아요"]]
+    ]
+
+    filtered_rain_boots = []
+
+    for rain_boot in rain_boots:
+        if (
+            (brand == rain_boot[0]) and
+            (heel_height is None or heel_height == rain_boot[1]) and
+            (min_price is None or rain_boot[2] >= min_price) and
+            (max_price is None or rain_boot[2] <= max_price) and
+            (size is None or size in rain_boot[3]) and
+            (min_rating is None or rain_boot[4] >= min_rating)
+        ):
+            filtered_rain_boots.append({
+                "brand": rain_boot[0],
+                "heel_height": rain_boot[1],
+                "price": rain_boot[2],
+                "size": rain_boot[3],
+                "rating": rain_boot[4],
+                "review": rain_boot[5]
+            })
+
+    return filtered_rain_boots
+
+@app.get("/influencer")
+async def filter_influencer(
+    name: str = Query(None, description="인플루언서 활동명"),
+    id: str = Query(None, description="인플루언서의 SNS 아이디"),
+    followers: str = Query(None, description="SNS 팔로워 수 ex) 10.8만, 21만 등"),
+    min_posts: int = Query(None, ge=0, description="최소 SNS 게시물 수"),
+    field: str = Query(..., description="분야 ex) 패션, 뷰티. 여행 등"),
+    platform: str = Query(None, description="활동플랫폼 ex) 유튜브, 인스타그램")
+):
+    # SNS 인플루언서 데이터
+    influencers = [
+        ["썸머썸머", "summerinbk", "7.9만", 1854, "뷰티", ["유튜브", "인스타그램"]],
+        ["그래쓰", "kim.asha.1", "10.1만", 1059, "여행", ["유튜브", "인스타그램"]],
+        ["김장미", "syllyworld", "19.6만", 2289, "패션", ["인스타그램"]],
+        ["최이현", "yvesox", "22.6만", 190, "패션", ["인스타그램"]],
+        ["노니유", "younonii", "21.5만", 1231, "패션", ["인스타그램"]]
+    ]
+
+    filtered_influencers = []
+
+    for influencer in influencers:
+        if (
+            (name is None or influencer[0] == name) and
+            (id is None or influencer[1] == id) and
+            (followers is None or influencer[2] == followers) and
+            (min_posts is None or influencer[3] >= min_posts) and
+            (field == influencer[4]) and
+            (platform is None or platform in influencer[5])
+        ):
+            filtered_influencers.append({
+                "name": influencer[0],
+                "id": influencer[1],
+                "followers": influencer[2],
+                "num": influencer[3],
+                "field": influencer[4],
+                "platform": influencer[5]
+            })
+
+    return filtered_influencers
+
+@app.get("/DermReservation")
+async def filter_derm_reservation(
+    name: str = Query(None, description="예약자 이름"),
+    reservation_date: str = Query(..., description="예약일자 ex) 2023.07.13"),
+    reservation_time: str = Query(None, description="예약시간"),
+    back_number: int = Query(None, description="예약자의 휴대폰 뒷번호"),
+    surgical_name: str = Query(None, description="시술명"),
+    number: int = Query(None, description="진행되는 시술 회차"),
+    first_visit: bool = Query(None, description="초진여부")
+):
+    # 피부과 예약자 데이터
+    derm_reservations = [
+        ["김민희", "2023.06.28", "10시 30분", "010-0000-0000", "보톡스", 1, False],
+        ["이민영", "2023.05.15", "18시", "010-1111-1111", "레이저토닝", 2, False],
+        ["최나현", "2023.08.09", "11시", "010-2222-2222", "쥬베룩", 3, True],
+        ["장민우", "2023.07.08", "14시 30분", "010-3333-3333", "레이저제모", 10, True],
+        ["강선하", "2023.06.03", "15시", "010-4444-4444", "보톡스", 3, False]
+    ]
+
+    filtered_derm_reservations = []
+
+    for reservation in derm_reservations:
+        if (
+            (name is None or reservation[0] == name) and
+            (reservation_date == reservation[1]) and
+            (reservation_time is None or reservation[2] == reservation_time) and
+            (back_number is None or back_number == int(reservation[3][-4:])) and
+            (surgical_name is None or reservation[4] == surgical_name) and
+            (number is None or reservation[5] == number) and
+            (first_visit is None or reservation[6] == first_visit)
+        ):
+            filtered_derm_reservations.append({
+                "name": reservation[0],
+                "reservation_date": reservation[1],
+                "reservation_time": reservation[2],
+                "phone_num": reservation[3],
+                "surgical_name": reservation[4],
+                "number": reservation[5],
+                "first_visit": reservation[6]
+            })
+
+    return filtered_derm_reservations
+
+@app.get("/UniversityStudents")
+async def filter_university_students(
+    name: str = Query(None, description="학생 이름"),
+    student_id: int = Query(None, description="학번"),
+    division: str = Query(None, description="학부 ex) 공과대학, 경영대학 등"),
+    department: str = Query(..., description="학과 ex) 건축학과, 중국어학과 등"),
+    admission_year: int = Query(None, description="입학연도 ex) 2017, 2019"),
+    student_dues: bool = Query(None, description="학생회비 납부여부")
+):
+    # 대학교 학생 데이터
+    university_students = [
+        ["이민우", 12181563, "공과대학", "건축학과", 2018, True, "010-0000-0000"],
+        ["최나라", 13191214, "경영대학", "국제통상학과", 2019, False, "010-1111-1111"],
+        ["이민지", 12171025, "법학대학", "법학과", 2017, False, "010-2222-2222"],
+        ["신기철", 22147988, "문과대학", "중국어학과", 2022, True, "010-3333-3333"],
+        ["김민기", 23210439, "공과대학", "화학공학과", 2023, True, "010-4444-4444"]
+    ]
+
+    filtered_university_students = []
+
+    for student in university_students:
+        if (
+            (name is None or student[0] == name) and
+            (student_id is None or student[1] == student_id) and
+            (division is None or student[2] == division) and
+            (student[3] == department) and
+            (admission_year is None or student[4] == admission_year) and
+            (student_dues is None or student[5] == student_dues)
+        ):
+            filtered_university_students.append({
+                "name": student[0],
+                "Student_ID": student[1],
+                "division": student[2],
+                "department": student[3],
+                "admission_year": student[4],
+                "student_dues": student[5],
+                "phone_number": student[6]
+            })
+
+    return filtered_university_students
+
+@app.get("/PaidSubscribers")
+async def filter_paid_subscribers(
+    channel_name: str = Query(..., description="채널명"),
+    subscriber: str = Query(None, description="구독자명"),
+    subscription_date: str = Query(None, description="채널을 처음 구독한 일자 ex) 2021.07.08"),
+    paid_subscription_date: str = Query(None, description="유료가입일자"),
+    paid_num: int = Query(None, description="유료가입 회차")
+):
+    # 유튜브 유료 구독자 데이터
+    paid_subscribers = [
+        ["이티잡스", "김호식", "wlksdk23", "2021.07.08", "2021.08.15", 19],
+        ["썸썸머", "이나라", "tttcbg347", "2022.03.28", "2023.04.01", 5],
+        ["솔리웍스", "박나래", "pqmajdh", "2022.07.11", "2022.07.28", 8],
+        ["스마티튜브", "김환", "rlaghks12457", "2017.04.23", "2021.03.31", 25],
+        ["바바채널", "강은숙", "slkho63", "2018.02.04", "2019.07.12", 37]
+    ]
+
+    filtered_paid_subscribers = []
+
+    for subscriber in paid_subscribers:
+        if (
+            subscriber[0] == channel_name and
+            (subscriber[1] == subscriber if subscriber else True) and
+            (subscriber[3] == subscription_date if subscription_date else True) and
+            (subscriber[4] == paid_subscription_date if paid_subscription_date else True) and
+            (subscriber[5] == paid_num if paid_num else True)
+        ):
+            filtered_paid_subscribers.append({
+                "channel_name": subscriber[0],
+                "subscriber": subscriber[1],
+                "subscriber_id": subscriber[2],
+                "subscription_date": subscriber[3],
+                "paid_subscription_date": subscriber[4],
+                "paid_Num": subscriber[5]
+            })
+
+    return filtered_paid_subscribers
+
+@app.get("/SalonReservation")
+async def filter_salon_reservation(
+    name: str = Query(None, description="예약자명"),
+    reservation_date: str = Query(..., description="예약일자 데이터형식 00월 00일"),
+    reservation_time: str = Query(None, description="예약시간 데이터형식 00시 00분"),
+    type: str = Query(None, description="헤어시술종류 ex) 커트, 펌, 염색 등"),
+    back_num: int = Query(None, description="휴대폰 뒷번호")
+):
+    # 미용실 예약자 데이터
+    salon_reservations = [
+        ["김나라", "08월 14일", "14시 30분", "커트", "010-5555-5555"],
+        ["김국진", "07월 12일", "10시", "펌", "010-6666-6666"],
+        ["이나영", "07월 14일", "16시", "염색", "010-7777-7777"],
+        ["김미진", "07월 14일", "18시 30분", "펌", "010-8888-8888"],
+        ["최진영", "07월 26일", "12시", "커트", "010-9999-9999"]
+    ]
+
+    filtered_salon_reservations = []
+
+    for reservation in salon_reservations:
+        if (
+            (reservation[0] == name if name else True) and
+            (reservation[1] == reservation_date) and
+            (reservation[2] == reservation_time if reservation_time else True) and
+            (reservation[3] == type if type else True) and
+            (reservation[4] == back_num if back_num else True)
+        ):
+            filtered_salon_reservations.append({
+                "Name": reservation[0],
+                "Reservation_date": reservation[1],
+                "Reservation_time": reservation[2],
+                "type": reservation[3],
+                "phone_num": reservation[4]
+            })
+
+    return filtered_salon_reservations
+
+@app.get("/InteriorCompany")
+async def filter_interior_company(
+    name: str = Query(None, description="업체명"),
+    city: str = Query(None, description="광역시도"),
+    district: str = Query(None, description="시군구"),
+    town: str = Query(None, description="읍면동"),
+    expertise_field: str = Query(..., description="전문분야 ex) 미장, 타일, 방수공사, 도배 등")
+):
+    # 인테리어 업체 데이터
+    interior_companies = [
+        ["서초인테리어", "서울시", "서초구", "서초동", ["미장", "타일", "방수공사"], "02-594-7046"],
+        ["홈테이인테리어", "서울시", "강남구", "역삼동", ["도배"], "0507-1336-9874"],
+        ["백억인테리어", "경기도", "오산시", "원동", ["유리", "창호공사"], "0507-1333-6537"],
+        ["가온인테리어", "전라북도", "전주시", "덕진동", ["미장", "타일", "방수공사"], "0507-1473-4433"],
+        ["김씨인테리어", "경상북도", "김천시", "성내동", ["도배"], "054-435-0078"]
+    ]
+
+    filtered_interior_companies = []
+
+    for company in interior_companies:
+        if (
+            (company[0] == name if name else True) and
+            (company[1] == city if city else True) and
+            (company[2] == district if district else True) and
+            (company[3] == town if town else True) and
+            (expertise_field in company[4])
+        ):
+            filtered_interior_companies.append({
+                "name": company[0],
+                "city": company[1],
+                "district": company[2],
+                "town": company[3],
+                "expertise_field": company[4],
+                "telephone_num": company[5]
+            })
+
+    return filtered_interior_companies
+
+@app.get("/ReunionParticipant")
+async def filter_reunion_participant(
+    school_name: str = Query(..., description="졸업한 학교명"),
+    name: str = Query(None, description="참여자 이름"),
+    gender: str = Query(None, description="성별"),
+    phone_num: str = Query(None, description="전화번호"),
+    career: str = Query(None, description="직업이나 직급 ex) 부장, 은행지점장, 아나운서")
+):
+    # 동창회 참여자 데이터
+    reunion_participants = [
+        ["일신여자상업고등학교", "이미자", "여성", "010-0000-0000", "은행지점장", "농협"],
+        ["일신여자상업고등학교", "김숙자", "여성", "010-1111-0000", "부장", "신한은행"],
+        ["경북항공고등학교", "최석현", "남성", "010-2222-0000", "기장", "대한항공"],
+        ["부평공업고등학교", "김상훈", "남성", "010-3333-0000", "과장", "삼성전자"],
+        ["서울정화고등학교", "이나희", "여성", "010-4444-0000", "아나운서", "JTBC"]
+    ]
+
+    filtered_reunion_participants = []
+
+    for participant in reunion_participants:
+        if (
+            (participant[0] == school_name) and
+            (participant[1] == name if name else True) and
+            (participant[2] == gender if gender else True) and
+            (participant[3] == phone_num if phone_num else True) and
+            (participant[4] == career if career else True)
+        ):
+            filtered_reunion_participants.append({
+                "school_name": participant[0],
+                "name": participant[1],
+                "gender": participant[2],
+                "phone_num": participant[3],
+                "career": participant[4],
+                "company": participant[5]
+            })
+
+    return filtered_reunion_participants
+
+@app.get("/WalletSearch")
+async def filter_wallet_search(
+    brand: str = Query(None, description="브랜드"),
+    type: str = Query(None, description="종류 ex) 반지갑, 장지갑, 카드지갑"),
+    material: str = Query(None, description="소재 ex) 천연가죽, 인조가죽"),
+    color: str = Query(None, description="색상 ex) Black, Camel, Green 등"),
+    max_price: int = Query(None, description="최대 가격", ge=0),
+    min_price: int = Query(None, description="최소 가격", ge=0)
+):
+    # 지갑 데이터
+    wallets = [
+        ["마땡킴", "반지갑", "천연가죽", "Green", 88000],
+        ["생로랑", "카드지갑", "천연가죽", "Black", 190000],
+        ["알파치노", "장지갑", "인조가죽", "Black", 99000],
+        ["할리케이", "카드지갑", "인조가죽", "Camel", 59000],
+        ["디랩", "반지갑", "천연가죽", "Gray", 25000]
+    ]
+
+    filtered_wallets = []
+
+    for wallet in wallets:
+        if (
+            (wallet[0] == brand if brand else True) and
+            (wallet[1] == type if type else True) and
+            (wallet[2] == material if material else True) and
+            (wallet[3] == color if color else True) and
+            (max_price is None or wallet[4] <= max_price) and
+            (min_price is None or wallet[4] >= min_price)
+        ):
+            filtered_wallets.append({
+                "brand": wallet[0],
+                "type": wallet[1],
+                "material": wallet[2],
+                "color": wallet[3],
+                "price": wallet[4]
+            })
+
+    return filtered_wallets
+
+@app.get("/market_store")
+async def filter_market_store(
+    category: str = Query(..., description="카테고리 ex) 폐백, 먹거리, 직물 등"),
+    store_name: str = Query(None, description="상호명"),
+    city: str = Query(None, description="광역시도"),
+    district: str = Query(None, description="시군구"),
+    town: str = Query(None, description="읍면동"),
+    telephone_num: str = Query(None, description="연락처"),
+    product: str = Query(None, description="판매상품 ex) 폐백음식, 명란젓, 맞춤정장 등")
+):
+    # 시장 점포 데이터
+    market_stores = [
+        ["폐백", "다만폐백", "서울특별시 종로구 예지동 6-1 광장시장 98호", "02-2279-4131", ["폐백음식", "이바지음식", "답례떡"]],
+        ["먹거리", "순희네반찬", "서울특별시 종로구 예지동 6-1 광장시장내 65-1", "02-2279-1855", ["명란젓", "간장게장", "가자미식해", "더덕무침"]],
+        ["직물", "진흥직물", "서울특별시 종로구 예지동 6-1 광장시장 147호", "0507-1475-9679", ["린넨까사", "린넨델가도", "린넨아미고"]],
+        ["먹거리", "오지개분식", "서울특별시 마포구 망원동 414-108 망원시장 B구역", "02-333-3639", ["떡볶이", "각종 튀김", "김밥", "순대", "어묵"]],
+        ["직물", "영성직물", "서울특별시 종로구 예지동 6-1 광장시장 1층 207호", "02-2267-3406", ["맞춤정장", "양복원단"]]
+    ]
+
+    filtered_stores = []
+
+    for store in market_stores:
+        if (
+            store[0] == category and
+            (store[1] == store_name if store_name else True) and
+            (store[2] == city if city else True) and
+            (store[3] == district if district else True) and
+            (store[4] == town if town else True) and
+            (store[5] == telephone_num if telephone_num else True) and
+            (product in store[6] if product else True)
+        ):
+            filtered_stores.append({
+                "category": store[0],
+                "store_name": store[1],
+                "detailed_address": store[2],
+                "telephone_num": store[3],
+                "product": store[4]
+            })
+
+    return filtered_stores
+
+@app.get("/lego_goods")
+async def filter_lego_goods(
+    product_name: str = Query(None, description="상품명"),
+    use_age: str = Query(..., description="사용연령 ex) 18세 이상, 8세 이상 등"),
+    max_price: int = Query(None, ge=0, description="최대 가격"),
+    min_price: int = Query(None, ge=0, description="최소 가격"),
+    max_parts: int = Query(None, ge=0, description="최대 부품수"),
+    min_parts: int = Query(None, ge=0, description="최소 부품수"),
+    field: str = Query(None, description="분야 ex) 빌딩, 자동차, 동물 등")
+):
+    # 레고 상품 데이터
+    lego_goods = [
+        ["부티크 호텔", 10297, "18세 이상", 299900, 3066, "빌딩"],
+        ["2022 포드 GT", 42154, "18세 이상", 159900, 1466, "자동차"],
+        ["행운의 고양이", 40436, "10세 이상", 13500, 134, "동물"],
+        ["아늑한 집", 31139, "8세 이상", 89900, 808, "빌딩"],
+        ["경찰차", 60312, "5세 이상", 12900, 94, "자동차"]
+    ]
+
+    filtered_goods = []
+
+    for goods in lego_goods:
+        if (
+            (goods[0] == product_name if product_name else True) and
+            goods[2] == use_age and
+            (goods[3] <= max_price if max_price else True) and
+            (goods[3] >= min_price if min_price else True) and
+            (goods[4] <= max_parts if max_parts else True) and
+            (goods[4] >= min_parts if min_parts else True) and
+            (goods[5] == field if field else True)
+        ):
+            filtered_goods.append({
+                "product_name": goods[0],
+                "product_num": goods[1],
+                "use_age": goods[2],
+                "price": goods[3],
+                "Parts_num": goods[4],
+                "field": goods[5]
+            })
+
+    return filtered_goods
+
+@app.get("/used_goods")
+async def filter_used_goods(
+    category: str = Query(None, description="카테고리 ex) 여성잡화, 가공식품, 생활가전"),
+    product_name: str = Query(None, description="상품명"),
+    city: str = Query(..., description="광역시도"),
+    district: str = Query(..., description="시군구"),
+    town: str = Query(None, description="읍면동"),
+    delivery_available: bool = Query(None, description="배송가능여부"),
+    purchase_available: bool = Query(None, description="구매가능여부"),
+    max_price: int = Query(None, ge=0, description="최대 가격")
+):
+    # 중고 물품 데이터
+    used_goods = [
+        ["여성잡화", "헬렌카민스키 마리나", "대전광역시 서구 도안동", True, True, 80000, "마리나 제품입니다. 구성품은 사진에 있는 것이 전부에요. 작년에 구매한 제품 입니다."],
+        ["생활가전", "전자레인지", "서울시 강북구 수유3동", False, True, 15000, "2004년식이고 작동은 잘 돼요 사이즈는 가로 54 세로 31 깊이 37"],
+        ["가공식품", "스팸선물세트 6호", "인천광역시 부평구 부평1동", False, False, 18000, "스팸 선물세트 6호 저렴하게 팔아요. 빠르게 연락주세요. 위치는 부평역 바로 앞 입니다."],
+        ["생활가전", "위닉스제습기", "경기도 의정부시 산곡동", False, True, 60000, "요즘같은때 딱 필요한 위닉스제습기 DHC-167IPW. 조인성배우분이 광고했던 인기제품이죠."],
+        ["여성잡화", "토리버치 크로스백", "경기도 수지구 성복동", True, True, 20000, "2번 들은 새상품급 깨끗한 상태입니다~ 미니 사이즈 크로스백 입니다. 사이즈 11x18"]
+    ]
+
+    filtered_goods = []
+
+    for goods in used_goods:
+        if (
+            (goods[0] == category if category else True) and
+            (goods[1] == product_name if product_name else True) and
+            goods[2] == f"{city} {district}" and
+            (goods[3] == delivery_available if delivery_available is not None else True) and
+            (goods[4] == purchase_available if purchase_available is not None else True) and
+            (goods[5] <= max_price if max_price else True)
+        ):
+            filtered_goods.append({
+                "category": goods[0],
+                "product_name": goods[1],
+                "location": goods[2],
+                "delivery_available": goods[3],
+                "purchase_available": goods[4],
+                "price": goods[5],
+                "description": goods[6]
+            })
+
+    return filtered_goods
+
+@app.get("/carrier_subscribers")
+async def filter_carrier_subscribers(
+    carrier: str = Query(..., description="통신사 ex) LG, SK, KT"),
+    subscribers_name: str = Query(None, description="고객명"),
+    subscription_date: str = Query(None, description="가입일 ex) 2019.02.11"),
+    phone_plan: str = Query(None, description="요금제 ex) 5G 시그니처, 다이렉트 LTE 22"),
+    amount: int = Query(None, description="청구금액"),
+    payment_status: bool = Query(None, description="요금 납부여부")
+):
+    # 대학교 학생 데이터
+    carrier_subscribers = [
+        ["LG", "유민기", "2021.04.02", "5G 시그니처", 88000, True, "2023.07.08"],
+        ["SK", "박미나", "2011.06.12", "T플랜 맥스", 69000, True, "2023.06.29"],
+        ["LG", "지정화", "2019.02.11", "LTE 프리미어 에센셜", 72000, False, "없음"],
+        ["KT", "김정식", "2012.05.23", "데이터ON", 43000, False, "없음"],
+        ["SK", "이은숙", "2022.08.04", "다이렉트 LTE 22", 22000, True, "2023.07.12"]
+    ]
+
+    filtered_subscribers = []
+
+    for subscriber in carrier_subscribers:
+        if (
+            subscriber[0] == carrier and
+            (subscriber[1] == subscribers_name if subscribers_name else True) and
+            (subscriber[2] == subscription_date if subscription_date else True) and
+            (subscriber[3] == phone_plan if phone_plan else True) and
+            (subscriber[4] == amount if amount else True) and
+            (subscriber[5] == payment_status if payment_status is not None else True)
+        ):
+            filtered_subscribers.append({
+                "carrier": subscriber[0],
+                "subscribers_name": subscriber[1],
+                "subscription_date": subscriber[2],
+                "phone_plan": subscriber[3],
+                "amount": subscriber[4],
+                "Payment_status": subscriber[5],
+                "payment_date": subscriber[6]
+            })
+
+    return filtered_subscribers
+
+@app.get("/maternity_clinic")
+async def filter_maternity_clinic(
+    name: str = Query(None, description="병원명"),
+    city: str = Query(None, description="광역시도"),
+    district: str = Query(None, description="시군구"),
+    town: str = Query(None, description="읍면동"),
+    woman_doctor: bool = Query(..., description="여의사진료 유무"),
+    min_doctor: int = Query(None, description="최소 전문의 수"),
+    specialized_cure: str = Query(None, description="전문진료명 ex) 여성성형, 여성검진, 복강경수술 등")
+):
+    # 산부인과 데이터
+    maternity_clinic = [
+        ["다움산부인과의원", "서울 강남구 역삼동 825-9", True, 2, ["여성성형", "여성검진", "외음부케어"]],
+        ["미래여성병원", "부산 부산진구 개금동 204-6", True, 10, ["여성성형", "여성검진"]],
+        ["아산더편한산부인과의원", "경기 남양주시 호평동 641", True, 1, ["여성검진", "산모검진"]],
+        ["이길완산부인과의원", "서울 은평구 대조동 6-5", False, 1, ["여성검진", "산모검진"]],
+        ["아이제일산부인과의원", "서울 은평구 역촌동 15-7", True, 4, ["복강경수술", "요실금", "여성성형", "에스테틱"]]
+    ]
+
+    filtered_clinics = []
+
+    for clinic in maternity_clinic:
+        if (
+            (clinic[0] == name if name else True) and
+            (clinic[1] == city if city else True) and
+            (clinic[2] == district if district else True) and
+            (clinic[3] == town if town else True) and
+            clinic[4] == woman_doctor and
+            (clinic[5] == min_doctor if min_doctor else True) and
+            (clinic[6] == specialized_cure if specialized_cure else True)
+        ):
+            filtered_clinics.append({
+                "name": clinic[0],
+                "address": clinic[1],
+                "woman_doctor": clinic[2],
+                "doctor_num": clinic[3],
+                "specialized_cure": clinic[4]
+            })
+
+    return filtered_clinics
+
+@app.get("/ophthalmic_clinic")
+async def filter_ophthalmic_clinic(
+    name: str = Query(None, description="병원명"),
+    city: str = Query(None, description="광역시도"),
+    district: str = Query(None, description="시군구"),
+    town: str = Query(None, description="읍면동"),
+    min_doctor: int = Query(None, description="최소 전문의 수"),
+    specialized_cure: str = Query(..., description="전문진료명 ex) 여성성형, 여성검진, 복강경수술 등")
+):
+    # 안과 데이터
+    ophthalmic_clinic = [
+        ["밝은눈안과의원", "서울시 서초구 서초동 1303-22", 8, ["백내장", "스마일라식", "라섹", "노안"], "1544-3994", "https://brighteyesclinic.com"],
+        ["손안과의원", "서울시 동대문구 전농동 32-4", 1, ["드림렌즈", "시력교정", "백내장", "녹내장"], "02-2244-7300", "없음"],
+        ["제일안과의원", "경기도 고양시 일산동구 장항동 895", 2, ["시력교정", "백내장", "드림렌즈", "노안"], "031-905-3357", "https://www.instagram.com/jeil_eye"],
+        ["새봄안과의원", "대전광역시 유성구 봉명동 1016-3", 3, ["백내장", "라식", "노안", "녹내장", "황반변성"], "042-826-2475", "http://www.sbeye.co.kr"],
+        ["푸른안과의원", "전라북도 전주시 덕진구 금암동 1588-6", 7, ["스마일라식", "라섹", "라식", "백내장"], "0507-1479-2124", "http://www.seenew.co.kr/"]
+    ]
+
+    filtered_clinics = []
+
+    for clinic in ophthalmic_clinic:
+        if (
+            (clinic[0] == name if name else True) and
+            (clinic[1] == city if city else True) and
+            (clinic[2] == district if district else True) and
+            (clinic[3] == town if town else True) and
+            (clinic[4] == min_doctor if min_doctor else True) and
+            clinic[5] == specialized_cure
+        ):
+            filtered_clinics.append({
+                "name": clinic[0],
+                "address": clinic[1],
+                "doctor_num": clinic[2],
+                "specialized_cure": clinic[3],
+                "telephone_num": clinic[4],
+                "website_address": clinic[5]
+            })
+
+    return filtered_clinics
+
+@app.get("/paid_app")
+async def filter_paid_app(
+    app_name: str = Query(None, description="어플명"),
+    type: str = Query(..., description="종류 ex) 카메라, 가계부 등"),
+    max_price: int = Query(None, description="최대 가격"),
+    min_price: int = Query(None, description="최소 가격"),
+    min_rating: float = Query(None, ge=0, le=5, description="최소 평점")
+):
+    # 유료 어플 데이터
+    paid_apps = [
+        ["화민필터", "카메라", 4400, 4.8, ["4400원이 안아까움", "필터들이 하나하나 다 예쁘고 이펙트 효과가 대박이라 소름 돋았어요."]],
+        ["위플 가계부 Pro", "가계부", 7700, 4.8, ["이만큼 깔끔하고 사용하기 쉽게 만들어진 어플은 없는 것 같아요.", "26살 때부터 써서 35살인 지금도 잘 사용 중입니다."]],
+        ["유니콘", "광고차단", 3300, 4.7, ["돈주고 앱사는건 인생처음입니다. 광고가 없어져서 너무 행복합니다", "광고를 확실하게 차단해줍니다! 추천!"]],
+        ["Analog Tokyo", "카메라", 1100, 2.8, ["다 좋은데 앱이 계속 꺼져요", "업데이트 좀 해주세요."]],
+        ["클머니가계부", "가계부", 5500, 3.2, ["동기화가 안됩나다. PC와 연동이 수일간 안되네요.", "진짜 너무 좋은데 업데이트가 안돼서 너무 아쉽습니다. 이만한 가계부 없는데...ㅠㅠ"]]
+    ]
+
+    filtered_apps = []
+
+    for app in paid_apps:
+        if (
+            (app[0] == app_name if app_name else True) and
+            app[1] == type and
+            (app[2] == max_price if max_price else True) and
+            (app[2] == min_price if min_price else True) and
+            (app[3] == min_rating if min_rating else True)
+        ):
+            filtered_apps.append({
+                "app_name": app[0],
+                "type": app[1],
+                "price": app[2],
+                "rating": app[3],
+                "review": app[4]
+            })
+
+    return filtered_apps
+
+
 
 
 #### 0718 Update ####
