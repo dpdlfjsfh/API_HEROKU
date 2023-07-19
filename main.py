@@ -1715,7 +1715,7 @@ async def filter_CVSPB(
             (product[0] == CVS_name) and
             (product[1] == type if type else True) and
             (product[2] == product_name if product_name else True) and
-            (product[3] == max_price if max_price else True) and
+            (product[3] <= max_price if max_price else True) and
             (product[4] == discount if discount else True)
         ):
             filtered_products.append({
@@ -3568,10 +3568,10 @@ def filter_refurbished_shop(
         filtered_products = [product for product in filtered_products if product[0] == manufacture]
     if name:
         filtered_products = [product for product in filtered_products if product[1] == name]
-    if category:
-        filtered_products = [product for product in filtered_products if product[2] == category]
     if sort:
-        filtered_products = [product for product in filtered_products if product[3] == sort]
+        filtered_products = [product for product in filtered_products if product[2] == sort]
+    if category:
+        filtered_products = [product for product in filtered_products if product[3] == category]
     if originPrice:
         filtered_products = [product for product in filtered_products if product[4] == originPrice]
     if min_salePrice:
@@ -3629,7 +3629,7 @@ uni_hospital_nurse_schedules = [
 @app.get("/uni_hospital_nurse")
 def filter_university_hospital_nurse(
     belong: str = Query(..., description="소속"),
-    schedule: str = Query(None, description="스케줄"),
+    day_schedule: str = Query(None, description="스케줄"),
     id: str = Query(None, description="사번"),
     name: str = Query(None, description="이름"),
     phone: str = Query(None, description="전화번호"),
@@ -3638,8 +3638,8 @@ def filter_university_hospital_nurse(
     filtered_schedules = uni_hospital_nurse_schedules
 
     filtered_schedules = [schedule for schedule in filtered_schedules if schedule[0] == belong]
-    if schedule:
-        filtered_schedules = [schedule for schedule in filtered_schedules if schedule[1] == schedule]
+    if day_schedule:
+        filtered_schedules = [schedule for schedule in filtered_schedules if schedule[1] == day_schedule]
     if id:
         filtered_schedules = [schedule for schedule in filtered_schedules if schedule[2] == id]
     if name:
@@ -3912,7 +3912,7 @@ member_data = [
 @app.get("/reading_room_member")
 def filter_reading_room_member(
     name: str = Query(None, description="회원 이름"),
-    seatId: str = Query(None, description="좌석 번호"),
+    seatId: int = Query(None, description="좌석 번호"),
     seatType: str = Query(..., description="좌석 형식"),
     min_time: int = Query(None, description="최소 잔여시간(분)"),
     max_time: int = Query(None, description="최대 잔여시간(분)"),
@@ -4042,7 +4042,7 @@ blogger_data = [
 @app.get("/blogger")
 def filter_blogger(
     blogName: str = Query(None, description="블로그명"),
-    blogger: str = Query(None, description="블로거 이름"),
+    bloggerName: str = Query(None, description="블로거 이름"),
     category: str = Query(..., description="카테고리"),
     min_openDate: int = Query(None, description="최소 개설일자"),
     keyword: str = Query(None, description="작성글 제목을 조회하는 키워드"),
@@ -4051,8 +4051,8 @@ def filter_blogger(
 
     if blogName:
         filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[0] == blogName]
-    if blogger:
-        filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[1] == blogger]
+    if bloggerName:
+        filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[1] == bloggerName ]
     filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[2] == category]
     if min_openDate is not None:
         filtered_bloggers = [blogger for blogger in filtered_bloggers if int(blogger[4].split(".")[0]) >= min_openDate]
