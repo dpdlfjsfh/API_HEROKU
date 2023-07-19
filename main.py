@@ -5673,9 +5673,9 @@ def filter_world_regional_festival(
 
     filtered_list = [festival for festival in filtered_list if name == festival[0]]
     if nation:
-        filtered_list = [festival for festival in filtered_list if festival[1] in nation]
+        filtered_list = [festival for festival in filtered_list if nation in festival[1]]
     if region:
-        filtered_list = [festival for festival in filtered_list if festival[1] in region]
+        filtered_list = [festival for festival in filtered_list if region in festival[1]]
     if contents:
         filtered_list = [festival for festival in filtered_list if contents == festival[2]]
     if month:
