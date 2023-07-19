@@ -4178,7 +4178,7 @@ def filter_museum_goods(
     filtered_goods = museum_goods_data
 
     if name:
-        filtered_goods = [goods for goods in filtered_goods if goods[0] == name]
+        filtered_goods = [goods for goods in filtered_goods if goods[0] in name]
     filtered_goods = [goods for goods in filtered_goods if goods[1] == type]
     if min_price:
         filtered_goods = [goods for goods in filtered_goods if goods[2] >= min_price]
