@@ -4654,11 +4654,11 @@ book_funding_data = [
 @app.get("/BookFunding")
 def filter_book_funding(
     b_name: str = Query(None, description="도서명"),
-    a_name: str = Query(None, description="저자명"),
+    a_name: str = Query(..., description="저자명"),
     min_price: int = Query(None, ge=0, description="최소 가격"),
     max_price: int = Query(None, ge=0, description="최대 가격"),
     date: str = Query(None, description="펀딩 마감일"),
-    desc: str = Query(..., description="설명 (도서 홍보 설명 등)"),
+    desc: str = Query(None, description="설명 (도서 홍보 설명 등)"),
 ):
     filtered_fundings = book_funding_data
 
