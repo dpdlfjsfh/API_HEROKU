@@ -4673,7 +4673,7 @@ def filter_book_funding(
     if date:
         filtered_fundings = [f for f in filtered_fundings if f[3] == date]
     if desc:
-        filtered_fundings = [f for f in filtered_fundings if f[5] == desc]
+        filtered_fundings = [f for f in filtered_fundings if desc in f[5]]
 
     return filtered_fundings
 
