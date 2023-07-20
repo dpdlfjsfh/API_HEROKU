@@ -2765,8 +2765,8 @@ async def filter_ophthalmic_clinic(
         if (
             (clinic[0] == name if name else True) and
             (city in clinic[1]  if city else True) and
-            (district in clinic[2]  if district else True) and
-            (town in clinic[3]  if town else True) and
+            (district in clinic[1]  if district else True) and
+            (town in clinic[1]  if town else True) and
             (clinic[2] >= min_doctor if min_doctor else True) and
             specialized_cure in clinic[3] 
         ):
