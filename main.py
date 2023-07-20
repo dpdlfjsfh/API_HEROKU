@@ -2724,12 +2724,12 @@ async def filter_maternity_clinic(
     for clinic in maternity_clinic:
         if (
             (clinic[0] == name if name else True) and
-            (clinic[1] == city if city else True) and
-            (clinic[2] == district if district else True) and
-            (clinic[3] == town if town else True) and
-            clinic[4] == woman_doctor and
-            (clinic[5] == min_doctor if min_doctor else True) and
-            (clinic[6] == specialized_cure if specialized_cure else True)
+            (city in clinic[1]  if city else True) and
+            (district in clinic[1]  if district else True) and
+            (town in clinic[1]   if town else True) and
+            clinic[2] == woman_doctor and
+            (clinic[3] >= min_doctor if min_doctor else True) and
+            (specialized_cure in clinic[4]  if specialized_cure else True)
         ):
             filtered_clinics.append({
                 "name": clinic[0],
@@ -2764,11 +2764,11 @@ async def filter_ophthalmic_clinic(
     for clinic in ophthalmic_clinic:
         if (
             (clinic[0] == name if name else True) and
-            (clinic[1] == city if city else True) and
-            (clinic[2] == district if district else True) and
-            (clinic[3] == town if town else True) and
-            (clinic[4] == min_doctor if min_doctor else True) and
-            clinic[5] == specialized_cure
+            (city in clinic[1]  if city else True) and
+            (district in clinic[2]  if district else True) and
+            (town in clinic[3]  if town else True) and
+            (clinic[2] >= min_doctor if min_doctor else True) and
+            specialized_cure in clinic[3] 
         ):
             filtered_clinics.append({
                 "name": clinic[0],
@@ -2804,9 +2804,9 @@ async def filter_paid_app(
         if (
             (app[0] == app_name if app_name else True) and
             app[1] == type and
-            (app[2] == max_price if max_price else True) and
-            (app[2] == min_price if min_price else True) and
-            (app[3] == min_rating if min_rating else True)
+            (app[2] <= max_price if max_price else True) and
+            (app[2] >= min_price if min_price else True) and
+            (app[3] >= min_rating if min_rating else True)
         ):
             filtered_apps.append({
                 "app_name": app[0],
