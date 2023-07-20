@@ -6871,17 +6871,17 @@ def filter_question_investigation(
 
     filtered_list = [item for item in filtered_list if item[0] == category]
     if question_name is not None:
-        filtered_list = [item for item in filtered_list if item[1] == question_name]
+        filtered_list = [item for item in filtered_list if question_name in item[1] ]
     if min_total_people is not None:
         filtered_list = [item for item in filtered_list if item[2] >= min_total_people]
     if min_join_people is not None:
-        filtered_list = [item for item in filtered_list if item[3] >= min_join_people]
+        filtered_list = [item for item in filtered_list if item[2] >= min_join_people]
     if max_join_people is not None:
-        filtered_list = [item for item in filtered_list if item[4] <= max_join_people]
+        filtered_list = [item for item in filtered_list if item[3] <= max_join_people]
     if max_question is not None:
-        filtered_list = [item for item in filtered_list if item[5] <= max_question]
+        filtered_list = [item for item in filtered_list if item[4] <= max_question]
     if join_tf is not None:
-        filtered_list = [item for item in filtered_list if item[6] == join_tf]
+        filtered_list = [item for item in filtered_list if item[5] == join_tf]
 
     return filtered_list
 
