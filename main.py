@@ -7232,7 +7232,7 @@ async def filter_non_caffeine(
     for drink in non_caffeine_drinks:
         if (
             (drink["name"] == name if name else True) and
-            (set(stuff).issubset(drink["stuff"])) and
+            (stuff in drink["stuff"]) and
             (drink["cold"] == cold if cold is not None else True) and
             (drink["price"] >= min_price if min_price is not None else True) and
             (drink["price"] <= max_price if max_price is not None else True)
