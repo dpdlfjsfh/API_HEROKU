@@ -3842,7 +3842,7 @@ def filter_diving_pool(
     name: str = Query(None, description="잠수풀명"),
     depth: float = Query(None, description="수심(m)"),
     amount: int = Query(None, description="수용 인원"),
-    class: str = Query(None, description="강습 종류"),
+    class_: str = Query(None, description="강습 종류"),
     rental: bool = Query(..., description="장비 대여 여부"),
     max_price: int = Query(None, description="최대 입장료"),
     keyword: str = Query(None, description="주소를 검색하는 키워드"),
@@ -3855,8 +3855,8 @@ def filter_diving_pool(
         filtered_diving_pools = [pool for pool in filtered_diving_pools if pool[2] == depth]
     if amount is not None:
         filtered_diving_pools = [pool for pool in filtered_diving_pools if pool[3] == amount]
-    if class is not None:
-        filtered_diving_pools = [pool for pool in filtered_diving_pools if class in pool[4]]
+    if class_ is not None:
+        filtered_diving_pools = [pool for pool in filtered_diving_pools if class_ in pool[4]]
     filtered_diving_pools = [pool for pool in filtered_diving_pools if pool[5] == rental]
     if max_price is not None:
         filtered_diving_pools = [pool for pool in filtered_diving_pools if pool[6] <= max_price]
