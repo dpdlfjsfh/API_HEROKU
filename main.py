@@ -4044,7 +4044,7 @@ def filter_blogger(
     blogName: str = Query(None, description="블로그명"),
     bloggerName: str = Query(None, description="블로거 이름"),
     category: str = Query(..., description="카테고리"),
-    openDate: int = Query(None, description="최소 개설일자"),
+    openDate: str = Query(None, description="최소 개설일자"),
     keyword: str = Query(None, description="작성글 제목을 조회하는 키워드"),
 ):
     filtered_bloggers = blogger_data
@@ -4055,7 +4055,7 @@ def filter_blogger(
         filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[1] == bloggerName ]
     filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[2] == category]
     if openDate is not None:
-        filtered_bloggers = [blogger for blogger in filtered_bloggers if int(blogger[4].split(".")[0]) >= openDate]
+        filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[4] openDate]
     if keyword:
         filtered_bloggers = [blogger for blogger in filtered_bloggers if keyword in blogger[3]]
 
