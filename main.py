@@ -2344,7 +2344,7 @@ async def filter_university_students(
 @app.get("/PaidSubscribers")
 async def filter_paid_subscribers(
     channel_name: str = Query(..., description="채널명"),
-    subscriber: str = Query(None, description="구독자명"),
+    subscriber_name: str = Query(None, description="구독자명"),
     subscription_date: str = Query(None, description="채널을 처음 구독한 일자 ex) 2021.07.08"),
     paid_subscription_date: str = Query(None, description="유료가입일자"),
     paid_num: int = Query(None, description="유료가입 회차")
@@ -2363,14 +2363,14 @@ async def filter_paid_subscribers(
     for subscriber in paid_subscribers:
         if (
             subscriber[0] == channel_name and
-            (subscriber[1] == subscriber if subscriber else True) and
+            (subscriber[1] == subscriber_name if subscriber_name else True) and
             (subscriber[3] == subscription_date if subscription_date else True) and
             (subscriber[4] == paid_subscription_date if paid_subscription_date else True) and
             (subscriber[5] == paid_num if paid_num else True)
         ):
             filtered_paid_subscribers.append({
                 "channel_name": subscriber[0],
-                "subscriber": subscriber[1],
+                "subscriber_name": subscriber[1],
                 "subscriber_id": subscriber[2],
                 "subscription_date": subscriber[3],
                 "paid_subscription_date": subscriber[4],
