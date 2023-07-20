@@ -3842,8 +3842,8 @@ def filter_diving_pool(
     name: str = Query(None, description="잠수풀명"),
     depth: float = Query(None, description="수심(m)"),
     amount: int = Query(None, description="수용 인원"),
-    class_: str = Query(..., description="강습 종류"),
-    rental: bool = Query(None, description="장비 대여 여부"),
+    class_: str = Query(None, description="강습 종류"),
+    rental: bool = Query(..., description="장비 대여 여부"),
     max_price: int = Query(None, description="최대 입장료"),
     keyword: str = Query(None, description="주소를 검색하는 키워드"),
 ):
@@ -3855,9 +3855,9 @@ def filter_diving_pool(
         filtered_diving_pools = [pool for pool in filtered_diving_pools if pool[2] == depth]
     if amount is not None:
         filtered_diving_pools = [pool for pool in filtered_diving_pools if pool[3] == amount]
-    filtered_diving_pools = [pool for pool in filtered_diving_pools if class_ in pool[4]]
-    if rental is not None:
-        filtered_diving_pools = [pool for pool in filtered_diving_pools if pool[5] == rental]
+    if class_ is not None:
+        filtered_diving_pools = [pool for pool in filtered_diving_pools if class_ in pool[4]]
+    filtered_diving_pools = [pool for pool in filtered_diving_pools if pool[5] == rental]
     if max_price is not None:
         filtered_diving_pools = [pool for pool in filtered_diving_pools if pool[6] <= max_price]
     if keyword:
@@ -4042,20 +4042,20 @@ blogger_data = [
 @app.get("/blogger")
 def filter_blogger(
     blogName: str = Query(None, description="블로그명"),
-    bloggerName: str = Query(None, description="블로거 이름"),
+    blogger: str = Query(None, description="블로거 이름"),
     category: str = Query(..., description="카테고리"),
-    min_openDate: int = Query(None, description="최소 개설일자"),
+    openDate: int = Query(None, description="최소 개설일자"),
     keyword: str = Query(None, description="작성글 제목을 조회하는 키워드"),
 ):
     filtered_bloggers = blogger_data
 
     if blogName:
         filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[0] == blogName]
-    if bloggerName:
-        filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[1] == bloggerName ]
+    if blogger:
+        filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[1] == blogger ]
     filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[2] == category]
-    if min_openDate is not None:
-        filtered_bloggers = [blogger for blogger in filtered_bloggers if int(blogger[4].split(".")[0]) >= min_openDate]
+    if openDate is not None:
+        filtered_bloggers = [blogger for blogger in filtered_bloggers if int(blogger[4].split(".")[0]) >= openDate]
     if keyword:
         filtered_bloggers = [blogger for blogger in filtered_bloggers if keyword in blogger[3]]
 
@@ -4771,8 +4771,8 @@ async def filter_nature_education(
             (edu["name"] == name if name else True) and
             (all(content in edu["contents"] for content in contents) if contents else True) and
             (edu["location"] == location if location else True) and
-            (edu["min_price"] is None or (edu["price"] >= min_price if min_price else True)) and
-            (edu["max_price"] is None or (edu["price"] <= max_price if max_price else True)) and
+            (edu["price"] is None or (edu["price"] >= min_price if min_price else True)) and
+            (edu["price"] is None or (edu["price"] <= max_price if max_price else True)) and
             (edu["age"] == age if age else True) and
             (edu["available"] == available if available is not None else True)
         ):
@@ -4911,8 +4911,8 @@ async def filter_shampoo_search(
             (shampoo["name"] == name if name else True) and
             (all(keyword in shampoo["effect"] for keyword in effect)) and
             (shampoo["aroma"] == aroma if aroma else True) and
-            (shampoo["min_price"] is None or (shampoo["price"] >= min_price if min_price else True)) and
-            (shampoo["max_price"] is None or (shampoo["price"] <= max_price if max_price else True)) and
+            (shampoo["price"] is None or (shampoo["price"] >= min_price if min_price else True)) and
+            (shampoo["price"] is None or (shampoo["price"] <= max_price if max_price else True)) and
             (shampoo["size"] == size if size else True) and
             (shampoo["component"] == component if component else True)
         ):
