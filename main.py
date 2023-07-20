@@ -7210,39 +7210,36 @@ def filter_pajama(
     return filtered_list
 
 
-noncaffeine_data = [
-    ["진한 보리차", ["볶은 보리"], True, 4000, "국내산 보리를 직접 볶아서 진하게 끓여낸 보리차입니다."],
-    ["루이보스티", ["루이보스"], False, 4500, "프리미엄 루이보스를 사용하였습니다."],
-    ["검은콩차", ["볶은 검은콩"], False, 4500, "국내산 검은콩을 직접 볶아서 진하게 끓여낸 보리차입니다."],
-    ["우엉차", ["말린 우엉"], False, 4500, "국내산 우엉을 사용한 차입니다."],
-    ["트로피컬 루이보스차", ["루이보스", "레몬", "베르가못"], True, 6000, "프리미엄 루이보스와 레몬필이 들어간 블랜딩 티입니다."]
-]
-
 @app.get("/NonCaffeine")
-def filter_noncaffeine(
+async def filter_non_caffeine(
     name: str = Query(None, description="음료이름"),
-    stuff: str = Query(..., description="재료 (예: 볶은 보리, 말린 우엉 등)"),
+    stuff: List[str] = Query(..., description="재료 (예: 보리, 우엉 등)"),
     cold: bool = Query(None, description="찬음료가능여부"),
     min_price: int = Query(None, description="최소 가격"),
     max_price: int = Query(None, description="최대 가격"),
 ):
-    filtered_list = noncaffeine_data
+    # 논카페인 음료 정보 데이터
+    non_caffeine_drinks = [
+        {"name": "진한 보리차", "stuff": ["보리"], "cold": True, "price": 4000, "desc": "국내산 보리를 직접 볶아서 진하게 끓여낸 보리차입니다."},
+        {"name": "루이보스티", "stuff": ["루이보스"], "cold": False, "price": 4500, "desc": "프리미엄 루이보스를 사용하였습니다."},
+        {"name": "검은콩차", "stuff": ["검은콩"], "cold": False, "price": 4500, "desc": "국내산 검은콩을 직접 볶아서 진하게 끓여낸 보리차입니다."},
+        {"name": "우엉차", "stuff": ["우엉"], "cold": False, "price": 4500, "desc": "국내산 우엉을 사용한 차입니다."},
+        {"name": "트로피컬 루이보스차", "stuff": ["루이보스", "레몬", "베르가못"], "cold": True, "price": 6000, "desc": "프리미엄 루이보스와 레몬필이 들어간 블랜딩 티입니다."},
+    ]
 
-    if name is not None:
-        filtered_list = [item for item in filtered_list if item[0] == name]
+    filtered_drinks = []
 
-    filtered_list = [item for item in filtered_list if item[1] == stuff]
+    for drink in non_caffeine_drinks:
+        if (
+            (drink["name"] == name if name else True) and
+            (set(stuff).issubset(drink["stuff"])) and
+            (drink["cold"] == cold if cold is not None else True) and
+            (drink["price"] >= min_price if min_price is not None else True) and
+            (drink["price"] <= max_price if max_price is not None else True)
+        ):
+            filtered_drinks.append(drink)
 
-    if cold is not None:
-        filtered_list = [item for item in filtered_list if item[2] == cold]
-
-    if min_price is not None:
-        filtered_list = [item for item in filtered_list if item[3] >= min_price]
-
-    if max_price is not None:
-        filtered_list = [item for item in filtered_list if item[3] <= max_price]
-
-    return filtered_list
+    return filtered_drinks
 
 donator_data = [
     ["이윤희", "서울시", "없음", 33, 450000, False, "010-0000-0000"],
