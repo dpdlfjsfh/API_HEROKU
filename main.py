@@ -4042,7 +4042,7 @@ blogger_data = [
 @app.get("/blogger")
 def filter_blogger(
     blogName: str = Query(None, description="블로그명"),
-    blogger: str = Query(None, description="블로거 이름"),
+    bloggerName: str = Query(None, description="블로거 이름"),
     category: str = Query(..., description="카테고리"),
     openDate: int = Query(None, description="최소 개설일자"),
     keyword: str = Query(None, description="작성글 제목을 조회하는 키워드"),
@@ -4051,7 +4051,7 @@ def filter_blogger(
 
     if blogName:
         filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[0] == blogName]
-    if blogger:
+    if bloggerName:
         filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[1] == blogger ]
     filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[2] == category]
     if openDate is not None:
