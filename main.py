@@ -6917,6 +6917,43 @@ def filter_swimming_goggles(
 
     return filtered_list
 
+@app.get("/bank_savings")
+async def filter_bank_savings(
+    bank: str = Query(..., description="은행"),
+    spot: str = Query(None, description="지점명"),
+    min_interest: float = Query(None, description="최소 금리(%)"),
+    max_interest: float = Query(None, description="최대 금리(%)"),
+    duration: int = Query(None, description="가입기간(개월)"),
+    min_contLimit: int = Query(None, description="최소 계약금액한도(만원)"),
+    max_contLimit: int = Query(None, description="최대 계약금액한도(만원)"),
+    signWay: str = Query(None, description="가입 방법(대면/비대면)"),
+):
+    # 예금 상품 정보 데이터
+    bank_savings = [
+        {"bank": "새마을금고", "spot": "파주", "interest": 5.7, "duration": 12, "contLimit": 5000, "signWay": "대면"},
+        {"bank": "농협은행", "spot": "안양", "interest": 4.5, "duration": 24, "contLimit": 3000, "signWay": "비대면"},
+        {"bank": "새마을금고", "spot": "강북", "interest": 3.8, "duration": 12, "contLimit": 10000, "signWay": "비대면"},
+        {"bank": "신협", "spot": "춘천", "interest": 2.1, "duration": 6, "contLimit": 7000, "signWay": "대면"},
+        {"bank": "우리은행", "spot": "단대오거리", "interest": 6.1, "duration": 36, "contLimit": 10000, "signWay": "비대면"},
+    ]
+
+    filtered_savings = []
+
+    for saving in bank_savings:
+        if (
+            (saving["bank"] == bank) and
+            (saving["spot"] == spot if spot else True) and
+            (saving["interest"] >= min_interest if min_interest is not None else True) and
+            (saving["interest"] <= max_interest if max_interest is not None else True) and
+            (saving["duration"] == duration if duration is not None else True) and
+            (saving["contLimit"] >= min_contLimit if min_contLimit is not None else True) and
+            (saving["contLimit"] <= max_contLimit if max_contLimit is not None else True) and
+            (saving["signWay"] == signWay if signWay else True)
+        ):
+            filtered_savings.append(saving)
+
+    return filtered_savings
+
 exchange_student_data = [
     ["김유라", "미국", "정치외교", "2211342", 4.12, 950],
     ["김형식", "영국", "경영", "220115", 4.30, 800],
