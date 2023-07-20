@@ -2556,11 +2556,11 @@ async def filter_market_store(
         if (
             store[0] == category and
             (store[1] == store_name if store_name else True) and
-            (store[2] == city if city else True) and
-            (store[3] == district if district else True) and
-            (store[4] == town if town else True) and
-            (store[5] == telephone_num if telephone_num else True) and
-            (product in store[6] if product else True)
+            (city in store[2] if city else True) and
+            (district in store[2]  if district else True) and
+            (town in store[2] ==  if town else True) and
+            (store[3] == telephone_num if telephone_num else True) and
+            (product in store[4] if product else True)
         ):
             filtered_stores.append({
                 "category": store[0],
@@ -2640,7 +2640,9 @@ async def filter_used_goods(
         if (
             (goods[0] == category if category else True) and
             (goods[1] == product_name if product_name else True) and
-            goods[2] == f"{city} {district}" and
+            (city in goods[2] if city else True) and
+            (district in goods[2]  if district else True) and
+            (town in goods[2] ==  if town else True) and
             (goods[3] == delivery_available if delivery_available is not None else True) and
             (goods[4] == purchase_available if purchase_available is not None else True) and
             (goods[5] <= max_price if max_price else True)
