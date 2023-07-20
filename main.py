@@ -4055,7 +4055,7 @@ def filter_blogger(
         filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[1] == bloggerName ]
     filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[2] == category]
     if openDate is not None:
-        filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[4] openDate]
+        filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[4] == openDate]
     if keyword:
         filtered_bloggers = [blogger for blogger in filtered_bloggers if keyword in blogger[3]]
 
