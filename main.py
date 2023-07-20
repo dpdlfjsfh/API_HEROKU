@@ -4948,8 +4948,8 @@ async def filter_bouquet_search(
             (bouquet["location"] == location) and
             (bouquet["flower"] == flower if flower else True) and
             (bouquet["color"] == color if color else True) and
-            (bouquet["min_price"] is None or (bouquet["price"] >= min_price if min_price else True)) and
-            (bouquet["max_price"] is None or (bouquet["price"] <= max_price if max_price else True))
+            (bouquet["price"] is None or (bouquet["price"] >= min_price if min_price else True)) and
+            (bouquet["price"] is None or (bouquet["price"] <= max_price if max_price else True))
         ):
             filtered_bouquets.append(bouquet)
 
