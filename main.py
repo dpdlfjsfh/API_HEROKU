@@ -4052,7 +4052,7 @@ def filter_blogger(
     if blogName:
         filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[0] == blogName]
     if bloggerName:
-        filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[1] == blogger ]
+        filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[1] == bloggerName ]
     filtered_bloggers = [blogger for blogger in filtered_bloggers if blogger[2] == category]
     if openDate is not None:
         filtered_bloggers = [blogger for blogger in filtered_bloggers if int(blogger[4].split(".")[0]) >= openDate]
