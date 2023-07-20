@@ -4745,42 +4745,40 @@ def filter_catering_customer_list(
 
     return filtered_list
 
-nature_education_data = [
-    ["건강숲","산행, 체조","백련산",40000,"65세 이상",True,"010-0000-0000"],
-    ["노르딕워킹","산행, 걷기코칭","백련산",60000,"일반성인",True,"010-0000-0000"],
-    ["양서류교실","숲해설, 물놀이","인산계곡",30000,"유아, 초등, 가족",True,"010-0000-0000"],
-    ["숲속보물찾기","숲해설, 자연탐방","인왕어린이공원",20000,"초등",False,"010-0000-0000"],
-    ["매미탐험","숲해설, 매미관찰","백련산",40000,"초등, 가족",True,"010-0000-0000"]
-]
-
 @app.get("/NatureEducation")
-def filter_nature_education(
+async def filter_nature_education(
     name: str = Query(None, description="교육이름"),
-    contents: str = Query(..., description="내용"),
+    contents: List[str] = Query(None, description="내용", min_length=1),
     location: str = Query(None, description="장소 (예: 백련산, 인왕계곡 등)"),
-    min_price: int = Query(None, gt=0, description="최소 가격"),
-    max_price: int = Query(None, gt=0, description="최대 가격"),
+    min_price: float = Query(None, description="최소 가격", ge=0),
+    max_price: float = Query(None, description="최대 가격", ge=0),
     age: str = Query(None, description="교육대상연령 (예: 유아, 초등, 가족 등)"),
     available: bool = Query(None, description="예약가능여부"),
 ):
-    filtered_list = nature_education_data
+    # 자연체험교육 정보 데이터
+    nature_educations = [
+        {"name": "건강숲", "contents": ["산행", "체조"], "location": "백련산", "price": 40000, "age": "65세 이상", "available": True, "tal": "010-0000-0000"},
+        {"name": "노르딕워킹", "contents": ["산행", "걷기코칭"], "location": "백련산", "price": 60000, "age": "일반성인", "available": True, "tal": "010-0000-0000"},
+        {"name": "양서류교실", "contents": ["숲해설", "물놀이"], "location": "인산계곡", "price": 30000, "age": "유아, 초등, 가족", "available": True, "tal": "010-0000-0000"},
+        {"name": "숲속보물찾기", "contents": ["숲해설", "자연탐방"], "location": "인왕어린이공원", "price": 20000, "age": "초등", "available": False, "tal": "010-0000-0000"},
+        {"name": "매미탐험", "contents": ["숲해설", "매미관찰"], "location": "백련산", "price": 40000, "age": "초등, 가족", "available": True, "tal": "010-0000-0000"},
+    ]
 
-    if name:
-        filtered_list = [l for l in filtered_list if l[0] == name]
-    if contents:
-        filtered_list = [l for l in filtered_list if l[1] == contents]
-    if location:
-        filtered_list = [l for l in filtered_list if l[2] == location]
-    if min_price is not None:
-        filtered_list = [l for l in filtered_list if l[3] >= min_price]
-    if max_price is not None:
-        filtered_list = [l for l in filtered_list if l[3] <= max_price]
-    if age:
-        filtered_list = [l for l in filtered_list if l[4] == age]
-    if available is not None:
-        filtered_list = [l for l in filtered_list if l[5] == available]
+    filtered_nature_educations = []
 
-    return filtered_list
+    for edu in nature_educations:
+        if (
+            (edu["name"] == name if name else True) and
+            (all(content in edu["contents"] for content in contents) if contents else True) and
+            (edu["location"] == location if location else True) and
+            (edu["min_price"] is None or (edu["price"] >= min_price if min_price else True)) and
+            (edu["max_price"] is None or (edu["price"] <= max_price if max_price else True)) and
+            (edu["age"] == age if age else True) and
+            (edu["available"] == available if available is not None else True)
+        ):
+            filtered_nature_educations.append(edu)
+
+    return filtered_nature_educations
 
 birds_of_korea_data = [
     ["청둥오리","Anas platyrhynchos","WV, Res","오리과",["하천","하구","저수지","호수","해안","농경지"],59],
@@ -4887,42 +4885,75 @@ def filter_small_local_club(
 
     return filtered_list
 
-shampoo_data = [
-    ["두피스파 샴푸","비듬 감소, 두피 건강","멘솔",12400,750,"소듐라우레스설페이트 등","시원한 쿨링감"],
-    ["모이스처 10 샴푸","두피와 모발건조 완화","코튼",15400,680,"소듐라우레스설페이트 등","촉촉함이 그대로 남는"],
-    ["자윤 모근강화 샴푸","모근 강화, 지성 두피용","한약재",17800,950,"소듐라우레스설페이트 등","한방 성분으로 모근을 더 건강하게"],
-    ["마이크로바이옴 효모 샴푸","두피 가려움 개선","플로럴",29000,400,"프로폴리스 추출물 등","두피 장벽 개선"],
-    ["펩타이드 고영양 샴푸","손상모 개선","코코넛",19400,850,"아르간 오일 등","찰랑찰랑한 머릿결로 회복"]
-]
-
 @app.get("/ShampooSearch")
-def filter_shampoo(
+async def filter_shampoo_search(
     name: str = Query(None, description="제품명"),
-    effect: str = Query(..., description="기능 (예: 비듬 감소, 모근 강화 등)"),
+    effect: List[str] = Query(..., description="기능키워드 (예: 비듬, 모근 등)", min_length=1),
     aroma: str = Query(None, description="향 (예: 코튼, 플로럴 등)"),
-    min_price: int = Query(None, description="최소 가격"),
-    max_price: int = Query(None, description="최대 가격"),
-    size: int = Query(None, description="용량(ml)"),
+    min_price: float = Query(None, description="최소 가격", ge=0),
+    max_price: float = Query(None, description="최대 가격", ge=0),
+    size: float = Query(None, description="용량(ml)"),
     component: str = Query(None, description="성분 (예: 프로폴리스, 아르간 오일 등)"),
 ):
-    filtered_list = shampoo_data
+    # 샴푸 정보 데이터
+    shampoos = [
+        {"name": "두피스파 샴푸", "effect": ["비듬", "두피"], "aroma": "멘솔", "price": 12400, "size": 750, "component": "소듐라우레스설페이트", "desc": "시원한 쿨링감"},
+        {"name": "모이스처 10 샴푸", "effect": ["두피", "모발", "건조"], "aroma": "코튼", "price": 15400, "size": 680, "component": "소듐라우레스설페이트", "desc": "촉촉함이 그대로 남는"},
+        {"name": "자윤 모근강화 샴푸", "effect": ["모근", "지성", "두피"], "aroma": "한약재", "price": 17800, "size": 950, "component": "소듐라우레스설페이트", "desc": "한방 성분으로 모근을 더 건강하게"},
+        {"name": "마이크로바이옴 효모 샴푸", "effect": ["두피", "가려움"], "aroma": "플로럴", "price": 29000, "size": 400, "component": "프로폴리스 추출물", "desc": "두피 장벽 개선"},
+        {"name": "펩타이드 고영양 샴푸", "effect": ["손상모"], "aroma": "코코넛", "price": 19400, "size": 850, "component": "아르간 오일", "desc": "찰랑찰랑한 머릿결로 회복"},
+    ]
 
-    if name:
-        filtered_list = [s for s in filtered_list if s[0] == name]
-    if effect:
-        filtered_list = [s for s in filtered_list if s[1] == effect]
-    if aroma:
-        filtered_list = [s for s in filtered_list if s[2] == aroma]
-    if min_price is not None:
-        filtered_list = [s for s in filtered_list if s[3] >= min_price]
-    if max_price is not None:
-        filtered_list = [s for s in filtered_list if s[3] <= max_price]
-    if size is not None:
-        filtered_list = [s for s in filtered_list if s[4] == size]
-    if component:
-        filtered_list = [s for s in filtered_list if s[5] == component]
+    filtered_shampoos = []
 
-    return filtered_list
+    for shampoo in shampoos:
+        if (
+            (shampoo["name"] == name if name else True) and
+            (all(keyword in shampoo["effect"] for keyword in effect)) and
+            (shampoo["aroma"] == aroma if aroma else True) and
+            (shampoo["min_price"] is None or (shampoo["price"] >= min_price if min_price else True)) and
+            (shampoo["max_price"] is None or (shampoo["price"] <= max_price if max_price else True)) and
+            (shampoo["size"] == size if size else True) and
+            (shampoo["component"] == component if component else True)
+        ):
+            filtered_shampoos.append(shampoo)
+
+    return filtered_shampoos
+
+@app.get("/BouquetSearch")
+async def filter_bouquet_search(
+    name: str = Query(None, description="제품명"),
+    f_name: str = Query(None, description="플로리스트 이름"),
+    location: str = Query(..., description="지역 (예: 서울시, 인천시, 대전시 등)"),
+    flower: str = Query(None, description="꽃종류 (예: 장미, 백합 등)"),
+    color: str = Query(None, description="색상 (예: 분홍색, 흰색 등)"),
+    min_price: float = Query(None, description="최소 가격", ge=0),
+    max_price: float = Query(None, description="최대 가격", ge=0),
+):
+    # 꽃다발 정보 데이터
+    bouquets = [
+        {"name": "겨울의신부", "f_name": "이선화", "location": "서울시", "flower": "은방울꽃", "color": "흰색", "price": 250000, "tel": "010-0000-0000"},
+        {"name": "트로피컬무드", "f_name": "이지현", "location": "인천시", "flower": "카라", "color": "주황색", "price": 200000, "tel": "010-0000-0000"},
+        {"name": "5월의 특혜", "f_name": "김승혜", "location": "대전시", "flower": "작약", "color": "분홍색", "price": 230000, "tel": "010-0000-0000"},
+        {"name": "붉은약속", "f_name": "박수현", "location": "부산시", "flower": "장미", "color": "빨간색", "price": 150000, "tel": "010-0000-0000"},
+        {"name": "보라색 꿈", "f_name": "유혜진", "location": "세종시", "flower": "반다", "color": "보라색", "price": 200000, "tel": "010-0000-0000"},
+    ]
+
+    filtered_bouquets = []
+
+    for bouquet in bouquets:
+        if (
+            (bouquet["name"] == name if name else True) and
+            (bouquet["f_name"] == f_name if f_name else True) and
+            (bouquet["location"] == location) and
+            (bouquet["flower"] == flower if flower else True) and
+            (bouquet["color"] == color if color else True) and
+            (bouquet["min_price"] is None or (bouquet["price"] >= min_price if min_price else True)) and
+            (bouquet["max_price"] is None or (bouquet["price"] <= max_price if max_price else True))
+        ):
+            filtered_bouquets.append(bouquet)
+
+    return filtered_bouquets
 
 fizzwater_data = [
     ["빅토리아","국내산",2000,500,"플레인","페트병"],
