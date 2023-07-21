@@ -471,7 +471,7 @@ toilet_paper_data = [
 
 @app.get("/ToiletPaper")
 async def filter_toilet_paper(
-    name: str = Query(..., description="상품명"),
+    name: str = Query(None, description="상품명"),
     sheets: str = Query(..., description="겹수 (예: 2겹, 3겹, 4겹 등)"),
     aroma: Optional[bool] = Query(None, description="향여부"),
     natural: Optional[bool] = Query(None, description="천연펄프여부"),
@@ -483,7 +483,7 @@ async def filter_toilet_paper(
 ):
     filtered_toilet_papers = []
     for toilet_paper in toilet_paper_data:
-        if name != toilet_paper["name"]:
+        if name is not None and name != toilet_paper["name"]:
             continue
         if sheets != toilet_paper["sheets"]:
             continue
