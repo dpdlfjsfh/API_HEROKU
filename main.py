@@ -7250,7 +7250,7 @@ def filter_pajama(
 @app.get("/NonCaffeine")
 async def filter_non_caffeine(
     name: str = Query(None, description="음료이름"),
-    stuff: List[str] = Query(..., description="재료 (예: 보리, 우엉 등)"),
+    stuff: str = Query(..., description="재료 (예: 보리, 우엉 등)"),
     cold: bool = Query(None, description="찬음료가능여부"),
     min_price: int = Query(None, description="최소 가격"),
     max_price: int = Query(None, description="최대 가격"),
