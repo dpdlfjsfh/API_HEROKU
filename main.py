@@ -17,7 +17,7 @@ async def basketball_test(
     return filtered_data
 
 basketball_test2 = [["김갑","서울"],["이을","부산"],["박병","대구"]]
-@app.get("/basketball_test")
+@app.get("/basketball_test2")
 
 async def basketball_test2(
     name: str = Query(...)):
