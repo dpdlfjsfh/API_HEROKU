@@ -3,6 +3,32 @@ from typing import List, Optional
 
 app = FastAPI()
 
+### 0809 test
+
+basketball_test = [[1,"김갑"],[2,"이을"],[3,"박병"]]
+@app.get("/basketball_test")
+
+async def basketball_test(
+    id: int = Query(...)):
+        filtered_data = []
+    for item in basketball_test:
+        if item[0] == id:
+            filtered_data.append({"id": item[0], "name":id[1]})
+    return filtered_data
+
+basketball_test2 = [["김갑","서울"],["이을","부산"],["박병","대구"]]
+@app.get("/basketball_test")
+
+async def basketball_test2(
+    name: str = Query(...)):
+        filtered_data = []
+    for item in basketball_test2:
+        if item[0] == name:
+            filtered_data.append({"name": item[0], "team":id[1]})
+    return filtered_data
+
+
+
 ### 0809 Update
 
 swimming_cap_data = [
