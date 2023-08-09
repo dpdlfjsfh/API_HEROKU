@@ -1684,7 +1684,710 @@ async def filter_nipple_patch(
 
     return filtered_data
 
+movie_data = [
+    ["라라랜드", 2016, "드라마", "라이언고슬링", "판씨네마(주)", "데이미언셔젤"],
+    ["해운대", 2009, "모험", "설경구", "CJENM", "윤제균"],
+    ["기생충", 2019, "드라마", "송강호", "CJENM", "봉준호"],
+    ["살인의추억", 2003, "범죄", "송강호", "CJENM", "봉준호"],
+    ["극한직업", 2019, "코미디", "류승룡", "CJENM", "이병헌"]
+]
 
+@app.get("/Movie")
+async def filter_movie(
+    title: str = Query(..., description="영화제목 (한글로 적어주세요)"),
+    released_year: Optional[int] = Query(None, description="개봉연도"),
+    genre: Optional[str] = Query(None, description="장르 (ex: 코미디, 드라마, 모험, 범죄 등)"),
+    main_actor: Optional[str] = Query(None, description="주연배우명"),
+    director: Optional[str] = Query(None, description="감독명")
+):
+    filtered_data = []
+
+    for item in movie_data:
+        if (
+            item[0] == title and
+            (released_year is None or item[1] == released_year) and
+            (genre is None or item[2] == genre) and
+            (main_actor is None or item[3] == main_actor) and
+            (director is None or item[5] == director)
+        ):
+            filtered_data.append({
+                "title": item[0],
+                "released_year": item[1],
+                "genre": item[2],
+                "main_actor": item[3],
+                "distributor": item[4],
+                "director": item[5]
+            })
+
+    return filtered_data
+
+congressman_data = [
+    ["강기윤", "남", "국민의힘", 1960, 2, 21],
+    ["강대식", "남", "국민의힘", 1959, 1, 21],
+    ["강득구", "남", "더불어민주당", 1963, 1, 21],
+    ["강민국", "남", "국민의힘", 1971, 1, 21],
+    ["강민정", "여", "더불어민주당", 1961, 1, 21]
+]
+
+@app.get("/Congressman")
+async def filter_congressman(
+    name: str = Query(..., description="성명 (한글로 적어주세요)"),
+    sex: Optional[str] = Query(None, description="성별 (남 or 여)"),
+    polparty: Optional[str] = Query(None, description="소속정당"),
+    nth_Congress: Optional[int] = Query(None, description="대수 (단위: 대)"),
+    seniority: Optional[int] = Query(None, description="당선횟수 (단위: 번, 회)")
+):
+    filtered_data = []
+
+    for item in congressman_data:
+        if (
+            item[0] == name and
+            (sex is None or item[1] == sex) and
+            (polparty is None or item[2] == polparty) and
+            (nth_Congress is None or item[5] == nth_Congress) and
+            (seniority is None or item[4] == seniority)
+        ):
+            filtered_data.append({
+                "name": item[0],
+                "sex": item[1],
+                "polparty": item[2],
+                "birthyear": item[3],
+                "seniority": item[4],
+                "nth_Congress": item[5]
+            })
+
+    return filtered_data
+
+bestseller_data = [
+    ["세이노의 가르침", "세이노", "자기계발", 9791168473690, "데이원", True, 2023],
+    ["문과 남자의 과학 공부", "유시민", "인문", 9791192836188, "돌베개", False, 2023],
+    ["인생을 결정짓는 내 안의 감정 패턴", "황시투안", "자기계발", 9791158741969, "미디어숲", False, 2023],
+    ["해커스 토익 기출보카 토익 보카 단어장", "데이티브 초", "외국어", 9788965422785, "해커스어학연구소", True, 2019],
+    ["역행자", "자청", "자기계발", 9788901272580, "웅진지식하우스", True, 2023]
+]
+
+@app.get("/BestsellerBook")
+async def filter_bestseller_book(
+    title: Optional[str] = Query(None, description="제목 (한글로 적어주세요)"),
+    author: str = Query(..., description="작가 (한글로 적어주세요)"),
+    category: Optional[str] = Query(None, description="카테고리"),
+    sale: Optional[bool] = Query(None, description="세일여부"),
+    published_year: Optional[int] = Query(None, description="출간연도")
+):
+    filtered_data = []
+
+    for item in bestseller_data:
+        if (
+            item[1] == author and
+            (title is None or item[0] == title) and
+            (category is None or item[2] == category) and
+            (sale is None or item[5] == sale) and
+            (published_year is None or item[6] == published_year)
+        ):
+            filtered_data.append({
+                "title": item[0],
+                "author": item[1],
+                "category": item[2],
+                "ISBN": item[3],
+                "publisher": item[4],
+                "sale": item[5],
+                "published_year": item[6]
+            })
+
+    return filtered_data
+
+cultural_properties_data = [
+    ["서울 숭례문", "국보", "서울 중구 세종대로 40(남대문로4가)", "조선시대", "국유"],
+    ["서울 원각사지 십층석탑", "국보", "서울 종로구 종로 99 (종로2가)", "조선시대", "국유"],
+    ["서울 북한산 신라 진흥왕 순수비", "국보", "서울 용산구 서빙고로 137, 국립중앙박물관 (용산동6가)", "삼국시대", "국유"],
+    ["여주 고달사지 승탑", "국보", "경기도 여주시 북내면 상교리 411-1", "고려시대", "국유"],
+    ["보은 법주사 쌍사자 석등", "국보", "충북 보은군 속리산면 법주사로 379, 법주사 (사내리)", "통일신라시대", "법주사"]
+]
+
+@app.get("/CulturalProperties")
+async def filter_cultural_properties(
+    name: Optional[str] = Query(None, description="문화재명 (한글로 적어주세요)"),
+    category: str = Query(..., description="지정종목 (ex: 국보, 보물, 사적)"),
+    location: Optional[str] = Query(None, description="소재지를 바탕으로 검색하는 키워드"),
+    built_age: Optional[str] = Query(None, description="축조시대 (ex: 조선시대, 고려시대, 삼국시대, 통일신라시대 등)"),
+    owner: Optional[str] = Query(None, description="소유자 (ex: 국유, 법주사 등)")
+):
+    filtered_data = []
+
+    for item in cultural_properties_data:
+        if (
+            item[1] == category and
+            (name is None or item[0] == name) and
+            (location is None or location in item[2]) and
+            (built_age is None or item[3] == built_age) and
+            (owner is None or item[4] == owner)
+        ):
+            filtered_data.append({
+                "name": item[0],
+                "category": item[1],
+                "location": item[2],
+                "built_age": item[3],
+                "owner": item[4]
+            })
+
+    return filtered_data
+
+new_music_data = [
+    ["스파이시", "에스파", "댄스", "루드비그 에버스", "방혜현", "문샤인"],
+    ["이티에이", "뉴진스", "댄스", "이오공", "임성빈", "이오공"],
+    ["아이엠", "아이브", "댄스", "라이언 전", "김이나", "라이언 전"],
+    ["여름이 들려", "오마이걸", "댄스", "라이언 전", "이스란", "라이언 전"],
+    ["허니문", "트웰브", "알앤비", "트웰브", "트웰브", "트웰브"]
+]
+
+@app.get("/NewMusic")
+async def filter_new_music(
+    title: Optional[str] = Query(None, description="곡제목 (한글로 적어주세요)"),
+    singer: str = Query(..., description="가수명 (한글로 적어주세요)"),
+    lyricist: Optional[str] = Query(None, description="작사가명 (한글로 적어주세요)"),
+    composer: Optional[str] = Query(None, description="작곡가명 (한글로 적어주세요)"),
+    genre: Optional[str] = Query(None, description="음악장르 (한글로 적어주세요. ex: 댄스, 알앤비 등)")
+):
+    filtered_data = []
+
+    for item in new_music_data:
+        if (
+            item[1] == singer and
+            (title is None or item[0] == title) and
+            (lyricist is None or item[4] == lyricist) and
+            (composer is None or item[3] == composer) and
+            (genre is None or item[2] == genre)
+        ):
+            filtered_data.append({
+                "title": item[0],
+                "singer": item[1],
+                "genre": item[2],
+                "composer": item[3],
+                "lyricist": item[4],
+                "arranger": item[5]
+            })
+
+    return filtered_data
+
+drama_data = [
+    ["비밀의숲2", "tvN", "스튜디오드래곤", 9.4, "안창호", "이수연"],
+    ["닥터차정숙", "JTBC", "(주)스튜디오앤뉴", 18.5, "임종화", "정여랑"],
+    ["마당이 있는 집", "ENA", "스튜디오드래곤", 3.0, "김하나", "지아니"],
+    ["미스터 선샤인", "tvN", "화앤담픽쳐스", 18.1, "이응복", "김은숙"],
+    ["구미호뎐1938", "tvN", "스튜디오드래곤", 8.0, "나지현", "한우리"]
+]
+
+@app.get("/Drama")
+async def filter_drama(
+    title: Optional[str] = Query(None, description="제목 (한글과 숫자만을 사용해서 적어주세요)"),
+    tvchannel: str = Query(..., description="편성채널(영어로 적어주세요. ex: tvN, JTBC, ENA 등)"),
+    min_rating: Optional[float] = Query(None, description="최소 시청률 (단위: %)"),
+    director: Optional[str] = Query(None, description="감독명 (한글로 적어주세요)"),
+    writer: Optional[str] = Query(None, description="작가명 (한글로 적어주세요)")
+):
+    filtered_data = []
+
+    for item in drama_data:
+        if (
+            item[1] == tvchannel and
+            (title is None or item[0] == title) and
+            (min_rating is None or item[3] >= min_rating) and
+            (director is None or item[4] == director) and
+            (writer is None or item[5] == writer)
+        ):
+            filtered_data.append({
+                "title": item[0],
+                "tvchannel": item[1],
+                "production": item[2],
+                "rating": item[3],
+                "director": item[4],
+                "writer": item[5]
+            })
+
+    return filtered_data
+
+suncare_data = [
+    [50, "셀퓨전씨", "선크림", 45, "대한민국"],
+    [50, "에스트라", "선크림", 40, "대한민국"],
+    [50, "라로슈포제", "선크림", 30, "프랑스"],
+    [50, "피지오겔", "선로션", 100, "대한민국"],
+    [50, "셀퓨전씨", "선스틱", 19, "대한민국"]
+]
+
+@app.get("/Suncare")
+async def filter_suncare(
+    spf: int = Query(..., description="SPF지수"),
+    brand: Optional[str] = Query(None, description="브랜드 (한글로 적어주세요)"),
+    capacity: Optional[int] = Query(None, description="최소 용량 (단위: ml)"),
+    manufacturing_country: Optional[str] = Query(None, description="제조국 (한글로 적어주세요)"),
+    type: Optional[str] = Query(None, description="제형 (ex: 선크림, 선로션, 선스틱 등)")
+):
+    filtered_data = []
+
+    for item in suncare_data:
+        if (
+            item[0] == spf and
+            (brand is None or item[1] == brand) and
+            (capacity is None or item[3] >= capacity) and
+            (manufacturing_country is None or item[4] == manufacturing_country) and
+            (type is None or item[2] == type)
+        ):
+            filtered_data.append({
+                "spf": item[0],
+                "brand": item[1],
+                "type": item[2],
+                "capacity": item[3],
+                "manufacturing_country": item[4]
+            })
+
+    return filtered_data
+
+airconditioner_data = [
+    ["엘지 투인원 에어컨", "엘지전자", "멀티형", 3, 7200],
+    ["엘지 휘센", "엘지전자", "스탠드형", 3, 7000],
+    ["삼성전자 무풍클래식", "삼성전자", "멀티형", 2, 7000],
+    ["캐리어 클라윈드", "캐리어", "벽걸이형", 5, 2300],
+    ["위니아 인버터 벽걸이에어컨", "위니아", "벽걸이형", 5, 2300]
+]
+
+@app.get("/Airconditioner")
+async def filter_airconditioner(
+    brand: Optional[str] = Query(None, description="브랜드 (한글로 적어주세요)"),
+    type: str = Query(..., description="상품유형 (한글로 적어주세요. ex: 멀티형, 벽걸이형, 스탠드형 등)"),
+    energy_grade: Optional[int] = Query(None, description="에너지효율등급"),
+    min_capacity: Optional[int] = Query(None, description="냉방능력"),
+    max_capacity: Optional[int] = Query(None, description="냉방능력")
+):
+    filtered_data = []
+
+    for item in airconditioner_data:
+        if (
+            (brand is None or item[1] == brand) and
+            item[2] == type and
+            (energy_grade is None or item[3] == energy_grade) and
+            (min_capacity is None or item[4] >= min_capacity) and
+            (max_capacity is None or item[4] <= max_capacity)
+        ):
+            filtered_data.append({
+                "name": item[0],
+                "brand": item[1],
+                "type": item[2],
+                "energy_grade": item[3],
+                "capacity": item[4]
+            })
+
+    return filtered_data
+
+fan_data = [
+    [True, "비티글로벌", "스탠드형", "BLDC", True],
+    [True, "신일전자", "스탠드형", "BLDC", True],
+    [False, "듀플렉스", "스탠드형", "AC", True],
+    [True, "한일전기", "벽걸이형", "AC", False],
+    [False, "스타일리스", "서큘레이터", "DC", False]
+]
+
+@app.get("/Fan")
+async def filter_fan(
+    remote: Optional[bool] = Query(None, description="리모컨여부"),
+    brand: Optional[str] = Query(None, description="제조사 (한글로 적어주세요)"),
+    type: str = Query(..., description="상품유형 (한글로 적어주세요. ex: 스탠드형, 서큘레이터, 벽걸이형 등)"),
+    motor_type: Optional[str] = Query(None, description="모터종류 (영어로 적어주세요. ex: DC, BLDC, AC)"),
+    freeshipping: Optional[bool] = Query(None, description="무료배송여부")
+):
+    filtered_data = []
+
+    for item in fan_data:
+        if (
+            (remote is None or item[0] == remote) and
+            (brand is None or item[1] == brand) and
+            item[2] == type and
+            (motor_type is None or item[3] == motor_type) and
+            (freeshipping is None or item[4] == freeshipping)
+        ):
+            filtered_data.append({
+                "remote": item[0],
+                "brand": item[1],
+                "type": item[2],
+                "motor_type": item[3],
+                "freeshipping": item[4]
+            })
+
+    return filtered_data
+
+dryer_data = [
+    ["에이씨모터", "보만", 3, True, 850],
+    ["에이씨모터", "위닉스", 4, True, 950],
+    ["인버터모터", "삼성전자", 19, True, 2400],
+    ["인버터모터", "엘지전자", 10, False, 950],
+    ["인버터모터", "엘지전자", 19, True, 950]
+]
+
+@app.get("/Dryer")
+async def filter_dryer(
+    motortype: Optional[str] = Query(None, description="모터종류 (한글로 적어주세요. ex: 인버터모터, 에이씨모터)"),
+    brand: Optional[str] = Query(None, description="제조사 (한글로 적어주세요)"),
+    capacity: int = Query(..., description="건조용량 (단위: kg)"),
+    max_powerCnsmptn: Optional[int] = Query(None, description="최대 소비전력 (단위: kW)"),
+    freeshipping: Optional[bool] = Query(None, description="무료배송여부")
+):
+    filtered_data = []
+
+    for item in dryer_data:
+        if (
+            (motortype is None or item[0] == motortype) and
+            (brand is None or item[1] == brand) and
+            item[2] == capacity and
+            (max_powerCnsmptn is None or item[4] <= max_powerCnsmptn) and
+            (freeshipping is None or item[3] == freeshipping)
+        ):
+            filtered_data.append({
+                "motortype": item[0],
+                "brand": item[1],
+                "capacity": item[2],
+                "freeshipping": item[3],
+                "powerCnsmptn": item[4]
+            })
+
+    return filtered_data
+
+sneakers_data = [
+    ["나이키", [260, 270, 280], 270000, "보라색", "농구화"],
+    ["아디다스", [240, 245, 250], 230000, "파란색", "농구화"],
+    ["뉴발란스", [250, 240, 245], 190000, "검정색", "런닝화"],
+    ["호카", [260, 265, 270], 200000, "형광노랑색", "트래킹화"],
+    ["휠라", [240, 245, 250], 150000, "노랑색", "런닝화"]
+]
+
+@app.get("/Sneakers")
+async def filter_sneakers(
+    brand: Optional[str] = Query(None, description="브랜드 (한글로 적어주세요. ex: 나이키, 아디다스, 호카 등)"),
+    size: int = Query(..., description="사이즈"),
+    category: Optional[str] = Query(None, description="카테고리 (한글로 적어주세요. ex: 농구화, 런닝화, 트래킹화 등)"),
+    min_price: Optional[int] = Query(None, description="최소 가격 (단위: 원)"),
+    max_price: Optional[int] = Query(None, description="최대 가격 (단위: 원)")
+):
+    filtered_data = []
+
+    for item in sneakers_data:
+        if (
+            (brand is None or item[0] == brand) and
+            size in item[1] and
+            (category is None or item[4] == category) and
+            (min_price is None or item[2] >= min_price) and
+            (max_price is None or item[2] <= max_price)
+        ):
+            filtered_data.append({
+                "brand": item[0],
+                "size": item[1],
+                "category": item[4],
+                "price": item[2],
+                "color": item[3]
+            })
+
+    return filtered_data
+
+microphone_data = [
+    ["MXL", "콘덴서 마이크", "실버", "청량감 있는 고음역대를 충분하게 수음할 수 있다", "머리 착용", 190000],
+    ["Sennheiser", "다이나믹 마이크", "블랙", "여러 거리에서도 음성이 풍부하고 생생하게 전달된다", "반원 타입", 250000],
+    ["BOYA", "무선 마이크", "블랙", "2.4GHz 주파수를 이용하는 초소형 마이크", "클립 타입", 99000],
+    ["SHURE", "다이나믹 마이크", "블랙", "원음의 비범한 소리를 언제 어디서나 바로 들을 수 있다", "손잡이 타입", 210000],
+    ["RODE", "콘덴서 마이크", "블랙", "스튜디오 수준의 사운드를 매우 간단하게 구현할 수 있는 전문적인 마이크이다.", "유에스비 타입", 310000]
+]
+
+@app.get("/Microphone")
+async def filter_microphone(
+    brand: Optional[str] = Query(None, description="브랜드 (영어로 적어주세요. ex: MXL, Sennheiser 등)"),
+    type: str = Query(..., description="종류 (한글로 적어주세요. ex: 콘덴서 마이크, 다이나믹 마이크, 무선 마이크 등)"),
+    color: Optional[str] = Query(None, description="색상 (한글로 적어주세요. ex: 실버, 블랙 등)"),
+    shape: Optional[str] = Query(None, description="형태 (한글로 적어주세요. ex: 머리 착용, 반원 타입, 유에스비 타입 등)"),
+    min_price: Optional[int] = Query(None, description="최소 가격 (단위: 원)"),
+    max_price: Optional[int] = Query(None, description="최대 가격 (단위: 원)")
+):
+    filtered_data = []
+
+    for item in microphone_data:
+        if (
+            (brand is None or item[0] == brand) and
+            item[1] == type and
+            (color is None or item[2] == color) and
+            (shape is None or item[4] == shape) and
+            (min_price is None or item[5] >= min_price) and
+            (max_price is None or item[5] <= max_price)
+        ):
+            filtered_data.append({
+                "brand": item[0],
+                "type": item[1],
+                "color": item[2],
+                "desc": item[3],
+                "shape": item[4],
+                "price": item[5]
+            })
+
+    return filtered_data
+
+strawboard_data = [
+    ["A4", "국내산", 350, "흰색", False],
+    ["A5", "수입산", 350, "흰색", True],
+    ["A3", "중국산", 250, "크림색", True],
+    ["A3", "일본산", 450, "아이보리색", True],
+    ["B4", "국내산", 300, "회색", False]
+]
+
+@app.get("/strawboard")
+async def filter_strawboard(
+    standard: str = Query(..., description="규격 (영어 대문자와 숫자 조합으로 적어주세요. ex: A4, A3 등)"),
+    origin: Optional[str] = Query(None, description="원산지 (한글로 적어주세요. ex: 국내산, 수입산, 중국산, 일본산 등)"),
+    min_weight: Optional[int] = Query(None, description="최소 무게 (단위: g)"),
+    max_weight: Optional[int] = Query(None, description="최대 무게 (단위: g)"),
+    color: Optional[str] = Query(None, description="색상 (한글로 적어주세요. ex: 크림색, 아이보리색, 흰색 등)"),
+    pearl: Optional[bool] = Query(None, description="펄 여부")
+):
+    filtered_data = []
+
+    for item in strawboard_data:
+        if (
+            item[0] == standard and
+            (origin is None or item[1] == origin) and
+            (min_weight is None or item[2] >= min_weight) and
+            (max_weight is None or item[2] <= max_weight) and
+            (color is None or item[3] == color) and
+            (pearl is None or item[4] == pearl)
+        ):
+            filtered_data.append({
+                "standard": item[0],
+                "origin": item[1],
+                "weight": item[2],
+                "color": item[3],
+                "pearl": item[4]
+            })
+
+    return filtered_data
+
+musical_data = [
+    ["샤롯데씨어터", 7, "조승우", "A", 90000, True],
+    ["플러스씨어터", 8, "정민", "B", 60000, False],
+    ["드림아트센터", 9, "정동화", "S", 110000, False],
+    ["예술의전당 오페라극장", 9, "유준상", "R", 140000, True],
+    ["블루스퀘어 신한카드홀", 10, "전동석", "A", 90000, True]
+]
+
+@app.get("/musical")
+async def filter_musical(
+    theater: str = Query(..., description="공연장 (한글로 적어주세요. ex: 샤롯데씨어터, 플러스씨어터, 드림아트센터, 예술의전당 오페라극장, 블루스퀘어 신한카드홀 등)"),
+    month: Optional[int] = Query(None, description="날짜 (단위: 월)"),
+    cast: Optional[str] = Query(None, description="캐스팅 (한글로 적어주세요.)"),
+    seat: Optional[str] = Query(None, description="좌석 (영어 대문자로 적어주세요. ex: B, A, S, R)"),
+    min_price: Optional[int] = Query(None, description="최소 가격 (단위: 원)"),
+    max_price: Optional[int] = Query(None, description="최대 가격 (단위: 원)")
+):
+    filtered_data = []
+
+    for item in musical_data:
+        if (
+            item[0] == theater and
+            (month is None or item[1] == month) and
+            (cast is None or item[2] == cast) and
+            (seat is None or item[3] == seat) and
+            (min_price is None or item[4] >= min_price) and
+            (max_price is None or item[4] <= max_price)
+        ):
+            filtered_data.append({
+                "theater": item[0],
+                "month": item[1],
+                "cast": item[2],
+                "seat": item[3],
+                "price": item[4],
+                "freeInstallment": item[5]
+            })
+
+    return filtered_data
+
+performance_data = [
+    ["종이 꽃밭 두할망본풀이", True, 70, "달오름극장", 3],
+    ["알로하나의엄마들", True, 170, "해오름극장", 35],
+    ["자유항", False, 70, "달오름극장", 23],
+    ["장단", True, 70, "하늘극장", 1],
+    ["럴 유영", False, 70, "달오름극장", 9]
+]
+
+@app.get("/nationaltheaterofkoreaperformance")
+async def filter_performance(
+    name: str = Query(..., description="공연 이름 (한글로 적어주세요.)"),
+    weekend: Optional[bool] = Query(None, description="주말 공연 여부"),
+    min_runningTM: Optional[int] = Query(None, description="최소 관람시간 (단위: 분)"),
+    max_runningTM: Optional[int] = Query(None, description="최대 관람시간 (단위: 분)"),
+    theater: Optional[str] = Query(None, description="극장 (한글로 적어주세요. ex: 달오름극장, 해오름극장, 하늘극장 등)")
+):
+    filtered_data = []
+
+    for item in performance_data:
+        if (
+            item[0] == name and
+            (weekend is None or item[1] == weekend) and
+            (min_runningTM is None or item[2] >= min_runningTM) and
+            (max_runningTM is None or item[2] <= max_runningTM) and
+            (theater is None or item[3] == theater)
+        ):
+            filtered_data.append({
+                "name": item[0],
+                "weekend": item[1],
+                "runningTm": item[2],
+                "theater": item[3],
+                "emptySeats": item[4]
+            })
+
+    return filtered_data
+
+leggings_data = [
+    ["안다르", "M", "화이트", False, 45000],
+    ["안다르", "S", "블랙", True, 37000],
+    ["젝시믹스", "L", "그레이", True, 25000],
+    ["젝시믹스", "S", "화이트", False, 31000],
+    ["젝시믹스", "XL", "그레이", False, 54000]
+]
+
+@app.get("/leggings")
+async def filter_leggings(
+    brand: str = Query(..., description="브랜드 (한글로 적어주세요. ex: 안다르, 젝시믹스 등)"),
+    size: Optional[str] = Query(None, description="사이즈 (영어 대문자로 적어주세요. ex: S, M, L, XL)"),
+    color: Optional[str] = Query(None, description="색상 (한글로 적어주세요. ex: 화이트, 블랙, 그레이 등)"),
+    pocket: Optional[bool] = Query(None, description="주머니 여부"),
+    min_price: Optional[int] = Query(None, description="최소 가격 (단위: 원)"),
+    max_price: Optional[int] = Query(None, description="최대 가격 (단위: 원)")
+):
+    filtered_data = []
+
+    for item in leggings_data:
+        if (
+            item[0] == brand and
+            (size is None or item[1] == size) and
+            (color is None or item[2] == color) and
+            (pocket is None or item[3] == pocket) and
+            (min_price is None or item[4] >= min_price) and
+            (max_price is None or item[4] <= max_price)
+        ):
+            filtered_data.append({
+                "brand": item[0],
+                "size": item[1],
+                "color": item[2],
+                "pocket": item[3],
+                "price": item[4]
+            })
+
+    return filtered_data
+
+stamp_collecting_data = [
+    [25000, "한혜진", "여성", 25, 5972],
+    [15000, "정우성", "남성", 37, 4612],
+    [10000, "양희은", "여성", 70, 4324],
+    [25000, "김서희", "남성", 46, 7694],
+    [18000, "남희석", "남성", 34, 4943]
+]
+
+@app.get("/stampcollecting")
+async def filter_stamp_collecting(
+    subscriptionFee: int = Query(..., description="구독료 (단위: 원)"),
+    name: Optional[str] = Query(None, description="이름 (한글로 적어주세요.)"),
+    sex: Optional[str] = Query(None, description="성별 (한글로 적어주세요. 여성 or 남성)"),
+    min_age: Optional[int] = Query(None, description="최소 나이 (단위: 세, 살)"),
+    max_age: Optional[int] = Query(None, description="최대 나이 (단위: 세, 살)")
+):
+    filtered_data = []
+
+    for item in stamp_collecting_data:
+        if (
+            item[0] == subscriptionFee and
+            (name is None or item[1] == name) and
+            (sex is None or item[2] == sex) and
+            (min_age is None or item[3] >= min_age) and
+            (max_age is None or item[3] <= max_age)
+        ):
+            filtered_data.append({
+                "subscriptionFee": item[0],
+                "name": item[1],
+                "sex": item[2],
+                "age": item[3],
+                "phonenumber": item[4]
+            })
+
+    return filtered_data
+
+scissors_data = [
+    ["모나미", "사무용", 30, "장인방식의 따라 글라인더 방식을 기초로 우수한 가위를 생산합니다.", "은색", 3500],
+    ["파울", "조리용", 23, "손에 힘안들이고도 잘리는 초강력 절삭력", "검정색", 7000],
+    ["잘라가위", "주방용", 33, "플라스틱 없는 친환경올스텐 소재로 반영구적으로 사용할 수 있습니다.", "은색", 5000],
+    ["토리베", "조리용", 25, "세련된 디자인과 뛰어난 절삭력", "은색", 12000],
+    ["세수", "조리용", 30, "곡선절단이 깔끔하여 강력한 절삭력을 가져다줍니다.", "흰색", 9900]
+]
+
+@app.get("/scissors")
+async def filter_scissors(
+    brand: Optional[str] = Query(None, description="브랜드 (한글로 적어주세요. ex: 모나미, 파울 등)"),
+    use: str = Query(..., description="용도 (한글로 적어주세요. ex: 사무용, 주방용, 조리용 등)"),
+    size: Optional[int] = Query(None, description="사이즈 (단위: cm)"),
+    color: Optional[str] = Query(None, description="색상 (한글로 적어주세요. ex: 은색, 검정색, 흰색 등)"),
+    min_price: Optional[int] = Query(None, description="최소 가격 (단위: 원)"),
+    max_price: Optional[int] = Query(None, description="최대 가격 (단위: 원)")
+):
+    filtered_data = []
+
+    for item in scissors_data:
+        if (
+            (brand is None or item[0] == brand) and
+            item[1] == use and
+            (size is None or item[2] == size) and
+            (color is None or item[4] == color) and
+            (min_price is None or item[5] >= min_price) and
+            (max_price is None or item[5] <= max_price)
+        ):
+            filtered_data.append({
+                "brand": item[0],
+                "use": item[1],
+                "size": item[2],
+                "desc": item[3],
+                "color": item[4],
+                "price": item[5]
+            })
+
+    return filtered_data
+
+newspaper_data = [
+    ["2023.04.17", "중앙일보", "문화", "오세진", 12545],
+    ["2023.02.22", "한겨례", "정치", "김돌돌", 55612],
+    ["2023.06.03", "조선일보", "사회", "유지태", 110000],
+    ["2023.05.12", "문화일보", "국제", "박수현", 45675],
+    ["2023.07.05", "경향신문", "스포츠", "이빈", 75642]
+]
+
+@app.get("/newspaper")
+async def filter_newspaper(
+    date: Optional[str] = Query(None, description="날짜 (YYYY.MM.DD 형식)"),
+    name: str = Query(..., description="신문명 (한글로 적어주세요. ex: 중앙일보, 한겨례 등)"),
+    category: Optional[str] = Query(None, description="카테고리 (한글로 적어주세요. ex: 정치, 사회, 국제)"),
+    reporter: Optional[str] = Query(None, description="기자 (한글로 적어주세요.)"),
+    min_comments: Optional[int] = Query(None, description="최소 댓글수 (단위: 개)"),
+    max_comments: Optional[int] = Query(None, description="최대 댓글수 (단위: 개)")
+):
+    filtered_data = []
+
+    for item in newspaper_data:
+        if (
+            (date is None or item[0] == date) and
+            item[1] == name and
+            (category is None or item[2] == category) and
+            (reporter is None or item[3] == reporter) and
+            (min_comments is None or item[4] >= min_comments) and
+            (max_comments is None or item[4] <= max_comments)
+        ):
+            filtered_data.append({
+                "date": item[0],
+                "name": item[1],
+                "category": item[2],
+                "reporter": item[3],
+                "comments": item[4]
+            })
+
+    return filtered_data
 
 
 
