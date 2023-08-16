@@ -2301,8 +2301,8 @@ lipmakeup_data = [
 
 @app.get("/Lipmakeup/")
 async def filter_lipmakeup(
-    name: str = Query(..., description="상품이름"),
-    brand: Optional[str] = Query(None, description="브랜드"),
+    name: str = Query(None, description="상품이름"),
+    brand: Optional[str] = Query(..., description="브랜드"),
     capacity: Optional[float] = Query(None, description="용량 (예시: 5.0, 5.5)"),
     manufacturer: Optional[str] = Query(None, description="제조사"),
     type: Optional[str] = Query(None, description="제품타입 (예시: 립틴트, 립스틱, 립글로즈)")
@@ -2311,8 +2311,8 @@ async def filter_lipmakeup(
 
     for item in lipmakeup_data:
         if (
-            item[0] == name and
-            (brand is None or brand == item[1]) and
+            (name is None or item[0] == name) and
+            brand == item[1] and
             (capacity is None or capacity == item[2]) and
             (manufacturer is None or manufacturer == item[3]) and
             (type is None or type == item[4])
