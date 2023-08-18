@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Body
 from typing import List, Optional
 
 app = FastAPI()
