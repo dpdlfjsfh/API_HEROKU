@@ -4,6 +4,39 @@ from typing import List, Optional
 app = FastAPI()
 
 
+### 0823 test
+
+@app.get("/0823test")
+async def connect_test(
+    query: str = Query(..., description="쿼리"),
+    period: Optional[str] = Query(None, description="기간"),
+    name: Optional[str] = Query(None, description="작성자 이름"),
+    role: Optional[str] = Query(None, description="null을 사용"),
+    space: Optional[str] = Query(None, description="null을 사용")
+):
+    result = '{source : "OSS", '
+    
+    if query is not None:
+        result = result + 'query : "' + str(query) + '"'
+    if period is not None:
+        result = result + ', period : "' + str(period) + '"'
+    else:
+        result = result + ', period : "none"'
+    if name is not None:
+        result = result + ', name : "' + str(name) + '"'
+    else:
+        result = result + ', name : "none"'
+    if role is not None:
+        result = result + ', role : "' + str(role) + '"'
+    else:
+        result = result + ', role : "none"'
+    if space is not None:
+        result = result + ', space : "' + str(space) + '"'
+    else:
+        result = result + ', space : "none"'
+    
+
+    return result
 
 
 ### 0809 Update
