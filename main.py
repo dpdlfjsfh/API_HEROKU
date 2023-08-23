@@ -31,9 +31,9 @@ async def connect_test(
     else:
         result = result + ', role : "none"'
     if space is not None:
-        result = result + ', space : "' + str(space) + '"'
+        result = result + ', space : "' + str(space) + '"}'
     else:
-        result = result + ', space : "none"'
+        result = result + ', space : "none"}'
     
 
     return result
