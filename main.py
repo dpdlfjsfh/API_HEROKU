@@ -3,6 +3,43 @@ from typing import List, Optional
 
 app = FastAPI()
 
+##1004 test
+
+# 가상의 데이터
+data = [{"month": 10, "day": 23, "destination": "제주도", "class": "F", "price": 200000},
+       {"month": 11, "day": 23, "destination": "제주도", "class": "F", "price": 200000},
+        {"month": 12, "day": 23, "destination": "제주도", "class": "F", "price": 200000},
+         {"month": 10, "day": 22, "destination": "제주도", "class": "F", "price": 200000}
+          ,{"month": 11, "day": 22, "destination": "제주도", "class": "F", "price": 200000}
+            ,{"month": 12, "day": 22, "destination": "제주도", "class": "F", "price": 200000}]
+
+# 필터링을 위한 엔드포인트 설정
+@app.get("/filter_data")
+async def filter_data(
+    month: int = Query(None, description="Month (e.g., 10)"),
+    day: int = Query(None, description="Day (e.g., 23)"),
+    destination: str = Query(None, description="Destination"),
+    class_type: str = Query(None, description="Class Type (e.g., F)")
+):
+    filtered_data = data
+
+    # 월(month)에 대한 필터링
+    if month is not None:
+        filtered_data = [item for item in filtered_data if item["month"] == month]
+
+    # 일(day)에 대한 필터링
+    if day is not None:
+        filtered_data = [item for item in filtered_data if item["day"] == day]
+
+    # 목적지(destination)에 대한 필터링
+    if destination is not None:
+        filtered_data = [item for item in filtered_data if destination in item["destination"]]
+
+    # 클래스(class)에 대한 필터링
+    if class_type is not None:
+        filtered_data = [item for item in filtered_data if item["class"] == class_type]
+
+    return filtered_data
 
 ### 0823 test
 
