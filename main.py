@@ -11,7 +11,10 @@ data = [{"month": 10, "day": 23, "destination": "제주도", "class": "F", "pric
         {"month": 12, "day": 23, "destination": "제주도", "class": "F", "price": 200000},
          {"month": 10, "day": 22, "destination": "제주도", "class": "F", "price": 200000}
           ,{"month": 11, "day": 22, "destination": "제주도", "class": "F", "price": 200000}
-            ,{"month": 12, "day": 22, "destination": "제주도", "class": "F", "price": 200000}]
+            ,{"month": 12, "day": 22, "destination": "제주도", "class": "F", "price": 200000}
+            ,{"month": 9, "day": 22, "destination": "제주도", "class": "F", "price": 200000}
+            ,{"month": 9, "day": 22, "destination": "제주도", "class": "E", "price": 100000}
+            ,{"month": 9, "day": 21, "destination": "제주도", "class": "F", "price": 200000}]
 
 # 필터링을 위한 엔드포인트 설정
 @app.get("/filter_data")
