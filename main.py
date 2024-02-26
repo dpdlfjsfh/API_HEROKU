@@ -52,6 +52,7 @@ async def search_movies(
     filtered_movies = []
     
     for movie in movies:
+        return movie
         # 각 필터에 대한 조건 확인
         if all(
             (genre_code is None or movie['genre_code'] == genre_code),
