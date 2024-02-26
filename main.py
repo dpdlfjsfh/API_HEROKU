@@ -552,17 +552,23 @@ async def search_movies(
             (rating is None or movie['rating'] >= rating) and
             (min_audience_count is None or movie["audience_count"] >= min_audience_count) and
             (max_audience_count is None or movie["audience_count"] <= max_audience_count) and
-            (title is None or any(keyword.lower() in movie['title'].lower() for keyword in title.split(','))) and
-            (keyword is None or any(keyword.lower() in ' '.join(movie['reviews']).lower() for keyword in keyword.split(',')))
+            (title is None or (title.lower() in movie['title'].lower()))
         ):
-            filtered_movies.append(movie)
+            # keyword가 None이 아닌 경우에만 검색
+            if keyword is not None:
+                # 키워드 검색 결과 저장
+                keyword_results = [keyword.lower() in ' '.join(movie['reviews']).lower() for keyword in keyword.split(',')]
+                # 모든 키워드가 만족하는지 확인
+                if all(keyword_results):
+                    filtered_movies.append(movie)
+            else:
+                filtered_movies.append(movie)
             
             # 호출 개수 제한
             if len(filtered_movies) >= 10:
                 break
     
     return filtered_movies
-
 ##1004 test
 
 # 가상의 데이터
