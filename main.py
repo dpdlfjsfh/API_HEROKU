@@ -31,13 +31,13 @@ movies = [
     }
 ]
 
-def get_synonyms(word):
+async def get_synonyms(word):
     dictionary=PyDictionary()
     synonyms = dictionary.synonym(word)
     return synonyms
 
 @app.get("/movies/search")
-def search_movies(
+async def search_movies(
     genre_code: Optional[int] = None,
     country_code: Optional[int] = None,
     director: Optional[str] = None,
