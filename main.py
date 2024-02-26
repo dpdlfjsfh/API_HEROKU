@@ -31,10 +31,6 @@ new_movies = [
     }
 ]
 
-async def get_synonyms(word):
-    dictionary=PyDictionary()
-    synonyms = dictionary.synonym(word)
-    return synonyms
 
 @app.get("/movies/search")
 async def search_movies(
@@ -61,8 +57,8 @@ async def search_movies(
             (rating is None or movie['rating'] >= rating) and
             (min_audience_count is None or movie["audience_count"] >= min_audience_count) and
             (max_audience_count is None or movie["audience_count"] <= max_audience_count) and
-            (title is None or any(keyword.lower() in movie['title'].lower() or keyword.lower() in ' '.join(get_synonyms(movie['title'])).lower() for keyword in title.split(','))) and
-            (keyword is None or any(keyword.lower() in ' '.join(movie['reviews']).lower() or keyword.lower() in ' '.join(get_synonyms(' '.join(movie['reviews']))).lower() for keyword in keyword.split(',')))
+            (title is None or any(keyword.lower() in movie['title'].lower() for keyword in title.split(','))) and
+            (keyword is None or any(keyword.lower() in ' '.join(movie['reviews']).lower() for keyword in keyword.split(',')))
         ):
             filtered_movies.append(movie)
             
