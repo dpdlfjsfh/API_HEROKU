@@ -6,7 +6,7 @@ app = FastAPI()
 #240226 테스트
 from PyDictionary import PyDictionary
 
-movies = [
+new_movies = [
     {
         "title": "The Shawshank Redemption",
         "year": 1994,
@@ -51,8 +51,7 @@ async def search_movies(
     # 필터링된 결과를 저장할 리스트
     filtered_movies = []
     
-    for movie in movies:
-        return movie
+    for movie in new_movies:
         # 각 필터에 대한 조건 확인
         if all(
             (genre_code is None or movie['genre_code'] == genre_code),
