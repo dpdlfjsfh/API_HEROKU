@@ -59,8 +59,8 @@ def search_movies(
             (director is None or director.lower() in movie['director'].lower()),
             (actor is None or actor.lower() in [actor.lower() for actor in movie['actors']]),
             (rating is None or movie['rating'] >= rating),
-            (min_audience_count is None or movie['audience_count'] >= min_audience_count),
-            (max_audience_count is None or movie['audience_count'] <= max_audience_count),
+            (min_audience_count is None or movie["audience_count"] >= min_audience_count),
+            (max_audience_count is None or movie["audience_count"] <= max_audience_count),
             (title is None or any(keyword.lower() in movie['title'].lower() or keyword.lower() in ' '.join(get_synonyms(movie['title'])).lower() for keyword in title.split(','))),
             (keyword is None or any(keyword.lower() in ' '.join(movie['reviews']).lower() or keyword.lower() in ' '.join(get_synonyms(' '.join(movie['reviews']))).lower() for keyword in keyword.split(',')))
         ):
