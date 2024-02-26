@@ -3,6 +3,75 @@ from typing import List, Optional
 
 app = FastAPI()
 
+#240226 테스트
+from PyDictionary import PyDictionary
+
+movies = [
+    {
+        "title": "The Shawshank Redemption",
+        "year": 1994,
+        "country_code": 1,
+        "director": "Frank Darabont",
+        "actors": ["Tim Robbins", "Morgan Freeman"],
+        "rating": 9.3,
+        "audience_count": 2000000,
+        "genre_code": 1,
+        "reviews": ["Great movie!", "Must watch"]
+    },
+    {
+        "title": "The Godfather",
+        "year": 1972,
+        "country_code": 1,
+        "director": "Francis Ford Coppola",
+        "actors": ["Marlon Brando", "Al Pacino"],
+        "rating": 9.2,
+        "audience_count": 1800000,
+        "genre_code": 1,
+        "reviews": ["Classic!", "Excellent"]
+    }
+]
+
+def get_synonyms(word):
+    dictionary=PyDictionary()
+    synonyms = dictionary.synonym(word)
+    return synonyms
+
+@app.get("/movies/search")
+def search_movies(
+    genre_code: Optional[int] = None,
+    country_code: Optional[int] = None,
+    director: Optional[str] = None,
+    actor: Optional[str] = None,
+    rating: Optional[float] = None,
+    min_audience_count: Optional[int] = None,
+    max_audience_count: Optional[int] = None,
+    title: Optional[str] = None,
+    keyword: Optional[str] = None
+):
+    # 필터링된 결과를 저장할 리스트
+    filtered_movies = []
+    
+    for movie in movies:
+        # 각 필터에 대한 조건 확인
+        if all(
+            (genre_code is None or movie['genre_code'] == genre_code),
+            (country_code is None or movie['country_code'] == country_code),
+            (director is None or director.lower() in movie['director'].lower()),
+            (actor is None or actor.lower() in [actor.lower() for actor in movie['actors']]),
+            (rating is None or movie['rating'] >= rating),
+            (min_audience_count is None or movie['audience_count'] >= min_audience_count),
+            (max_audience_count is None or movie['audience_count'] <= max_audience_count),
+            (title is None or any(keyword.lower() in movie['title'].lower() or keyword.lower() in ' '.join(get_synonyms(movie['title'])).lower() for keyword in title.split(','))),
+            (keyword is None or any(keyword.lower() in ' '.join(movie['reviews']).lower() or keyword.lower() in ' '.join(get_synonyms(' '.join(movie['reviews']))).lower() for keyword in keyword.split(',')))
+        ):
+            filtered_movies.append(movie)
+            
+            # 호출 개수 제한
+            if len(filtered_movies) >= 10:
+                break
+    
+    return filtered_movies
+
 ##1004 test
 
 # 가상의 데이터
