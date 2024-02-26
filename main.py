@@ -53,15 +53,15 @@ async def search_movies(
     
     for movie in new_movies:
         # 각 필터에 대한 조건 확인
-        if all(
-            (genre_code is None or movie['genre_code'] == genre_code),
-            (country_code is None or movie['country_code'] == country_code),
-            (director is None or director.lower() in movie['director'].lower()),
-            (actor is None or actor.lower() in [actor.lower() for actor in movie['actors']]),
-            (rating is None or movie['rating'] >= rating),
-            (min_audience_count is None or movie["audience_count"] >= min_audience_count),
-            (max_audience_count is None or movie["audience_count"] <= max_audience_count),
-            (title is None or any(keyword.lower() in movie['title'].lower() or keyword.lower() in ' '.join(get_synonyms(movie['title'])).lower() for keyword in title.split(','))),
+        if (
+            (genre_code is None or movie['genre_code'] == genre_code) and
+            (country_code is None or movie['country_code'] == country_code) and
+            (director is None or director.lower() in movie['director'].lower()) and
+            (actor is None or actor.lower() in [actor.lower() for actor in movie['actors']]) and
+            (rating is None or movie['rating'] >= rating) and
+            (min_audience_count is None or movie["audience_count"] >= min_audience_count) and
+            (max_audience_count is None or movie["audience_count"] <= max_audience_count) and
+            (title is None or any(keyword.lower() in movie['title'].lower() or keyword.lower() in ' '.join(get_synonyms(movie['title'])).lower() for keyword in title.split(','))) and
             (keyword is None or any(keyword.lower() in ' '.join(movie['reviews']).lower() or keyword.lower() in ' '.join(get_synonyms(' '.join(movie['reviews']))).lower() for keyword in keyword.split(',')))
         ):
             filtered_movies.append(movie)
