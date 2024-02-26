@@ -15,7 +15,7 @@ new_movies = [
         "actors": ["송강호", "이선균"],
         "rating": 8.6,
         "audience_count": 10000000,
-        "genre_code": 2,
+        "genre_code": 6,
         "reviews": ["현실을 반영한 작품", "봉준호 감독의 뛰어난 연출"]
     },
     {
@@ -37,7 +37,7 @@ new_movies = [
         "actors": ["김혜자", "원빈"],
         "rating": 8.1,
         "audience_count": 3000000,
-        "genre_code": 2,
+        "genre_code": 5,
         "reviews": ["감정을 자극하는 작품", "봉준호 감독의 역작"]
     },
     {
@@ -48,7 +48,7 @@ new_movies = [
         "actors": ["송강호", "박해일"],
         "rating": 7.8,
         "audience_count": 4000000,
-        "genre_code": 2,
+        "genre_code": 5,
         "reviews": ["모든 것이 완벽한 영화", "최고의 엔딩"]
     },
     {
@@ -59,7 +59,7 @@ new_movies = [
         "actors": ["송강호", "토마스 크레취만"],
         "rating": 8.0,
         "audience_count": 7000000,
-        "genre_code": 2,
+        "genre_code": 5,
         "reviews": ["감동적인 이야기", "우리의 역사를 되새기게 하는 작품"]
     },
     {
@@ -81,7 +81,7 @@ new_movies = [
         "actors": ["김민희", "김태리"],
         "rating": 8.3,
         "audience_count": 4500000,
-        "genre_code": 2,
+        "genre_code": 6,
         "reviews": ["비정한 세계를 그린 작품", "박찬욱 감독의 아름다운 영상"]
     },
     {
@@ -92,7 +92,7 @@ new_movies = [
         "actors": ["이선균", "이정재"],
         "rating": 7.5,
         "audience_count": 5500000,
-        "genre_code": 2,
+        "genre_code": 1,
         "reviews": ["한국 영화의 역사를 다시 쓴 작품", "유쾌한 액션과 긴장감 있는 스토리"]
     },
     {
@@ -114,7 +114,7 @@ new_movies = [
         "actors": ["하정우", "강동원"],
         "rating": 7.8,
         "audience_count": 4200000,
-        "genre_code": 2,
+        "genre_code": 5,
         "reviews": ["스릴 넘치는 해변 액션", "감동적인 우정 이야기"]
     },
     {
@@ -136,7 +136,7 @@ new_movies = [
         "actors": ["송강호", "류승룡"],
         "rating": 7.6,
         "audience_count": 3700000,
-        "genre_code": 2,
+        "genre_code": 5,
         "reviews": ["극적인 역사 드라마", "훈훈한 가족 이야기"]
     },
     {
@@ -169,7 +169,7 @@ new_movies = [
         "actors": ["이병헌", "하정우"],
         "rating": 7.7,
         "audience_count": 4600000,
-        "genre_code": 2,
+        "genre_code": 5,
         "reviews": ["북한을 배경으로 한 인간 드라마", "감동적인 결말"]
     },
     {
@@ -180,7 +180,7 @@ new_movies = [
         "actors": ["하정우", "차태현"],
         "rating": 8.1,
         "audience_count": 7100000,
-        "genre_code": 2,
+        "genre_code": 5,
         "reviews": ["죽음을 다룬 판타지 영화", "인생과 죽음에 대한 깊은 사유"]
     },
     {
@@ -213,7 +213,7 @@ new_movies = [
         "actors": ["이병헌", "한효주"],
         "rating": 7.7,
         "audience_count": 8000000,
-        "genre_code": 2,
+        "genre_code": 1,
         "reviews": ["사극의 재미를 만끽할 수 있는 작품", "화려한 영상미"]
     },
     {
@@ -224,7 +224,7 @@ new_movies = [
         "actors": ["로버트 다우니 주니어", "크리스 에반스"],
         "rating": 8.4,
         "audience_count": 12000000,
-        "genre_code": 1,
+        "genre_code": 4,
         "reviews": ["마블의 히어로들의 대미 장면", "감동적인 결말"]
     },
     {
@@ -235,7 +235,7 @@ new_movies = [
         "actors": ["레오나르도 디카프리오", "조셉 고든 레빗"],
         "rating": 8.8,
         "audience_count": 8500000,
-        "genre_code": 1,
+        "genre_code": 4,
         "reviews": ["꿈 속의 꿈을 그린 사이킷 액션", "뛰어난 시나리오와 비주얼"]
     },
     {
@@ -246,7 +246,7 @@ new_movies = [
         "actors": ["크리스찬 베일", "히스 레저"],
         "rating": 9.0,
         "audience_count": 9000000,
-        "genre_code": 1,
+        "genre_code": 4,
         "reviews": ["조커의 뛰어난 연기", "어둠 속의 영웅"]
     },
     {
@@ -257,7 +257,7 @@ new_movies = [
         "actors": ["톰 행크스", "로빈 라이트"],
         "rating": 8.8,
         "audience_count": 7000000,
-        "genre_code": 1,
+        "genre_code": 5,
         "reviews": ["감동적인 우정 이야기", "삶의 의미를 다시 생각하게 함"]
     },
     {
@@ -268,7 +268,7 @@ new_movies = [
         "actors": ["매튜 맥커너히", "앤 해서웨이"],
         "rating": 8.6,
         "audience_count": 6500000,
-        "genre_code": 1,
+        "genre_code": 4,
         "reviews": ["우주 여행을 다룬 SF 스토리", "시간 여행의 개념"]
     },
     {
@@ -279,7 +279,7 @@ new_movies = [
         "actors": ["장 르노", "나탈리 포트만"],
         "rating": 8.5,
         "audience_count": 6000000,
-        "genre_code": 3,
+        "genre_code": 2,
         "reviews": ["소년과 킬러의 독특한 우정", "액션과 감동의 조화"]
     },
     {
@@ -290,7 +290,7 @@ new_movies = [
         "actors": ["에이미 포엘러", "필리스 스미스"],
         "rating": 8.2,
         "audience_count": 7500000,
-        "genre_code": 4,
+        "genre_code": 5,
         "reviews": ["감정의 세계를 그린 애니메이션", "어른들도 공감하는 메시지"]
     },
     {
@@ -301,7 +301,7 @@ new_movies = [
         "actors": ["레오나르도 디카프리오", "마크 러팔로"],
         "rating": 8.1,
         "audience_count": 6000000,
-        "genre_code": 5,
+        "genre_code": 4,
         "reviews": ["환상적인 섬 모험", "의미 있는 결말"]
     },
     {
@@ -312,7 +312,7 @@ new_movies = [
         "actors": ["팀 로빈스", "모건 프리먼"],
         "rating": 9.3,
         "audience_count": 8000000,
-        "genre_code": 1,
+        "genre_code": 2,
         "reviews": ["감옥에서의 탈출 이야기", "삶과 자유에 대한 깊은 이야기"]
     },
     {
@@ -323,7 +323,7 @@ new_movies = [
         "actors": ["톰 행크스", "헬렌 헌트"],
         "rating": 7.8,
         "audience_count": 5500000,
-        "genre_code": 1,
+        "genre_code": 5,
         "reviews": ["무인도에서의 생존기", "우정과 결단의 이야기"]
     },
     {
@@ -334,7 +334,7 @@ new_movies = [
         "actors": ["테이크 액시트", "올리비아 쿡"],
         "rating": 7.5,
         "audience_count": 6000000,
-        "genre_code": 1,
+        "genre_code": 4,
         "reviews": ["가상 현실을 다룬 SF 모험", "팝컬처의 풍부한 참조"]
     },
     {
@@ -356,7 +356,7 @@ new_movies = [
         "actors": ["샌드라 블록", "조지 클루니"],
         "rating": 7.7,
         "audience_count": 5500000,
-        "genre_code": 1,
+        "genre_code": 4,
         "reviews": ["우주 공간에서의 사람의 생존을 그린 SF 스릴러", "진짜감 있는 비주얼"]
     },
     {
@@ -367,7 +367,7 @@ new_movies = [
         "actors": ["아놀드 슈워제네거", "린다 해밀턴"],
         "rating": 8.5,
         "audience_count": 8000000,
-        "genre_code": 1,
+        "genre_code": 2,
         "reviews": ["로봇의 액션 시퀀스", "과거와 미래의 충돌"]
     },
     {
@@ -378,7 +378,7 @@ new_movies = [
         "actors": ["해리슨 포드", "캐럴라인 무클로드"],
         "rating": 8.4,
         "audience_count": 7500000,
-        "genre_code": 1,
+        "genre_code": 2,
         "reviews": ["모험과 액션의 대표적인 시리즈", "고전적인 어드벤처"]
     },
     {
@@ -389,7 +389,7 @@ new_movies = [
         "actors": ["사무엘 L. 잭슨", "리암 니슨"],
         "rating": 7.6,
         "audience_count": 6000000,
-        "genre_code": 1,
+        "genre_code": 4,
         "reviews": ["공룡의 세계를 그린 전투 액션", "흥미진진한 모험"]
     },
     {
@@ -400,7 +400,7 @@ new_movies = [
         "actors": ["더스틴 호프먼", "톰 크루즈"],
         "rating": 8.0,
         "audience_count": 7000000,
-        "genre_code": 1,
+        "genre_code": 5,
         "reviews": ["조수를 따라가는 두 남자의 이야기", "정신병의 이해와 용기"]
     },
     {
@@ -411,7 +411,7 @@ new_movies = [
         "actors": ["엠마 스톤", "엠마 톰슨"],
         "rating": 7.4,
         "audience_count": 6500000,
-        "genre_code": 1,
+        "genre_code": 6,
         "reviews": ["디즈니 악당의 미래를 보여주는 영화", "패션과 반항의 여정"]
     },
     {
@@ -433,84 +433,73 @@ new_movies = [
         "actors": ["휴 잭맨", "패트릭 스튜어트"],
         "rating": 8.1,
         "audience_count": 7000000,
-        "genre_code": 1,
+        "genre_code": 2,
         "reviews": ["월버린의 마지막 이야기", "액션과 감동의 조화"]
     },
     {
         "title": "아마데우스",
         "year": 1984,
-        "country_code": 420,
+        "country_code": 1,
         "director": "밀로스 포르만",
         "actors": ["톰 훌스", "페이 브러스넌"],
         "rating": 8.3,
         "audience_count": 5500000,
-        "genre_code": 7,
+        "genre_code": 6,
         "reviews": ["모차르트의 삶과 음악을 그린 작품", "명작 클래식"]
     },
     {
         "title": "라이프 이즈 비욘드",
         "year": 1999,
-        "country_code": 44,
+        "country_code": 1,
         "director": "프랭크 다라본트",
         "actors": ["짐 캐리", "에드 해리스"],
         "rating": 8.8,
         "audience_count": 7000000,
-        "genre_code": 7,
+        "genre_code": 5,
         "reviews": ["현실과 환상이 교차하는 판타지 영화", "생각할 거리를 주는 작품"]
-    },
-    {
-        "title": "쇼생크 탈출",
-        "year": 1994,
-        "country_code": 33,
-        "director": "프랭크 다라본트",
-        "actors": ["팀 로빈스", "모건 프리먼"],
-        "rating": 9.3,
-        "audience_count": 8000000,
-        "genre_code": 7,
-        "reviews": ["감옥에서의 탈출 이야기", "삶과 자유에 대한 깊은 이야기"]
     },
     {
         "title": "테오와 마법의 성",
         "year": 2006,
-        "country_code": 39,
+        "country_code": 1,
         "director": "미켈란젤로 코르비니",
         "actors": ["리처드 해리스", "사이러스 벤"],
         "rating": 7.9,
         "audience_count": 6500000,
-        "genre_code": 7,
+        "genre_code": 6,
         "reviews": ["어린이를 위한 판타지 모험", "마법과 용의 세계"]
     },
     {
         "title": "아마데우스: 최후의 소원",
         "year": 1988,
-        "country_code": 39,
+        "country_code": 1,
         "director": "밀로스 포르만",
         "actors": ["톰 훌스", "페이 브러스넌"],
         "rating": 8.0,
         "audience_count": 7000000,
-        "genre_code": 7,
+        "genre_code": 6,
         "reviews": ["모차르트의 삶과 음악을 그린 작품", "감동적인 이야기"]
     },
     {
         "title": "레옹: 감독판",
         "year": 1996,
-        "country_code": 33,
+        "country_code": 1,
         "director": "뤽 베송",
         "actors": ["장 르노", "나탈리 포트만"],
         "rating": 8.7,
         "audience_count": 7500000,
-        "genre_code": 7,
+        "genre_code": 2,
         "reviews": ["감독의 감정적인 집착", "더욱 깊어진 캐릭터 탐구"]
     },
     {
         "title": "이터널 선샤인",
         "year": 2004,
-        "country_code": 33,
+        "country_code": 1,
         "director": "미셸 공드리",
         "actors": ["진 캐리", "케이트 윈슬렛"],
         "rating": 8.3,
         "audience_count": 6000000,
-        "genre_code": 7,
+        "genre_code": 5,
         "reviews": ["기억과 사랑의 이야기", "시간과 공간을 초월한 결말"]
     },
     {
@@ -521,18 +510,18 @@ new_movies = [
         "actors": ["타카하시 미술", "카미시라이시 모네"],
         "rating": 8.4,
         "audience_count": 6500000,
-        "genre_code": 7,
+        "genre_code": 6,
         "reviews": ["타임 트래블을 다룬 판타지 이야기", "감동과 여운의 메시지"]
     },
     {
         "title": "아포칼립토",
         "year": 1999,
-        "country_code": 44,
+        "country_code": 1,
         "director": "린다스 파르머",
         "actors": ["조지 클루니", "니콜 키드먼"],
         "rating": 7.8,
         "audience_count": 6000000,
-        "genre_code": 7,
+        "genre_code": 4,
         "reviews": ["최후의 날을 그린 인류의 생존 이야기", "파괴와 희망의 대립"]
     }
 ]
