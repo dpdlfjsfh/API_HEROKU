@@ -413,7 +413,7 @@ async def search_books(
                 keyword_results = [keyword.lower() in ' '.join(book['reviews']).lower() for keyword in keyword.split(',')]
                 # 모든 키워드가 만족하는지 확인
                 if all(keyword_results):
-                    filtered_bookss.append(book)
+                    filtered_books.append(book)
             else:
                 filtered_books.append(book)
             
