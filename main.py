@@ -4,7 +4,425 @@ from typing import List, Optional
 app = FastAPI()
 
 #240226 테스트
-from PyDictionary import PyDictionary
+new_books = [    {
+        "title": "위대한 개츠비",
+        "year": 1925,
+        "country_code": 1,
+        "author": "프란시스 스콧 피츠제럴드",
+        "publisher": "차이크",
+        "rating": 8.9,
+        "price": 15000,
+        "genre_code": 1,
+        "reviews": ["로맨틱한 분위기가 가득한 명작", "최고의 소설 중 하나"]
+    },
+    {
+        "title": "1984",
+        "year": 1949,
+        "country_code": 1,
+        "author": "조지 오웰",
+        "publisher": "한국출판사",
+        "rating": 9.2,
+        "price": 12000,
+        "genre_code": 1,
+        "reviews": ["거장의 예언, 끝없는 경고", "현실적인 비전"]
+    },
+    {
+        "title": "미움받을 용기",
+        "year": 2013,
+        "country_code": 1,
+        "author": "기히로 시모노",
+        "publisher": "북하우스",
+        "rating": 8.5,
+        "price": 18000,
+        "genre_code": 81,
+        "reviews": ["자신을 다시 발견하는 여정", "위로와 용기를 주는 책"]
+    },
+    {
+        "title": "반지의 제왕",
+        "year": 1954,
+        "country_code": 1,
+        "author": "J.R.R. 톨킨",
+        "publisher": "팬텀",
+        "rating": 9.8,
+        "price": 25000,
+        "genre_code": 1,
+        "reviews": ["환상의 세계로 초대하는 대작", "마법같은 모험"]
+    },
+    {
+        "title": "죽은 시인의 사회",
+        "year": 1989,
+        "country_code": 1,
+        "author": "피터 위어",
+        "publisher": "대한출판사",
+        "rating": 9.0,
+        "price": 16000,
+        "genre_code": 1,
+        "reviews": ["자유와 열정을 논하는 명작", "파워풀한 메시지"]
+    },
+    {
+        "title": "동물농장",
+        "year": 1945,
+        "country_code": 1,
+        "author": "조지 오웰",
+        "publisher": "로지",
+        "rating": 8.7,
+        "price": 11000,
+        "genre_code": 1,
+        "reviews": ["유쾌하면서도 경쾌한 이야기", "사회 비판의 걸작"]
+    },
+    {
+        "title": "토지",
+        "year": 1935,
+        "country_code": 82,
+        "author": "박경리",
+        "publisher": "현대문학",
+        "rating": 9.5,
+        "price": 20000,
+        "genre_code": 1,
+        "reviews": ["한국 문학의 걸작", "희망과 우정의 이야기"]
+    },
+    {
+        "title": "데미안",
+        "year": 1919,
+        "country_code": 1,
+        "author": "헤르만 헤세",
+        "publisher": "서양문고",
+        "rating": 8.8,
+        "price": 17000,
+        "genre_code": 1,
+        "reviews": ["내면의 탐색과 성장", "청춘의 명작"]
+    },
+    {
+        "title": "사랑의 불시착",
+        "year": 2016,
+        "country_code": 82,
+        "author": "박지은",
+        "publisher": "샘터",
+        "rating": 9.3,
+        "price": 22000,
+        "genre_code": 1,
+        "reviews": ["감동과 재미를 모두 잡은 대작", "눈을 뗄 수 없는 몰입도"]
+    },
+    {
+        "title": "빨간 머리 앤",
+        "year": 1908,
+        "country_code": 1,
+        "author": "루시 모드 몽고메리",
+        "publisher": "문학동네",
+        "rating": 8.6,
+        "price": 13000,
+        "genre_code": 1,
+        "reviews": ["꿈과 용기의 이야기", "사랑스러운 캐릭터들"]
+    },
+        {
+        "title": "꽃을 보듯 너를 본다",
+        "year": 1992,
+        "country_code": 82,
+        "author": "나태주",
+        "publisher": "문학동네",
+        "rating": 9.2,
+        "price": 16000,
+        "genre_code": 2,
+        "reviews": ["감성을 자극하는 시집", "시를 통해 세상을 본다"]
+    },
+    {
+        "title": "어떻게 말해줘야 할까",
+        "year": 2018,
+        "country_code": 82,
+        "author": "윤정비",
+        "publisher": "시인정글",
+        "rating": 9.0,
+        "price": 18000,
+        "genre_code": 2,
+        "reviews": ["마음을 담은 시의 향연", "어떤 말로 표현할까 고민되는 감정을 담은 시"]
+    },
+    {
+        "title": "우리 집에 가는 길",
+        "year": 2005,
+        "country_code": 82,
+        "author": "하태완",
+        "publisher": "샘터",
+        "rating": 8.8,
+        "price": 15000,
+        "genre_code": 2,
+        "reviews": ["일상의 아름다움을 느낄 수 있는 시집", "마음이 따뜻해지는 시"]
+    },
+    {
+        "title": "내 마음의 숲",
+        "year": 2010,
+        "country_code": 82,
+        "author": "정호승",
+        "publisher": "행복한 어린이",
+        "rating": 8.5,
+        "price": 14000,
+        "genre_code": 2,
+        "reviews": ["힐링되는 시집", "자연과 함께하는 시"]
+    },
+    {
+        "title": "봄이 오나요",
+        "year": 2015,
+        "country_code": 82,
+        "author": "이해인",
+        "publisher": "봄봄",
+        "rating": 9.5,
+        "price": 20000,
+        "genre_code": 2,
+        "reviews": ["봄의 따뜻함을 느낄 수 있는 시집", "꽃 향기처럼 달콤한 시"]
+    },
+    {
+        "title": "오늘의 기분",
+        "year": 2008,
+        "country_code": 82,
+        "author": "이상철",
+        "publisher": "무드",
+        "rating": 8.9,
+        "price": 17000,
+        "genre_code": 2,
+        "reviews": ["하루를 마무리하는 시집", "감성을 자극하는 달콤한 시"]
+    },
+    {
+        "title": "너의 뒤에 서서",
+        "year": 2019,
+        "country_code": 82,
+        "author": "손히",
+        "publisher": "서현",
+        "rating": 9.2,
+        "price": 19000,
+        "genre_code": 2,
+        "reviews": ["사랑을 담은 시집", "눈물과 웃음을 함께하는 시"]
+    },
+    {
+        "title": "한 뼘의 자유",
+        "year": 2002,
+        "country_code": 82,
+        "author": "홍현희",
+        "publisher": "오늘의 책",
+        "rating": 8.7,
+        "price": 18000,
+        "genre_code": 2,
+        "reviews": ["자유로움을 노래하는 시집", "희망의 메시지를 전하는 시"]
+    },
+    {
+        "title": "여름날",
+        "year": 2017,
+        "country_code": 82,
+        "author": "박희진",
+        "publisher": "희망",
+        "rating": 9.0,
+        "price": 16000,
+        "genre_code": 2,
+        "reviews": ["여름의 시원함을 담은 시집", "더운 여름을 시원하게 해주는 시"]
+    },
+    {
+        "title": "소리없는 아우성",
+        "year": 2007,
+        "country_code": 82,
+        "author": "정재승",
+        "publisher": "소나무",
+        "rating": 8.8,
+        "price": 15000,
+        "genre_code": 2,
+        "reviews": ["감동과 울림을 주는 시집", "작은 소리에서 큰 울림을 느끼는 시"]
+    },
+    {
+        "title": "김정은의 불편한 진실",
+        "year": 2020,
+        "country_code": 82,
+        "author": "이선희",
+        "publisher": "한국출판사",
+        "rating": 8.7,
+        "price": 18000,
+        "genre_code": 3,
+        "reviews": ["북한에 대한 새로운 시각을 제시하는 책", "김정은의 인간적인 면을 다룬 책"]
+    },
+    {
+        "title": "여행의 이유",
+        "year": 2015,
+        "country_code": 82,
+        "author": "김영하",
+        "publisher": "북한산",
+        "rating": 9.1,
+        "price": 20000,
+        "genre_code": 3,
+        "reviews": ["여행의 진정한 의미를 찾아가는 여정", "인생을 바꿀 수 있는 책"]
+    },
+    {
+        "title": "삶과 죽음에 대하여",
+        "year": 2018,
+        "country_code": 82,
+        "author": "조용필",
+        "publisher": "다산북스",
+        "rating": 8.8,
+        "price": 17000,
+        "genre_code": 3,
+        "reviews": ["인생의 가치에 대해 다시 생각하게 만드는 책", "삶과 죽음에 대한 깊은 인사이트를 제공하는 책"]
+    },
+    {
+        "title": "우리들의 무지개",
+        "year": 2019,
+        "country_code": 82,
+        "author": "이영철",
+        "publisher": "모아씨엔씨",
+        "rating": 8.9,
+        "price": 19000,
+        "genre_code": 3,
+        "reviews": ["다양성과 포용에 대한 메시지를 전하는 책", "우리 사회의 미래를 엿보는 책"]
+    },
+    {
+        "title": "나의 하루",
+        "year": 2017,
+        "country_code": 82,
+        "author": "서울시립",
+        "publisher": "세계문학",
+        "rating": 8.6,
+        "price": 16000,
+        "genre_code": 3,
+        "reviews": ["일상의 아름다움을 발견하는 책", "작은 것들에 감사하는 마음을 심는 책"]
+    },
+    {
+        "title": "무모한 도전",
+        "year": 2016,
+        "country_code": 82,
+        "author": "김영민",
+        "publisher": "노란별",
+        "rating": 8.5,
+        "price": 15000,
+        "genre_code": 3,
+        "reviews": ["포기하지 않는 열정을 보여주는 책", "성공과 실패 사이의 비밀을 말해주는 책"]
+    },
+    {
+        "title": "한 걸음 더",
+        "year": 2021,
+        "country_code": 82,
+        "author": "강호동",
+        "publisher": "성안당",
+        "rating": 8.4,
+        "price": 14000,
+        "genre_code": 4,
+        "reviews": ["자기계발의 길을 찾아가는 책", "한 발 더 나아가는 비결을 알려주는 책"]
+    },
+        {
+        "title": "부의 시나리오",
+        "year": 2018,
+        "country_code": 1,
+        "author": "이제니",
+        "publisher": "성인당",
+        "rating": 8.9,
+        "price": 18000,
+        "genre_code": 4,
+        "reviews": ["부자가 되기 위한 실전 가이드", "재무 교육의 바이블"]
+    },
+    {
+        "title": "죽음에 관하여",
+        "year": 1999,
+        "country_code": 1,
+        "author": "베르테르스만",
+        "publisher": "문학동네",
+        "rating": 9.2,
+        "price": 20000,
+        "genre_code": 4,
+        "reviews": ["인생의 가치를 깊이 생각하게 하는 책", "생의 진정한 의미를 찾아가는 여정"]
+    },
+    {
+        "title": "코스모스",
+        "year": 1980,
+        "country_code": 1,
+        "author": "칼 세이건",
+        "publisher": "사이언스북스",
+        "rating": 8.8,
+        "price": 17000,
+        "genre_code": 3,
+        "reviews": ["우주에 대한 감탄을 자아내는 책", "과학을 통해 세계를 이해하는 철학적인 접근"]
+    },
+    {
+        "title": "인생의 가치",
+        "year": 2015,
+        "country_code": 1,
+        "author": "팀 클라인",
+        "publisher": "빅픽처스프레스",
+        "rating": 9.0,
+        "price": 19000,
+        "genre_code": 4,
+        "reviews": ["인생의 방향을 재정립하는 책", "진정한 행복의 길을 찾아가는 지침서"]
+    },
+    {
+        "title": "내가 좋아하는 것만 남기고, 나머지는 모두 정리하라",
+        "year": 2019,
+        "country_code": 1,
+        "author": "미노스",
+        "publisher": "현대경제사",
+        "rating": 8.7,
+        "price": 16000,
+        "genre_code": 4,
+        "reviews": ["간소화된 삶을 위한 지혜", "불필요한 것을 버리고 진정한 가치를 찾아가는 여정"]
+    },
+    {
+        "title": "성공하는 사람들의 7가지 습관",
+        "year": 2010,
+        "country_code": 1,
+        "author": "스티븐 R. 코비",
+        "publisher": "시네21",
+        "rating": 8.5,
+        "price": 15000,
+        "genre_code": 4,
+        "reviews": ["성공의 비결을 알려주는 베스트셀러", "변화와 성장을 이끌어내는 실용적인 가이드북"]
+    },
+    {
+        "title": "행복의 운",
+        "year": 2005,
+        "country_code": 1,
+        "author": "조슈아 워튼",
+        "publisher": "한국경제사",
+        "rating": 8.4,
+        "price": 14000,
+        "genre_code": 4,
+        "reviews": ["인생의 목표를 달성하는 법을 알려주는 책", "내면의 우주적인 행복을 발견하는 여정"]
+    }
+]
+
+@app.get("/books/search")
+async def search_books(
+    genre_code: Optional[int] = None,
+    country_code: Optional[int] = None,
+    author: Optional[str] = None,
+    publisher: Optional[str] = None,
+    rating: Optional[float] = None,
+    min_price: Optional[int] = None,
+    max_price: Optional[int] = None,
+    title: Optional[str] = None,
+    keyword: Optional[str] = None
+):
+    # 필터링된 결과를 저장할 리스트
+    filtered_books = []
+    
+    for book in new_books:
+        # 각 필터에 대한 조건 확인
+        if (
+            (genre_code is None or book['genre_code'] == genre_code) and
+            (country_code is None or book['country_code'] == country_code) and
+            (author is None or author.lower() in book['author'].lower()) and
+            (publisher is None or publisher.lower() in book['publisher'].lower()) and
+            (rating is None or book['rating'] >= rating) and
+            (min_price is None or book["price"] >= min_price) and
+            (max_price is None or book["price"] <= max_price) and
+            (title is None or (title.lower() in book['title'].lower()))
+        ):
+            # keyword가 None이 아닌 경우에만 검색
+            if keyword is not None:
+                # 키워드 검색 결과 저장
+                keyword_results = [keyword.lower() in ' '.join(book['reviews']).lower() for keyword in keyword.split(',')]
+                # 모든 키워드가 만족하는지 확인
+                if all(keyword_results):
+                    filtered_bookss.append(book)
+            else:
+                filtered_books.append(book)
+            
+            # 호출 개수 제한
+            if len(filtered_books) >= 10:
+                break
+    
+    return filtered_movies
+
 
 new_movies = [
     {
