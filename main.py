@@ -421,7 +421,7 @@ async def search_books(
             if len(filtered_books) >= 10:
                 break
     
-    return filtered_movies
+    return filtered_books
 
 
 new_movies = [
