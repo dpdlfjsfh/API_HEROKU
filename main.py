@@ -14,18 +14,18 @@ rag_data = [{
            },
             {
         "category": "스킬 관리",
-        "context": ""
+        "context": "1"
            },
             {
         "category": "시나리오 관리",
-        "context": ""
+        "context": "1"
            },
             {
         "category": "스킬셋 버전 관리",
-        "context": ""
+        "context": "1"
            },
             {
-        "category": "스킬셋 관리",
+        "category": "스킬 트레이너 화면",
         "context": "스킬 트레이너 화면"
            }
            ]
