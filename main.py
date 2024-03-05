@@ -29,12 +29,12 @@ new_books = [    {
     {
         "title": "미움받을 용기",
         "year": 2013,
-        "country_code": 1,
+        "country_code": 81,
         "author": "기히로 시모노",
         "publisher": "북하우스",
         "rating": 8.5,
         "price": 18000,
-        "genre_code": 81,
+        "genre_code": 1,
         "reviews": ["자신을 다시 발견하는 여정", "위로와 용기를 주는 책"]
     },
     {
