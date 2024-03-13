@@ -31,7 +31,7 @@ rag_data2 = [{
 async def get_rag_test(
     category: Optional[str] = Query(None, description="Location of the rental car")
 ) -> List[dict]:
-    filtered_rag = rag_data
+    filtered_rag = rag_data2
 
     if category:
         filtered_rag = [rag for rag in filtered_rag if rag["category"] == category]
