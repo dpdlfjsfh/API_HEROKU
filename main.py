@@ -16,7 +16,7 @@ nikes = [    {
         "bubble": ["인빈서블3 알려줘", "페가수스 40 알려줘", "인피니티 런 4 알려줘"]
     },
              {
-        "intent": "추천",
+        "intent": "정보",
         "product_type": "신발",
         "category": "런닝",
         "gender": None,
@@ -41,7 +41,7 @@ nikes = [    {
 
 @app.get("/nike_test")
 async def search_nikes(
-    intent: int,
+    intent: str,
     product_type: Optional[str] = None,
     category: Optional[str] = None,
     gender: Optional[str] = None,
