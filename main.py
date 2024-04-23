@@ -3,6 +3,71 @@ from typing import List, Optional
 
 app = FastAPI()
 
+#나이키 테스트
+nikes = [    {
+        "intent": "추천",
+        "product_type": "신발",
+        "category": "런닝",
+        "gender": None,
+        "color": None,
+        "product_name": None,
+        "answer": "나이키 러닝화 추천'에 대해 찾아볼게요!\n\n1. 인피니티 런 4\n나이키 리액트 폼보다 13% 더 높은 에너지 반환력을 갖춘 새로운 나이키 리액트X 폼으로 제작되어 상쾌하고 탄력 있는 발걸음이 유지되며, 지지력 있는 쿠셔닝을 적용해 러닝 시 안정적인 자세를 유지할 수 있도록 도와줍니다.\n\n2. 페가수스 40\n나이키 페가수스 40은 기존의 페가수스 모델을 업그레이드한 제품으로, 더욱 편안하고 안정적인 러닝을 할 수 있도록 설계되었습니다. 리액트 폼을 적용하여 부드럽고 탄력 있는 쿠셔닝을 제공하며, 발 중앙 부분에 아치를 지지해 주는 디자인이 적용되어 안정적인 러닝을 할 수 있도록 도와줍니다.\n\n3. 인빈서블 3\n줌X 폼을 적용하여 부드럽고 탄력 있는 쿠셔닝을 제공하며, 발 중앙 부분에 아치를 지지해 주는 디자인이 적용되어 안정적인 러닝을 할 수 있도록 도와줍니다.",
+        "card": ["인피니티 런 4","페가수스 40"],
+        "bubble": ["인빈서블3 알려줘", "페가수스 40 알려줘", "인피니티 런 4 알려줘"]
+    },
+             {
+        "intent": "추천",
+        "product_type": "신발",
+        "category": "런닝",
+        "gender": None,
+        "color": None,
+        "product_name": "인피니티런4",
+        "answer": "나이키 인피니티 런 4'에 대해 알려드릴게요.\n\n나이키 인피니티 런 4는 지지력 있는 쿠셔닝을 적용한 제품입니다. 나이키 리액트 폼보다 13% 더 높은 에너지 반환력을 갖춘 새로운 나이키 리액트X 폼으로 제작되어 더욱 상쾌하고 탄력 있는 발걸음을 유지할 수 있습니다. 플라이니트와 리액트X 폼이 어우러진 부드러운 갑피의 지지력과 통기성으로 자신감 있는 러닝을 만들어줘요.",
+        "card": ["인피니티 런 4"],
+        "bubble": ["인피니티 런 4 사이즈 알려줘", "인피니티 런 4 특징 알려줘", "인피니티 런 4 소재 알려줘"]
+    },
+             {
+        "intent": "정보",
+        "product_type": "신발",
+        "category": "런닝",
+        "gender": "남성",
+        "color": "오렌지",
+        "product_name": "알파플라이2",
+        "answer": "'나이키 알파플라이 2 남성 로드 레이싱화 사이즈'에 대해 찾아볼게요!\n\n나이키 알파플라이 2 남성 로드 레이싱화는 사이즈 250 ~ 310까지 있습니다.\n정확한 정보는 [제품 상세 페이지](https://www.nike.com/kr/t/%EC%95%8C%ED%8C%8C%ED%94%8C%EB%9D%BC%EC%9D%B4-2-%EB%82%A8%EC%84%B1-%EB%A1%9C%EB%93%9C-%EB%A0%88%EC%9D%B4%EC%8B%B1%ED%99%94-tL7CEVL8/DN3555-600)에서 확인해 주세요",
+        "card": ["나이키 알파플라이 2 남성 로드 레이싱화"],
+        "bubble": ["나이키 알파플라이 2 남성 로드 레이싱화 색상 알려줘", "나이키 알파플라이 2 남성 로드 레이싱화 소재 알려줘", "나이키 알파플라이 2 남성 로드 레이싱화 특징 알려줘"]
+    }
+            ]
+
+@app.get("/nike_test")
+async def search_nikes(
+    intent: int,
+    product_type: Optional[str] = None,
+    category: Optional[str] = None,
+    gender: Optional[str] = None,
+    color: Optional[str] = None,
+    product_name: Optional[str] = None,
+):
+    # 필터링된 결과를 저장할 리스트
+    filtered_nikes = []
+    
+    for nike in nikes:
+        # 각 필터에 대한 조건 확인
+        if (
+            (intent is None or nike['intent'] == intent) and
+            (product_type is None or nike['product_type'] == product_type) and
+            (category is None or nike['category'] == category) and
+            (gender is None or nike['gender'] == gender) and
+            (color is None or nike['color'] == color) and
+            (product_name is None or nike['product_name'] == product_name)
+        ):
+
+            filtered_nikes.append(nike)
+
+    
+    return filtered_nikes
+
+
 #240305 테스트
 rag_data = [{
         "category": "Security Monitoring",
