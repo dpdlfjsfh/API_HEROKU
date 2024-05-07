@@ -190,7 +190,7 @@ async def searchLimitedEditionStrawberryFood(
         None,
     ),
     food_keywords: List[str] = Query(
-        ...,
+        None,
         description="한글로 띄어쓰기 없이 제품키워드를 입력하세요"
     )
 ):
@@ -200,7 +200,7 @@ async def searchLimitedEditionStrawberryFood(
         if (food_name is None or food_name == item["food_name"]) \
                 and (food_type is None or food_type == item["food_type"]) \
                 and (food_brand is None or food_brand == item["food_brand"]) \
-                and all(keyword in item["food_keywords"] for keyword in food_keywords):
+                and (food_keywords is None or all(keyword in item["food_keywords"] for keyword in food_keywords)):
             filtered_data.append(item)
     return filtered_data
 
