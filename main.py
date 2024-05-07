@@ -181,8 +181,6 @@ strawberry_data = [
 async def searchLimitedEditionStrawberryFood(
     food_name: Optional[str] = Query(
         None,
-        min_length=1,
-        max_length=20"
     ),
     food_type: Optional[str] = Query(
         None,
@@ -190,12 +188,9 @@ async def searchLimitedEditionStrawberryFood(
     ),
     food_brand: Optional[str] = Query(
         None,
-        min_length=1,
-        max_length=20"
     ),
     food_keywords: List[str] = Query(
         ...,
-        min_length=1",
         description="한글로 띄어쓰기 없이 제품키워드를 입력하세요"
     ),
     food_price: Optional[int] = Query(
