@@ -559,7 +559,8 @@ cooking_receipe_data = [  {
   {
     "creator": "유지누나",
     "food_classification": [
-      "국"
+      "국",
+      "미역"
     ],
     "cook_name": "들깨 미역국",
     "ingredients": [
