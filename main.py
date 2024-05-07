@@ -3,6 +3,701 @@ from typing import List, Optional
 
 app = FastAPI()
 
+#벌크 테스트
+strawberry_data = [
+  {
+    "food_name": "빈츠 딸기 프로마쥬",
+    "food_type": "과자",
+    "food_brand": "롯데제과",
+    "food_keywords": [
+      "딸기",
+      "초콜릿",
+      "쿠키",
+      "2024년",
+      "핑크",
+      "봄",
+      "빈츠"
+    ],
+    "food_price": 4500,
+    "release_date": "2024-02-10",
+    "review_rating": 4.3
+  },
+  {
+    "food_name": "몽쉘 딸기 생크림 케이크",
+    "food_type": "과자",
+    "food_brand": "롯데제과",
+    "food_keywords": [
+      "딸기",
+      "초콜릿",
+      "케이크",
+      "2024년",
+      "딸기잼",
+      "봄",
+      "몽쉘"
+    ],
+    "food_price": 6500,
+    "release_date": "2024-02-12",
+    "review_rating": 4.5
+  },
+  {
+    "food_name": "딸기라떼 카스타드",
+    "food_type": "과자",
+    "food_brand": "롯데제과",
+    "food_keywords": [
+      "딸기",
+      "딸기라떼",
+      "케이크",
+      "2024년",
+      "카스타드",
+      "봄"
+    ],
+    "food_price": 5500,
+    "release_date": "2024-02-11",
+    "review_rating": 4.4
+  },
+  {
+    "food_name": "딸기라떼 명가 찰떡파이",
+    "food_type": "과자",
+    "food_brand": "롯데제과",
+    "food_keywords": [
+      "딸기",
+      "찰떡",
+      "찰떡파이",
+      "딸기라떼",
+      "2024년",
+      "핑크",
+      "봄"
+    ],
+    "food_price": 7650,
+    "release_date": "2024-02-06",
+    "review_rating": 4.3
+  },
+  {
+    "food_name": "팔도 봄 에디션 딸기 비빔면",
+    "food_type": "라면",
+    "food_brand": "팔도",
+    "food_keywords": [
+      "딸기",
+      "비빔면",
+      "딸기맛",
+      "2024년",
+      "상큼",
+      "봄"
+    ],
+    "food_price": 5500,
+    "release_date": "2024-02-05",
+    "review_rating": 4.2
+  },
+  {
+    "food_name": "딸기 블라썸 붕어싸만코",
+    "food_type": "빙과",
+    "food_brand": "빙그레",
+    "food_keywords": [
+      "딸기",
+      "벚꽃",
+      "붕어싸만코",
+      "2024년",
+      "아이스크림",
+      "봄",
+      "핑크",
+      "편의점신상"
+    ],
+    "food_price": 2200,
+    "release_date": "2024-03-02",
+    "review_rating": 4.7
+  },
+  {
+    "food_name": "딸기 글레이즈드 도넛",
+    "food_type": "베이커리",
+    "food_brand": "크리스피크림",
+    "food_keywords": [
+      "딸기",
+      "도넛",
+      "2024년",
+      "핑크",
+      "봄"
+    ],
+    "food_price": 2500,
+    "release_date": "2024-03-15",
+    "review_rating": 4.9
+  },
+  {
+    "food_name": "상큼한 딸기크림을 토핑한 스트로베리 피그 도넛",
+    "food_type": "베이커리",
+    "food_brand": "크리스피크림",
+    "food_keywords": [
+      "딸기",
+      "초콜릿",
+      "딸기크림",
+      "도넛",
+      "동물모양",
+      "2024년",
+      "핑크",
+      "봄"
+    ],
+    "food_price": 3900,
+    "release_date": "2024-03-13",
+    "review_rating": 4.1
+  },
+  {
+    "food_name": "생딸기 마스카포네 도넛",
+    "food_type": "베이커리",
+    "food_brand": "노티드",
+    "food_keywords": [
+      "딸기",
+      "생딸기",
+      "도넛",
+      "2024년",
+      "크림치즈",
+      "봄",
+      "마스카포네"
+    ],
+    "food_price": 5200,
+    "release_date": "2024-03-21",
+    "review_rating": 4.6
+  },
+  {
+    "food_name": "스트로베리 자스민티",
+    "food_type": "음료",
+    "food_brand": "노티드",
+    "food_keywords": [
+      "딸기",
+      "자스민",
+      "차",
+      "2024년",
+      "핑크",
+      "봄",
+      "허브티",
+      "아이스티",
+      "논카페인"
+    ],
+    "food_price": 6800,
+    "release_date": "2024-03-06",
+    "review_rating": 4.3
+  }
+]
+
+@app.get("/limited_edition_strawberry_food_search")
+async def searchLimitedEditionStrawberryFood(
+    food_name: Optional[str] = Query(
+        None,
+        min_length=1,
+        max_length=20,
+        regex="^[가-힣0-9 \]+$"
+    ),
+    food_type: Optional[str] = Query(
+        None,
+        description="과자, 라면, 빙과, 베이커리, 음료 중 하나를 선택하세요"
+    ),
+    food_brand: Optional[str] = Query(
+        None,
+        min_length=1,
+        max_length=20,
+        regex="^[가-힣]+$"
+    ),
+    food_keywords: List[str] = Query(
+        ...,
+        min_length=1,
+        regex="^[가-힣]+$",
+        description="한글로 띄어쓰기 없이 제품키워드를 입력하세요"
+    ),
+    food_price: Optional[int] = Query(
+        5000,
+        ge=1,
+        le=1000000,
+        description="가격을 정수로 입력하세요 (단위: 원)"
+    )
+):
+    # 데이터에서 검색 조건에 맞는 항목 필터링
+    filtered_data = []
+    for item in strawberry_data:
+        if (food_name is None or food_name == item["food_name"]) \
+                and (food_type is None or food_type == item["food_type"]) \
+                and (food_brand is None or food_brand == item["food_brand"]) \
+                and all(keyword in item["food_keywords"] for keyword in food_keywords) \
+                and (food_price is None or food_price == item["food_price"]):
+            filtered_data.append(item)
+    return filtered_data
+
+# 무형문화제 데이터
+intangible_cultural_heritage_data = [    {
+        "name": "판소리",
+        "main_category": "전통공연",
+        "subcategory": "음악",
+        "designated_date": "1964.12.28",
+        "location": "기타",
+        "introduction": "판소리는 한 명의 소리꾼이 고수(북치는 사람)의 장단에 맞추어 창(소리), 말(아니리), 몸짓(너름새)을 섞어가며 긴 이야기를 엮어가는 것을 말한다."
+    },
+    {
+        "name": "양주별산대놀이",
+        "main_category": "전통공연",
+        "subcategory": "연희",
+        "designated_date": "1964.12.07",
+        "location": "경기도 양주시",
+        "introduction": "양주별산대놀이는 경기도 양주군 주내면 유양리 지역에서 전승되는 산대놀이 계통의 탈놀이다."
+    },
+    {
+        "name": "자수장",
+        "main_category": "전통기술",
+        "subcategory": "공예",
+        "designated_date": "1984.10.15",
+        "location": "부산광역시 금정구",
+        "introduction": "자수(刺繡)는 여러 색깔의 실을 바늘에 꿰어 바탕천에 무늬를 수놓아 나타내는 조형활동이다."
+    },
+    {
+        "name": "주철장",
+        "main_category": "전통기술",
+        "subcategory": "공예",
+        "designated_date": "2001.03.12",
+        "location": "충청북도 진천군",
+        "introduction": "주철장이란 인류가 오랫동안 사용하였던 쇠를 녹여서 각종 기물을 만드는 장인을 말한다."
+    },
+    {
+        "name": "사직대제",
+        "main_category": "의례의식",
+        "subcategory": "그 밖의 의식의례",
+        "designated_date": "2000.10.19",
+        "location": "서울특별시 종로구",
+        "introduction": "사직대제는 땅과 곡식의 신에게 드리는 국가적인 제사로, 사(社)는 땅의 신, 직(稷)은 곡식의 신을 의미한다. 예로부터 나라를 세우면 먼저 조상에게 제사를 지내고 이와 함께 땅과 곡식의 신에게 백성이 편안하게 살 수 있도록 풍요를 기원하는 사직제를 올렸다."
+    },
+    {
+        "name": "강강술래",
+        "main_category": "전통공연",
+        "subcategory": "음악",
+        "designated_date": "1966.02.15",
+        "location": "전라남도 진도군",
+        "introduction": "강강술래는 노래와 춤이 하나로 어우러진 부녀자들의 집단놀이이다."
+    },
+    {
+        "name": "강릉단오제",
+        "main_category": "전통놀이",
+        "subcategory": "축제",
+        "designated_date": "1967.01.16",
+        "location": "강원도 강릉시",
+        "introduction": "강릉단오제는 우리나라에서 가장 역사가 깊은 축제로, 마을을 지켜주는 대관령 산신을 제사하고, 마을의 평안과 농사의 번영, 집안의 태평을 기원한다."
+    },
+    {
+        "name": "한산모시짜기",
+        "main_category": "전통기술",
+        "subcategory": "공예",
+        "designated_date": "1967.01.16",
+        "location": "충청남도 서천군",
+        "introduction": "한산모시는 우리나라의 미를 상징하는 여름 전통옷감으로 역사적 가치가 높아 제작기술을 보호하고자 국가무형유산으로 지정했다."
+    },
+    {
+        "name": "북청사자놀음",
+        "main_category": "전통공연",
+        "subcategory": "연희",
+        "designated_date": "1967.03.31",
+        "location": "서울특별시",
+        "introduction": "북청사자놀음은 대사의 묘미나 풍자적인 측면보다는 사자춤의 묘기와 흥겨움이 중심이 되어 다른 사자춤사위보다 교묘하고 힘찬 동작이 특징이다."
+    },
+    {
+        "name": "줄타기",
+        "main_category": "전통공연",
+        "subcategory": "연희",
+        "designated_date": "1976.06.16",
+        "location": "경기도 과천시",
+        "introduction": "줄타기는 공중에 맨 줄 위에서 재미있는 이야기와 발림을 섞어가며 여러 가지 재주를 보여주는 놀이이다."
+    },
+    {
+        "name": "종묘제례",
+        "main_category": "의례의식",
+        "subcategory": "그 밖의 의식의례",
+        "designated_date": "1975.05.09",
+        "location": "서울특별시 종로구",
+        "introduction": "종묘제례란 조선시대 역대 왕과 왕비의 신위를 모셔 놓은 사당(종묘)에서 지내는 제사를 말한다."
+    },
+    {
+        "name": "제주민요",
+        "main_category": "전통공연",
+        "subcategory": "음악",
+        "designated_date": "1989.12.01",
+        "location": "제주특별자치도 서귀포시",
+        "introduction": "제주민요는 일하면서 부르는 노동요가 많고 부녀자들이 부르는 민요가 흔하다는 점에서 주목된다. 노랫말도 특이한 제주도 사투리를 많이 사용하고 있으며, 경기지역 민요보다 구슬프다."
+    },
+    {
+        "name": "영산줄다리기",
+        "main_category": "전통놀이",
+        "subcategory": "놀이",
+        "designated_date": "1969.02.11",
+        "location": "경상남도 창녕군",
+        "introduction": "영산줄다리기는 경상남도 창녕군 영산면에서 전승되는 민속놀이로 현재는 3·1문화제 행사의 하나로 줄다리기를 하고 있다."
+    },
+    {
+        "name": "연등회",
+        "main_category": "전통놀이",
+        "subcategory": "축제",
+        "designated_date": "2012.04.06",
+        "location": "서울특별시 종로구",
+        "introduction": "연등회는 관불의식, 연등행렬, 회향의 형식으로 진행되며 연등행렬 때 동원되는 등(燈)이 다양하고 다채롭다."
+    },
+    {
+        "name": "번와장",
+        "main_category": "전통기술",
+        "subcategory": "건축",
+        "designated_date": "2008.10.21",
+        "location": "기타",
+        "introduction": "번와장'이란 지붕의 기와를 잇는 장인을 말한다."
+    }
+]
+
+@app.get("/intangible_cultural_heritage")
+async def filterIntangibleCulturalHeritage(
+    name: Optional[str] = Query(
+        None,
+        description="문화재명을 한글로 적어주세요 (ex. 판소리, 양주별산대놀이, 주철장)"
+    ),
+    main_category: str = Query(
+        ...,
+        description="대분류를 한글로 적어주세요 (ex. 전통공연, 전통기술, 의례의식)"
+    ),
+    subcategory: Optional[str] = Query(
+        None,
+        description="소분류를 한글로 적어주세요 (ex. 음악, 공예, 그 밖의 의식의례)"
+    ),
+    designated_date: Optional[str] = Query(
+        None,
+        description="지정일을 1964.12.28 형식으로 적어주세요"
+    ),
+    location: Optional[str] = Query(
+        None,
+        description="소재지를 한글로 적어주세요 (ex. 기타, 경기도 양주시, 부산광역시 금정구, 충청북도 진천군)"
+    )
+):
+    # 데이터에서 검색 조건에 맞는 항목 필터링
+    filtered_data = []
+    for item in intangible_cultural_heritage_data:
+        if (name is None or name == item["name"]) \
+                and main_category == item["main_category"] \
+                and (subcategory is None or subcategory == item["subcategory"]) \
+                and (designated_date is None or designated_date == item["designated_date"]) \
+                and (location is None or location == item["location"]):
+            filtered_data.append(item)
+    return filtered_data
+
+cooking_receipe_data = [
+  {
+    "creator": "뇨리사",
+    "food_classification": [
+      "음료"
+    ],
+    "cook_name": "셀러리 주스",
+    "ingredients": [
+      "셀러리",
+      "물",
+      "바나나",
+      "사과",
+      "레몬"
+    ],
+    "time": 5,
+    "receipe": "1. 셀러리는 깨끗하게 씻어서 잎은 떼어내고 줄기만  갈기 좋은 크기로 자릅니다. 2. 사과는 껍질을 벗긴 후 역시 갈리 좋은 크기로 잘라둡니다. 3. 믹서 용기에 물을 붓고 잘라둔 셀러리와 사과를 넣어요. 그 위에 바나나도 뚝뚝 잘라 넣습니다. 4. 레몬은 껍질은 벗기고 씨를 발라낸 후 과육만 넣어요. 5. 재료들이 곱게 갈릴 때까지 믹서를 돌린 후 컵에 담아요. ",
+    "views": 12902
+  },
+  {
+    "creator": "히트주부",
+    "food_classification": [
+      "죽"
+    ],
+    "cook_name": "버섯 굴죽",
+    "ingredients": [
+      "쌀",
+      "굴",
+      "버섯",
+      "물",
+      "참기름",
+      "국간장",
+      "소금",
+      "후추"
+    ],
+    "time": 30,
+    "receipe": "1. 굴은 굵은 소금을 뿌려서 껍질을 골라내고 살살 씻어서 건져둡니다. 2. 냄비에 참기름과 쌀, 물 한큰술을 넣고 기름이 잘 섞이도록 살살 볶아요. 찹쌀을 섞거나 쌀알을 다져서 넣으면 더 촉촉한 느낌이 납니다. 3. 물 5컵을 넣고 쌀알이 완전히 떠오를때까지 끓여요. 4. 물기를 뺀 굴과 다진 버섯을 냄비에 넣고 물 1컵을 추가해서 살짝 더 끓여요. 5. 국간장으로는 색만 내고 소금, 후추로 간해요.   ",
+    "views": 14319
+  },
+  {
+    "creator": "프로쿠커",
+    "food_classification": [
+      "매일반찬"
+    ],
+    "cook_name": "두부 조림",
+    "ingredients": [
+      "두부",
+      "대파",
+      "실고추",
+      "들기름"
+    ],
+    "time": 15,
+    "receipe": "1. 두부를 3 ×4.5 ×0.8㎝ 정도로 잘라서 소금을 뿌려 물기를 잠시 뺀 후 면보나 키친타올로 닦아서 준비해요.  2. 두부 물기가 빠질 동안 양념 재료를 섞고 실고추와 채썬 대파를 1~2㎝ 길이로 잘라둡니다.  3. 팬에 기름을 두른 후 두부를 넣고 한쪽이 완전히 노릇노릇하게 될때까지 중간불에 두었다 뒤집어요. 빨리 뒤집지말고 한쪽면이 단단해질때까지 기다려야 부서지지않아요.  4. 두부에 양념장을 조금씩 올리고 약불~중불에서 천천히 조려요.  5. 수분이 반정도 줄어들면 실고추와 채썬 파를 올려요. 처음부터 넣으면 색이 이쁘지않아요. 6. 센불로 잠깐 올려서 남은 수분을 날려줍니다",
+    "views": 24031
+  },
+  {
+    "creator": "금손곰손",
+    "food_classification": [
+      "매일반찬"
+    ],
+    "cook_name": "고기전",
+    "ingredients": [
+      "쇠고기 다짐육",
+      "양파",
+      "당근",
+      "밀가루",
+      "달걀",
+      "식용유",
+      "마늘",
+      "국간장",
+      "참기름"
+    ],
+    "time": 35,
+    "receipe": "1. 채소는 다져서 준비해요. 2. 식용유를 제외한 채소, 고기, 양념, 달걀, 밀가루를 모두 섞어요.  3. 팬에 기름을 두르고 데운 후 재료를 한수저씩 떠서 팬에 놓아요. 중간에 한번 뒤집어주세요. 4. 고기가 주재료라 약한 불에서 천천히 익혀야 타지않고 보기좋아요.",
+    "views": 13714
+  },
+  {
+    "creator": "라이프쿠커",
+    "food_classification": [
+      "저장음식",
+      "매일반찬"
+    ],
+    "cook_name": "두릅장아찌",
+    "ingredients": [
+      "두릅",
+      "물",
+      "국간장",
+      "식초",
+      "설탕",
+      "소주",
+      "청양고추"
+    ],
+    "time": 10,
+    "receipe": "1. 두릅의 딱딱한 끝부분을 잘라내고 겉껍질을 떼어낸 후 씻어요. 2. 소금을 약간 넣은 끓는 물에 두릅의 줄기부터 넣어 30초 정도 먼저 데쳐요. 3. 두릅을 모두 넣고 줄기를 먼저 넣은 시간부터 총 3분 정도 데쳐줍니다.4. 건져서 찬물에 빨리 헹궈야 숨이 죽지 않고 아삭해요. 5. 두릅의 물기를 빼고 꼭 짜두세요. 6. 소스를 끓여서 한 김 식혀둡니다. 7. 용기에 두릅을 담고 소스를 넣어 3일간 숙성시킨 후 먹어요. 용기가 넓으면 소스가 더 필요하니 유념하세요.",
+    "views": 4908
+  },
+  {
+    "creator": "마카롱언니",
+    "food_classification": [
+      "가족",
+      "초대요리",
+      "매일반찬"
+    ],
+    "cook_name": "치킨 너겟",
+    "ingredients": [
+      "닭 안심살",
+      "마요네즈",
+      "시리얼",
+      "마늘",
+      "소금",
+      "후추",
+      "생각가루"
+    ],
+    "time": 50,
+    "receipe":"1. 고기는 물에 한번 씻어서 물기를 빼두세요. 안심은 기름이 거의 없어 냄새가 나지않아 우유에 담가두지 않아도 괜찮아요.  2. 안심을 2등분 합니다. 이때 힘줄이 보이면 잘라내 줍니다. 힘줄을 제거하면 더 부드럽게 먹을 수 있어요. 3. 한입 크기로 자른 고기에 소금, 후추, 생강가루로 밑간을 합니다. 4. 마요네즈에 다진 마늘을 섞은 후 고기에 버무립니다.  5. 시리얼을 지퍼백에 넣고 방망이나 병으로 성글게 밀어요. 조금 크게 부숴야 바삭하게 씹히는 느낌이 좋아요.
+6. 마요네즈에 버무린 고기에다 부순 시리얼을  골고루  묻혀요.  7. 오븐팬에 고기끼리 닿지않게 놓아요. 8. 200℃로 예열한 오븐에서 20분간 구워요. 중간에 한번 뒤집어주어야 앞뒤로 바삭하게 구워져요.
+", "views":54336},{"creator": "빨간모자",
+    "food_classification": [
+      "국",
+      "가족"
+    ],
+    "cook_name": "버섯 들깨탕",
+    "ingredients": [
+      "느타리버섯",
+      "말린 표고버섯",
+      "대파",
+      "멸치다시마",
+      "국간장",
+      "들깨가루",
+      "쌀가루",
+      "소금",
+      "멸치",
+      "다시마"
+    ],
+    "time": 30,
+    "receipe": "1. 물 5~6컵에 멸치를 넣어 육수를 만든 후 다시마를 넣어요. 2. 5분 후 불을 끄고 다시마는 건져내고 육수 4컵을 준비해요. 3. 말린 표고버섯은 물에 불려서 썰고 느타리버섯은 가늘게 찢어요. 표고버섯은 말린 후 물에 불리는게 향과 맛이 더 좋지만 말린게 없으면 생표고를 사용해도 됩니다. 4. 육수 4컵에 국간장을 넣어 간을 미리 맞추고 버섯을 넣어요. 혹시, 싱거우면 소금을 넣어주세요.  5. 들깨가루와 쌀가루를 국물에 섞어요. 채를 사용하면 뭉치지않게 잘 풀어집니다. 쌀가루를 넣으면 영양면에서도 보완이 되고 식사대용으로 먹을 수 있습니다. 쌀가루를 넣은 후에는 타지않게 바닥을 저어주는게 좋아요. 6. 한소큼 끓으면 어슷하게 썬 대파를 넣어줍니다.",
+    "views": 73456
+  },
+  {
+    "creator": "지갑텅명",
+    "food_classification": [
+      "가족",
+      "초대요리",
+      "매일반찬"
+    ],
+    "cook_name": "새우 춘권",
+    "ingredients": [
+      "춘권피",
+      "달걀",
+      "식용유",
+      "새우살",
+      "양파",
+      "당근",
+      "풋고추",
+      "녹말가루",
+      "소금",
+      "후추"
+    ],
+    "time": 120,
+    "receipe": "1. 춘권피는 냉동실에서 꺼내 살짝 녹여두고 달걀은 잘 풀어둡니다. 2. 춘권피 가장자리에 붓이나 손으로 달걀물을 바른 후 중간에 속재료를 넣고 한쪽 모서리로 덮어요. 3. 잘 말아준 뒤 잠시 잘 붙도록 둡니다. 5. 170~180℃로 데운 기름에 춘권을 튀긴 후 키친타월에 밭쳐 기름을 빼요. 6. 초간장이나 스위트칠리소스, 해선장 등을 곁들이면 잘 어울려요.",
+    "views": 36434
+  },
+  {
+    "creator": "사랑맘",
+    "food_classification": [
+      "찌개",
+      "가족"
+    ],
+    "cook_name": "참치 김치찌개",
+    "ingredients": [
+      "참치캔",
+      "김치",
+      "고추장",
+      "참기름",
+      "참치액",
+      "두부"
+    ],
+    "time": 18,
+    "receipe": "1. 김치를 먹기좋게 자르고 고추장과 기름을 넣어서 중간불에서 잘 어우러지게 볶아요. 2. 참치캔의 기름은 버리고 참치만 건져둬요. 올리브유에 담긴 참치는 그 기름으로 볶으세요. 3. 김치에 고추장과 기름이 잘 섞였으면 물을 붓고 끓여요. 4. 김치가 완전히 익으면 참치를 넣고 맛이 어우러지게 5분 정도만 더 끓여요. 5. 혹, 싱거우면 김칫국물 (참치액이나 조미료) 등으로 간을 맞춰주세요.",
+    "views": 3923
+  },
+  {
+    "creator": "유지누나",
+    "food_classification": [
+      "국"
+    ],
+    "cook_name": "들깨 미역국",
+    "ingredients": [
+      "미역",
+      "들기름",
+      "물",
+      "국간장",
+      "들깨가루",
+      "마늘"
+    ],
+    "time": 10,
+    "receipe": "1. 불린 미역은 먹기 좋게 잘라요.  2. 냄비에 미역과 들기름, 국간장, 마늘을 넣고 중간불에서 양념이 섞이도록 잠시 볶아요.  3. 뜨물(물)을 넣고 10분 정도 미역이 부드러워질때까지 끓여요. 뜨물을 넣으면 육수를 따로 내지않아도 맛있어요. 4. 소금으로 간을 맞춰요.  5. 거피한 들깨가루를 체에 걸러 국물에 풀어주세요. 걸쭉한게 좋으면 들깨가루를 더 넣어도 됩니다.  ",
+    "views": 342284
+  },
+  {
+    "creator": "빵덕후",
+    "food_classification": [
+      "간식"
+    ],
+    "cook_name": "전 남친 토스트",
+    "ingredients": [
+      "식삥",
+      "크림치즈",
+      "블루베리잼"
+    ],
+    "time": 2,
+    "receipe": "1. 먼저 식빵을 토스터나 프라이팬에 노릇노릇하게 구워줍니다. 2. 구워진 식빵에 크림치즈를 골고루 펴발라줍니다. 3. 크림치즈에 위에 블루베리잼을 바릅니다. 4. 전자렌지에 넣어 10초간 돌려 완성합니다.",
+    "views": 645453
+  },
+  {
+    "creator": "카랑카랑",
+    "food_classification": [
+      "간식"
+    ],
+    "cook_name": "소떡소떡",
+    "ingredients": [
+      "떡볶이떡",
+      "비엔나 소시지",
+      "꼬치",
+      "식용유",
+      "허니머스터드",
+      "케첩",
+      "고추장",
+      "물엿",
+      "맛술",
+      "핫소스"
+    ],
+    "time": 20,
+    "receipe": "1. 단단한 떡볶이 떡은 끓는 물에 데쳐서 부드럽게 만들어요. 소시지도 데쳐서 기름기를 빼는게 좋아요. 2. 떡과 소시지를 체에 밭쳐 물기를 말려요.  3. 나무 꼬치에 소시지와 떡을 차례로 끼워요. 4. 기름을 넉넉하게 넣은 팬에서 튀기듯이 앞뒤를 구워요. 떡을 튀기면 튀어올라 화상을 입을 수 있으니 굽는게 안전합니다.  5. 소스를 팬에서 졸이거나 전자레인지에 1분 정도 돌려서 걸쭉하게 만들어요.6. 취향에 따라 소스와 허니머스터드 소스를 발라서 먹어요.",
+    "views": 132221
+  },
+  {
+    "creator": "두시의쿠킹",
+    "food_classification": [
+      "간식"
+    ],
+    "cook_name": "감말랭이",
+    "ingredients": [
+      "감"
+    ],
+    "time": 300,
+    "receipe": "1. 감의 껍질을 벗긴 후 반으로 갈라요. 2. 꼭지를 떼어주고 씨도 보이는대로 빼줍니다. 3. 말리기 좋은 크기로 잘라줍니다. 4. 감을 건조기에 고루 깔아주세요.감끼리 겹쳐지지않게 놓아야 더 빨리 마릅니다. 5. 온도는 70℃로 맞춰놓고 시간은 10~20시간 사이로 감의 양에 따라 조절해요. 8. 감이 다 마르면 건조기를 끈 다음 감말랭이가 식으면 그릇이나 지퍼백에 담아 냉동실에 보관해요.",
+    "views": 6654
+  },
+  {
+    "creator": "이선주요리교실",
+    "food_classification": [
+      "기타",
+      "소스"
+    ],
+    "cook_name": "발사믹 양파조림",
+    "ingredients": [
+      "양파",
+      "포도씨오일",
+      "발사믹비니거",
+      "소금",
+      "후추"
+    ],
+    "time": 40,
+    "receipe": "1. 양파를 최대한 가늘게 썰어줍니다. 두께가 비슷해야 익는 속도가 같아지니 채칼을 사용하면 편해요. 2. 포도씨유를 두르고 약불에서 한동안 볶아 부드럽게 숨을 죽여요. 3. 양파가 부드럽게 볶아졌으면 발사믹비니거를 넣고 더 볶아줍니다.(총 40분 정도 소요됨) 4. 소금, 후추로 간해요. 5. 불을 끈 후 덜어내지말고 그대로 두고 뜸을 더 들인 후 용기에 담는게 좋아요.",
+    "views": 248543
+  },
+  {
+    "creator": "하사랑",
+    "food_classification": [
+      "저장음식"
+    ],
+    "cook_name": "동치미",
+    "ingredients": [
+      "총각무",
+      "쪽파",
+      "마늘",
+      "생강",
+      "지고추"
+    ],
+    "time": 100,
+    "receipe": "1. 김장때 나오는 작은 달랑무를 소금에 굴려서 쪽파와 함께 하룻 동안 통에 담아둡니다. 달랑무가 없으면  큰무 하나를 토막낸 후 쪽파와 함께 소금을 그냥 고루 발라두세요. 2. 하루가 지난 후  생수에 소금으로 간을 짭짤하게 맞춰둡니다. 3. 지고추와 편으로 썬 마늘과 생강,  파프리카나 배, 감 등을 배보자기에 담아 모두 넣어요. 4. 실온에 하루정도 두었다가 김치냉장고에 넣어요.  5. 일주일 후부터 먹을 수 있습니다.",
+    "views": 63454
+  }
+]
+
+@app.get("/cooking_receipe")
+async def filterCookingReceipe(
+    creator: Optional[str] = Query(
+        None,
+        description="창작자를 한글로 적어주세요(ex. 꿀키, 양순맘)"
+    ),
+    food_classification: str = Query(
+        ...,
+        description="음식 분류를 한글로 적어주세요(ex. 밥, 죽, 면, 매일반찬, 저장음식, 소스, 양념장, 가족, 초대요리, 국, 찌개, 전골, 간식, 음료, 기타)"
+    ),
+    cook_name: Optional[str] = Query(
+        None,
+        description="요리명을 한글로 적어주세요(ex. 당근라페, 계란버섯전, 전 남친 토스트)"
+    ),
+    ingredients: Optional[str] = Query(
+        None,
+        description="재료를 한글로 적어주세요(ex. 당근, 버섯, 홀그레인머스타드, 시금치, 간장, 설탕)"
+    ),
+    time: Optional[int] = Query(
+        None,
+        ge=0,
+        description="소요시간(단위: 분)은 0이상의 정수로 적어주세요."
+    )
+):
+    # 데이터에서 검색 조건에 맞는 항목 필터링
+    filtered_data = []
+    for item in cooking_receipe_data:
+        if (creator is None or creator == item["creator"]) \
+                and food_classification == item["food_classification"] \
+                and (cook_name is None or cook_name == item["cook_name"]) \
+                and (ingredients is None or all(ingredient in item["ingredients"] for ingredient in ingredients.split(','))) \
+                and (time is None or time == item["time"]):
+            filtered_data.append(item)
+    return filtered_data
+
+
+
 #나이키 테스트
 nikes = [    {
         "intent": "추천",
