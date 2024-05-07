@@ -192,12 +192,6 @@ async def searchLimitedEditionStrawberryFood(
     food_keywords: List[str] = Query(
         ...,
         description="한글로 띄어쓰기 없이 제품키워드를 입력하세요"
-    ),
-    food_price: Optional[int] = Query(
-        5000,
-        ge=1,
-        le=1000000,
-        description="가격을 정수로 입력하세요 (단위: 원)"
     )
 ):
     # 데이터에서 검색 조건에 맞는 항목 필터링
@@ -206,8 +200,7 @@ async def searchLimitedEditionStrawberryFood(
         if (food_name is None or food_name == item["food_name"]) \
                 and (food_type is None or food_type == item["food_type"]) \
                 and (food_brand is None or food_brand == item["food_brand"]) \
-                and all(keyword in item["food_keywords"] for keyword in food_keywords) \
-                and (food_price is None or food_price == item["food_price"]):
+                and all(keyword in item["food_keywords"] for keyword in food_keywords):
             filtered_data.append(item)
     return filtered_data
 
