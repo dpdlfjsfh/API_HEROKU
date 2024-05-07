@@ -682,7 +682,7 @@ async def filterCookingReceipe(
     filtered_data = []
     for item in cooking_receipe_data:
         if (creator is None or creator == item["creator"]) \
-                and food_classification == item["food_classification"] \
+                and food_classification in item["food_classification"] \
                 and (cook_name is None or cook_name == item["cook_name"]) \
                 and (ingredients is None or all(ingredient in item["ingredients"] for ingredient in ingredients.split(','))) \
                 and (time is None or time == item["time"]):
