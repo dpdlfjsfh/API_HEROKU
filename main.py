@@ -21,7 +21,9 @@ async def station_time(
     )
 ):
     # 데이터에서 검색 조건에 맞는 항목 필터링
-    filtered_data = [{"station_name":"정자역", "time": ['17:00','17:10']}]
+    filtered_data = []
+    if station_name == '정자역':
+        filtered_data = [{"station_name":"정자역", "time": ['17:00','17:10']}]
     return filtered_data
 
 
