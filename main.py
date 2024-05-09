@@ -3,6 +3,28 @@ from typing import List, Optional
 
 app = FastAPI()
 
+#지하철역 이름
+@app.get("/find_station")
+async def find_station(
+    landmark : Optional[str] = Query(
+        None,
+    )
+):
+    # 데이터에서 검색 조건에 맞는 항목 필터링
+    filtered_data = [{"station_name":"정자역"}]
+    return filtered_data
+
+@app.get("/station_time")
+async def station_time(
+    station_name : Optional[str] = Query(
+        None,
+    )
+):
+    # 데이터에서 검색 조건에 맞는 항목 필터링
+    filtered_data = [{"station_name":"정자역", "time": ['17:00','17:10']}]
+    return filtered_data
+
+
 #벌크 테스트
 strawberry_data = [
   {
