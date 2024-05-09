@@ -7,49 +7,58 @@ app = FastAPI()
 def read_zoo_animal():
     return []
 
+class AddressInput(BaseModel):
+    address: str
+    
 @app.post("/zoo_animal")
-def create_zoo_animal():
-    return []
+def create_zoo_animal(request: Request):
+    data = await request.json()
+    return data
 
 @app.get("/apartment_complex")
 def read_zoo_anima1l():
     return []
 
 @app.post("/apartment_complex")
-def create_zoo_animal1():
-    return []
+def create_zoo_animal1(request: Request):
+    data = await request.json()
+    return data
 
 @app.get("/spread_jam_search")
 def read_zoo_animal2():
     return []
 
 @app.post("/spread_jam_search")
-def create_zoo_anima2l():
-    return []
+def create_zoo_anima2l(request: Request):
+    data = await request.json()
+    return data
 
 @app.get("/terrace_cafe_search")
 def read_zoo_animal3():
     return []
 
 @app.post("/terrace_cafe_search")
-def create_zoo_anima3l():
-    return []
+def create_zoo_anima3l(request: Request):
+    data = await request.json()
+    return data
 
 @app.get("/naeil_baeum_card")
 def read_zoo_animal4():
     return []
 
 @app.post("/naeil_baeum_card")
-def create_zoo_animal4():
-    return []
+def create_zoo_animal4(request: Request):
+    data = await request.json()
+    return data
 
 @app.get("/yoga_pilates_class_reservation")
 def read_zoo_animal5():
     return []
 
 @app.post("/yoga_pilates_class_reservation")
-def create_zoo_animal5():
-    return []
+def create_zoo_animal5(request: Request):
+    data = await request.json()
+    return data
 
 #지하철역 이름
 @app.get("/find_station")
