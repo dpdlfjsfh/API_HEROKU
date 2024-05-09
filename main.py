@@ -3,6 +3,54 @@ from typing import List, Optional
 
 app = FastAPI()
 
+@app.get("/zoo_animal")
+def read_zoo_animal():
+    return []
+
+@app.post("/zoo_animal")
+def create_zoo_animal():
+    return []
+
+@app.get("/apartment_complex")
+def read_zoo_anima1l():
+    return []
+
+@app.post("/apartment_complex")
+def create_zoo_animal1():
+    return []
+
+@app.get("/spread_jam_search")
+def read_zoo_animal2():
+    return []
+
+@app.post("/spread_jam_search")
+def create_zoo_anima2l():
+    return []
+
+@app.get("/terrace_cafe_search")
+def read_zoo_animal3():
+    return []
+
+@app.post("/terrace_cafe_search")
+def create_zoo_anima3l():
+    return []
+
+@app.get("/naeil_baeum_card")
+def read_zoo_animal4():
+    return []
+
+@app.post("/naeil_baeum_card")
+def create_zoo_animal4():
+    return []
+
+@app.get("/yoga_pilates_class_reservation")
+def read_zoo_animal5():
+    return []
+
+@app.post("/yoga_pilates_class_reservation")
+def create_zoo_animal5():
+    return []
+
 #지하철역 이름
 @app.get("/find_station")
 async def find_station(
