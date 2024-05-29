@@ -10,14 +10,14 @@ async def socar(
     price: Optional[str] = Query(None),
     color: Optional[str] = Query(None),
 ):
-    if location == '전주역':
-        return '전주역에서 빌릴 수 있는 차량 소개해드리겠습니다.'
-    if location == '전주역' and car_type == '경차' :
-        return '전주역에서 빌릴 수 있는 경차 소개해드리겠습니다.'
-    if location == '전주역' and car_type == '경차' and price == '10만원대':
-        return '전주역에서 빌릴 수 있는 10만원대 경차 소개해드리겠습니다.'
     if location == '전주역' and car_type == '경차' and price == '10만원대' and color == '빨강':
         return '전주역에서 빌릴 수 있는 10만원대 빨간 경차 소개해드리겠습니다.'
+    elif location == '전주역' and car_type == '경차' and price == '10만원대':
+        return '전주역에서 빌릴 수 있는 10만원대 경차 소개해드리겠습니다.'
+    elif location == '전주역' and car_type == '경차' :
+        return '전주역에서 빌릴 수 있는 경차 소개해드리겠습니다.'
+    elif location == '전주역':
+        return '전주역에서 빌릴 수 있는 차량 소개해드리겠습니다.'
     else:
         return '꽝'
 
