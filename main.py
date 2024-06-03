@@ -17,9 +17,16 @@ async def socar(
     elif location == '전주역' and car_type == '경차' :
         return '전주역에서 빌릴 수 있는 경차 소개해드리겠습니다.'
     elif location == '전주역':
-        return '전주역에서 빌릴 수 있는 차량 소개해드리겠습니다.'
+        return '{"차종" : "싼타페", "가격" : "2000원/분"}'
     else:
         return '죄송합니다. 해당 차량 정보를 찾을 수 없습니다. 자세한 문의는 고객센터 1212-4545-7878로 문의 부탁드립니다.'
+
+@app.get("/carpricesearch")
+async def socar(
+    car_name: Optional[str] = Query(None)
+):
+    if car_name == '싼타페':
+        return '2500만원'
 
 
 
